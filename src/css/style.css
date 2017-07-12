@@ -1,0 +1,119 @@
+.lFoto{
+    -fx-border-color: blue;
+}
+
+.lFoto:hover{
+    -fx-background-color: #1C1C1C;
+    /*-fx-opacity: 0.5;*/
+    -fx-text-fill: white;
+    /*FadeTransition{duration:1s; node: lFoto; fromValue: 1.0; toValue: 0.5;}*/
+}
+
+/*==================================================Tela de Login=====================================================*/
+
+.Pane{
+    -fx-background-color: white;
+    /*-fx-border-color: black;*/
+}
+
+.inPane{
+    -fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0);
+    -fx-background-color: white;
+    /*-fx-border-color: red*/
+}
+
+.btEntrar{
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+.btSair{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+/*==================================================Tela Principal=====================================================*/
+.raiz{
+    -fx-background-color: white;
+}
+
+.grid{
+    -fx-padding: 10;
+    -fx-background-color: #6495ED;
+    /*-fx-effect: dropshadow(gaussian, black, 10, 0, 0, 0);*/
+}
+
+
+/*==================================================Tela Cadastro de Monitor=====================================================*/
+
+.btCadastrar{
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+
+.btCancelar{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+/*==================================================Tela Cadastro de Criancas=====================================================*/
+.btAddResp{
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+}
+.btRemoveResp{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+.pane{
+    -fx-background-color: white;
+}
+
+.btCadResp{
+    -fx-background-color: green;   
+}
+
+
+/*==================================================Tela Cadastro de Brinquedo=====================================================*/
+
+.pane{
+    -fx-background-color: white;
+}
+
+/*==================================================Tela Cadastro de Visitação Escola==============================================*/
+
+.btAddEscola{
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
+}
+
+.btAddAluno{
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
+}
+
+.btRemoveAluno{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+/*==================================================Tela Cadastro de Visitação Escola==============================================*/
+
+.btAddBrinquedo{
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
+}
+
+.btRemoveBrinquedo{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+.btAddOcorrencia{
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
+}
+
+.btRemoveOcorrencia{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
