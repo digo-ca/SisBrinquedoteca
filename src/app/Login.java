@@ -13,6 +13,7 @@ import entidade.Monitor;
 import static java.awt.Color.red;
 import java.util.List;
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -74,10 +75,10 @@ public class Login extends Application {
     private void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(500, 350); //definindo o tamanho da janela de Login
+        pane.setPrefSize(500, 365); //definindo o tamanho da janela de Login
         pane.getStyleClass().add("Pane");
         inPane = new Pane();
-        inPane.setPrefSize(450, 300);
+        inPane.setPrefSize(450, 315);
         inPane.getStyleClass().add("inPane");
         
         lLogin = new Label("Login");
@@ -110,15 +111,13 @@ public class Login extends Application {
         btSair = new JFXButton("Sair");
         btSair.getStyleClass().add("btSair");
         btSair.setPrefWidth(40);
-
-        inPane.getChildren().addAll(/*lLogin, lSenha,*/ txLogin, txSenha, btEntrar, btSair);
-        pane.getChildren().add(inPane);
         
-        img = new ImageView();
-        //img.setImage(new Image("imagens/unigran.png"));
-        img.setFitWidth(180);
-        img.setFitHeight(100);
-        inPane.getChildren().add(img);
+        img = new ImageView(new Image("img/unigran.png"));
+        img.setFitHeight(120);
+        img.setFitWidth(200);
+
+        inPane.getChildren().addAll(txLogin, txSenha, btEntrar, btSair, img);
+        pane.getChildren().add(inPane);
     }
 
     private void initLayout() {
@@ -127,16 +126,16 @@ public class Login extends Application {
         lLogin.setLayoutX(200);
         lLogin.setLayoutY(140);
         txLogin.setLayoutX(70);
-        txLogin.setLayoutY(110);
+        txLogin.setLayoutY(120);
         lSenha.setLayoutX(200);
         lSenha.setLayoutY(170);
         txSenha.setLayoutX(70);
-        txSenha.setLayoutY(170);
+        txSenha.setLayoutY(180);
         btEntrar.setLayoutX(300);
-        btEntrar.setLayoutY(210);
+        btEntrar.setLayoutY(220);
         btSair.setLayoutX(10);
-        btSair.setLayoutY(260);
-        img.setLayoutX(140);
+        btSair.setLayoutY(280);
+        img.setLayoutX(120);
         img.setLayoutY(0);
     }
 
@@ -195,10 +194,6 @@ public class Login extends Application {
                     return m;
                 }
             }
-
-            //if(m.getNomeUsuario().)
-            //JOptionPane.showMessageDialog(null, m.getNomeUsuario());
-            //JOptionPane.showMessageDialog(null, m.getSenha());
         }
 
         return null;
