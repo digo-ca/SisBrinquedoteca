@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
@@ -94,7 +95,9 @@ public class CadastroVisitacaoEscola extends Application {
 
     private Monitor monitor;
 
-    private VisitacaoEscola visitaEscola;
+    private VisitacaoEscola visitaEscola = null;
+    
+    private DiarioDeBordo diario;
 
     public void setMonitor(Monitor m) {
         monitor = m;
@@ -277,57 +280,40 @@ public class CadastroVisitacaoEscola extends Application {
                 if (visitaEscola == null) {
                     visitaEscola = new VisitacaoEscola();
                 }
+                
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
                 visitaEscola.setData(Date.from(cData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-
                 visitaEscola.setPeriodo((Periodo) cbPeriodo.getSelectionModel().getSelectedItem());
                 visitaEscola.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
                 visitaEscola.setEscola((Escola) cbEscola.getSelectionModel().getSelectedItem());
                 visitaEscola.setProfessor(txProfessor.getText());
                 visitaEscola.setAtividadesMinistradas(txAtivMinistradas.getText());
                 visitaEscola.setFaixaEtariaCriancas(txFaixaEtaria.getText());
-                visitaEscola.setAlunos(listaAlunos.getItems());
+                //visitaEscola.setAlunos();
 
                 Dao.salvar(visitaEscola);
-
-                List<DiarioDeBordo> diarios = new ArrayList<>();
-                diarios = Dao.listar(DiarioDeBordo.class);
-                int exists = -1;
-                for (int i = 0; i < diarios.size(); i++) {
-                    if (diarios.get(i).getDia().equals(visitaEscola.getData())) {
-                        exists = i;
-                    }
-                }
-
-                DiarioDeBordo diario;
-                //Adicionando Ocorrencia
+                
+                //Salvando uma ocorrencia ao diario de bordo===================================
                 ItemDiarioDeBordo item = new ItemDiarioDeBordo();
                 item.setDescricao("Visita de Escola");
                 item.setMonitor(monitor);
-
-                if (Dao.consultarDiarioHoje().size() == 0) { //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
+                
+                
+                if (Dao.consultarDiarioHoje().isEmpty()){ //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
                     diario = new DiarioDeBordo();
 
                     diario.setDia(new Date(System.currentTimeMillis()));
                     diario.setMonitorAbriu(monitor);
                     diario.getOcorrencias().add(item);
-
-                    Dao.salvar(diario);
                 } else { //Caso tenha um cadastrado edita
                     diario = Dao.consultarDiarioHoje().get(0);
                     diario.getOcorrencias().add(item);
 
-                    Dao.salvar(diario);
                 }
+                Dao.salvar(diario);
 
                 CadastroVisitacaoEscola.getStage().close();
-                //Convertendo Date para LocalDate é feito dessa forma
-                /*
-                    Date date = new Date();
-                    Instant instant = date.toInstant();
-                    LocalDate from = instant.atZone(ZoneId.systemDefault()).toLocalDate();
-                 */
             }
         });
 

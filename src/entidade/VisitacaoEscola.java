@@ -5,6 +5,7 @@
  */
 package entidade;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -23,7 +24,7 @@ import javax.persistence.TemporalType;
  * @author PcWare
  */
 @Entity
-public class VisitacaoEscola {
+public class VisitacaoEscola implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -126,5 +127,5 @@ public class VisitacaoEscola {
 
     public void setMonitor(Monitor monitor) {
         this.monitor = monitor;
-    } 
+    }
 }

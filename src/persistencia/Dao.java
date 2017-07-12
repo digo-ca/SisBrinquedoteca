@@ -42,7 +42,7 @@ public class Dao {
             trx.commit();
             
         } catch (Exception e) {
-            //JOptionPane.showMessageDialog(null, "Erro ao salvar no Banco");
+            JOptionPane.showMessageDialog(null, "Erro ao salvar no Banco");
         }
     }
 

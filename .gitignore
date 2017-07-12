@@ -26,3 +26,13 @@
 /nbproject/configs/Executar_no_Browser.properties
 /lib/jfoenix.jar
 /lib/junit_4/junit-4.12-javadoc.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.dbws.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.core.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.antlr.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.jpa.modelgen.processor.jar
+/lib/EclipseLink-GlassFish-v3/javax.persistence.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.moxy.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.asm.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.jpa.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.jpa.jpql.jar
+/lib/EclipseLink-GlassFish-v3/org.eclipse.persistence.oracle.jar
