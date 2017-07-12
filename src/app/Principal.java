@@ -81,14 +81,9 @@ public class Principal extends Application {
         //JOptionPane.showMessageDialog(null, m.getNomeUsuario());///////////////////////////
     }
     
-    /*public Monitor getMonitor(){
-        return monitor;
-    }*/
-    
     
     
 
-    //private static Stage stage;
 
     @Override
     public void start(Stage parent) {
