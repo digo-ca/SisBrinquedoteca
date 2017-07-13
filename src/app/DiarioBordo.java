@@ -9,6 +9,8 @@ import cadastro.CadastroOcorrencia;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import entidade.Brinquedo;
 import entidade.DiarioDeBordo;
@@ -31,6 +33,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
@@ -65,6 +69,8 @@ public class DiarioBordo extends Application{
     private TableColumn id;
     private TableColumn descricao;
     private TableColumn colunaMonitor;
+    
+    private StackPane stackPane;
     
     Monitor monitor;
     DiarioDeBordo db;
@@ -239,7 +245,7 @@ public class DiarioBordo extends Application{
                     tabelaBrinquedos.getItems().add(cbBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().remove(cbBrinquedos.getSelectionModel().getSelectedItem());
                 }else{
-                    JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
+                    //JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
                 }
             }
         });
