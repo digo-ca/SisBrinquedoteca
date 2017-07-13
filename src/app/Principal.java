@@ -134,7 +134,6 @@ public class Principal extends Application {
                 stage.close();
                 try {
                     new Login().start(Principal.stage);
-                    //Principal.getStage().close();
                 } catch (Exception ex) {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
