@@ -249,7 +249,7 @@ public class CadastroVisitacaoEscola extends Application {
                 //tabela.setItems(FXCollections.observableArrayList(txAluno.getText()));
                 if (!txAluno.getText().isEmpty()) {
                     //tabela.getItems().add(txAluno.getText());
-                    //alunos.add(txAluno.getText());
+                    alunos.add(txAluno.getText());
                     listaAlunos.getItems().add(txAluno.getText());
                     txAluno.setText("");
                 } else {
@@ -262,6 +262,7 @@ public class CadastroVisitacaoEscola extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (listaAlunos.getSelectionModel().getSelectedIndex() != -1) {
+                    alunos.remove(listaAlunos.getSelectionModel().getSelectedItem());
                     listaAlunos.getItems().remove(listaAlunos.getSelectionModel().getSelectedItem());
                 } else {
                     JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
@@ -283,9 +284,6 @@ public class CadastroVisitacaoEscola extends Application {
                 if (visitaEscola == null) {
                     visitaEscola = new VisitacaoEscola();
                 }
-                //List<String> listAlunos = new LinkedList();
-                //listAlunos = (List) listaAlunos.getItems();
-                //JOptionPane.showMessageDialog(null, listAlunos);
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
                 visitaEscola.setData(Date.from(cData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
@@ -295,9 +293,7 @@ public class CadastroVisitacaoEscola extends Application {
                 visitaEscola.setProfessor(txProfessor.getText());
                 visitaEscola.setAtividadesMinistradas(txAtivMinistradas.getText());
                 visitaEscola.setFaixaEtariaCriancas(txFaixaEtaria.getText());
-                
-                //Verificar depois porque esta dando erro ao salvar a lista de string no banco
-                //visitaEscola.setAlunos(listaAlunos.getItems());
+                visitaEscola.setAlunos(alunos);
 
                 Dao.salvar(visitaEscola);
                 
@@ -305,14 +301,18 @@ public class CadastroVisitacaoEscola extends Application {
                 ItemDiarioDeBordo item = new ItemDiarioDeBordo();
                 item.setDescricao("Visita de Escola");
                 item.setMonitor(monitor);
-                
+      
                 
                 if (Dao.consultarDiarioHoje().isEmpty()){ //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
                     diario = new DiarioDeBordo();
+                    
+                    List<ItemDiarioDeBordo>  list = new LinkedList<>();
+                    list.add(item);
 
                     diario.setDia(new Date(System.currentTimeMillis()));
                     diario.setMonitorAbriu(monitor);
-                    diario.getOcorrencias().add(item);
+                    
+                    diario.setOcorrencias(list);
                 } else { //Caso tenha um cadastrado edita
                     diario = Dao.consultarDiarioHoje().get(0);
                     diario.getOcorrencias().add(item);
