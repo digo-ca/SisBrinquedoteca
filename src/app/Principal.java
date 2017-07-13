@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -62,7 +63,7 @@ public class Principal extends Application {
     
     private MenuItem itemLCrianca;
     private MenuItem itemSair;
-    private MenuItem itemNomeUser;
+    private Menu itemNomeUser;
     private MenuItem itemLResp;
     
     private Button bDiario;
@@ -177,9 +178,10 @@ public class Principal extends Application {
         
         
         itemSair = new MenuItem("Sair");
-        itemNomeUser = new MenuItem(monitor.getNomeUsuario());
+        itemNomeUser = new Menu(monitor.getNomeUsuario());
         
         alteraSenha = new MenuItem("Alterar Senha");
+        itemNomeUser.getItems().add(alteraSenha);
         
         grid = new GridPane();
         bDiario = new Button("Exibir Diário");
@@ -189,7 +191,7 @@ public class Principal extends Application {
         // Add menuItems to the Menus
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemMonitor, itemVisita, itemVisitaEscola);
         mListar.getItems().addAll(itemLCrianca, itemLResp);
-        mUsuario.getItems().addAll(itemNomeUser,alteraSenha, itemSair);
+        mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
         menuBar.getMenus().addAll(MenuCad, mListar, mUsuario);
