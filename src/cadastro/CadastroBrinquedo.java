@@ -15,6 +15,8 @@ import entidade.Estado;
 import java.awt.Choice;
 import static java.awt.Color.gray;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -74,6 +76,7 @@ public class CadastroBrinquedo extends Application {
     private List<Classificacao> classificacoes = Dao.listar(Classificacao.class);
 
     private FileChooser fileChooser;
+    private byte[] bImagem;
     
     private Brinquedo brinquedo;
     
@@ -186,7 +189,7 @@ public class CadastroBrinquedo extends Application {
                 b.setFabricante(txFabricante.getText());
                 b.setEstado((Estado) cbEstado.getSelectionModel().getSelectedItem());
                 b.setClassificacao((Classificacao) cbClassificacao.getSelectionModel().getSelectedItem());
-                //b.set
+                b.setFoto(bImagem);
                 Dao.salvar(b);
                 //JOptionPane.showMessageDialog(null, "Brinquedo Cadastrado");
                 CadastroBrinquedo.getStage().hide();
@@ -200,6 +203,12 @@ public class CadastroBrinquedo extends Application {
                 fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Imagem", "*.png", "*.jpg"));
 
                 File selectedFile = fileChooser.showOpenDialog(stage);
+                
+                try {
+                    bImagem = imageToByte(selectedFile.getPath());
+                } catch (IOException ex) {
+                    Logger.getLogger(CadastroBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 Image imagem = null;
 
@@ -212,18 +221,21 @@ public class CadastroBrinquedo extends Application {
                     }
                     
                     img.setImage(imagem);
-                    //img.fitWidthProperty();
-                    //img.setFitWidth(lFoto.getWidth());
-                    //img.setFitHeight(lFoto.getHeight());
-                    //img.setPreserveRatio(true);
                     lFoto.setText("");
                     lFoto.setGraphic(img);
                 }
-
-                //imagem = new Image(getClass().getResourceAsStream(selectedFile.getName()+""));
-                //lFoto.setGraphic();
             }
         });
+    }
+     //Imagem para Byte, conversão.
+    public byte[] imageToByte(String image) throws IOException {
+        InputStream is = null;
+        byte[] buffer = null;
+        is = new FileInputStream(image);
+        buffer = new byte[is.available()];
+        is.read(buffer);
+        is.close();
+        return buffer;
     }
 
     public static Stage getStage() {

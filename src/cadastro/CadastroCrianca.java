@@ -11,7 +11,11 @@ import com.jfoenix.controls.JFXTextField;
 import entidade.Crianca;
 import entidade.Estado;
 import entidade.Responsavel;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -44,6 +48,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
@@ -85,6 +90,7 @@ public class CadastroCrianca extends Application {
 
     private FileChooser filechooser;
     private ImageView img;
+    private byte[] bImagem = null;
 
     public void setCrianca(Crianca c) {
         crianca = c;
@@ -120,7 +126,11 @@ public class CadastroCrianca extends Application {
         lFoto = new Label("            Foto");
         //lFoto.setStyle("-fx-border-color: blue");
         lFoto.getStyleClass().add("lFoto");
-        lFoto.setPrefSize(105, 120);
+        //lFoto.setPrefSize(105, 120);
+        lFoto.setMaxWidth(105);
+        lFoto.setMaxHeight(120);
+        lFoto.setMinWidth(105);
+        lFoto.setMinHeight(120);
         pane.getChildren().add(lFoto);
 
         txNome = new JFXTextField();
@@ -184,7 +194,7 @@ public class CadastroCrianca extends Application {
         pane.getChildren().add(btCancelar);
 
         filechooser = new FileChooser();
-
+        img = new ImageView();
     }
 
     private void initLayout() {
@@ -258,7 +268,7 @@ public class CadastroCrianca extends Application {
                 crianca.setIdade(Integer.parseInt(txIdade.getText()));
                 crianca.setEscola(txEscola.getText());
                 crianca.setResponsaveis(tabela.getItems());
-
+                crianca.setFoto(bImagem);
                 Dao.salvar(crianca);
                 CadastroCrianca.getStage().close();
             }
@@ -271,6 +281,12 @@ public class CadastroCrianca extends Application {
                 filechooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagem", "*.png", "*.jpg"));
 
                 File selectedFile = filechooser.showOpenDialog(stage);
+
+                try {
+                    bImagem = imageToByte(selectedFile.getPath());
+                } catch (IOException ex) {
+                    Logger.getLogger(CadastroCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
                 Image imagem = null;
 
@@ -289,7 +305,7 @@ public class CadastroCrianca extends Application {
             }
         });
 
-        /*lFoto.setOnMouseEntered(new EventHandler<MouseEvent>() {
+        lFoto.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 if (crianca == null) {
@@ -303,10 +319,9 @@ public class CadastroCrianca extends Application {
         lFoto.setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                lFoto.setText("            Foto");
+                lFoto.setText(null);
             }
-        });*/
-        
+        });
         cadResp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -339,42 +354,29 @@ public class CadastroCrianca extends Application {
         txEscola.setText(crianca.getEscola());
         tabela.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
         cbResponsavel.getItems().removeAll(crianca.getResponsaveis());
+        //Convertendo byte para imagem
+        byte[] b = null;
+
     }
 
     public static Stage getStage() {
         return stage;
     }
 
+    //Imagem para Byte, conversão.
+    public byte[] imageToByte(String image) throws IOException {
+        InputStream is = null;
+        byte[] buffer = null;
+        is = new FileInputStream(image);
+        buffer = new byte[is.available()];
+        is.read(buffer);
+        is.close();
+        return buffer;
+    }
+    
+    //Byte para imagem, conversão.
+
     public static void main(String[] args) {
         launch(args);
     }
-    
-    /*public byte[] getByte(String img){
-        InputStream is;
-        is = this.getClass().getResourceAsStream(img);
-        int i, len=0;
-        byte bArray[] = new byte[500];
-        byte bArray2[];
-        byte b[] = new byte[1];
-        try {
-            while ( is.read(b) != -1 ){
-                if ( len+1 >= bArray.length ){
-		bArray2 = new byte[bArray.length];
-		for ( i = 0; i < len; i++ ){
-                        bArray2[i] = bArray[i];
-                    }			
-		bArray = new byte[bArray2.length+500];
-		for ( i = 0; i < len; i++ ){
-                        bArray[i] = bArray2[i];
-                    }			
-                }
-                bArray[len] = b[0];
-                len++;
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return bArray;
-    }*/
-
 }
