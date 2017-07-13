@@ -12,6 +12,8 @@ import entidade.Crianca;
 import entidade.Estado;
 import entidade.Responsavel;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -346,5 +348,33 @@ public class CadastroCrianca extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
+    /*public byte[] getByte(String img){
+        InputStream is;
+        is = this.getClass().getResourceAsStream(img);
+        int i, len=0;
+        byte bArray[] = new byte[500];
+        byte bArray2[];
+        byte b[] = new byte[1];
+        try {
+            while ( is.read(b) != -1 ){
+                if ( len+1 >= bArray.length ){
+		bArray2 = new byte[bArray.length];
+		for ( i = 0; i < len; i++ ){
+                        bArray2[i] = bArray[i];
+                    }			
+		bArray = new byte[bArray2.length+500];
+		for ( i = 0; i < len; i++ ){
+                        bArray[i] = bArray2[i];
+                    }			
+                }
+                bArray[len] = b[0];
+                len++;
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return bArray;
+    }*/
 
 }

@@ -28,7 +28,7 @@ public class Crianca implements Serializable{
     private String escola;
 
     //@Column(nullable = false)
-    private String foto;
+    private byte[] foto;
     
     @ManyToMany
     @JoinTable(name = "Crianca_Responsavel")
@@ -75,11 +75,11 @@ public class Crianca implements Serializable{
         this.escola = escola;
     }
 
-    public String getFoto() {
+    public byte[] getFoto() {
         return foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(byte[] foto) {
         this.foto = foto;
     }
     
