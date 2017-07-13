@@ -322,20 +322,10 @@ public class Principal extends Application {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*Monitor m = new Monitor();
-        m.setNome("Ivanildo");
-        m.setNomeUsuario("Ivanildo");
-        m.setSenha("34246138");
-        m.setSupervisor(Boolean.TRUE);
-        
-        Dao.salvar(m);*/
-        
         if(Dao.consultarTodos(Monitor.class).isEmpty()){
             CadastroMonitor.main(args);
         }else{
             Login.main(args);
         }
-
-        //Application.launch(args);
     }
 }
