@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -91,7 +93,7 @@ public class CadastroVisitacaoEscola extends Application {
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
     
-    private JFXListView listaAlunos;
+    private JFXListView<String> listaAlunos;
 
     private Monitor monitor;
 
@@ -136,6 +138,7 @@ public class CadastroVisitacaoEscola extends Application {
         
         cData = new JFXDatePicker();
         cData.setEditable(false);
+        cData.setValue(new Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         cData.setPromptText("Selecione o Dia");
         pane.getChildren().add(cData);
         cbPeriodo = new JFXComboBox(FXCollections.observableArrayList(Periodo.values()));
@@ -280,7 +283,9 @@ public class CadastroVisitacaoEscola extends Application {
                 if (visitaEscola == null) {
                     visitaEscola = new VisitacaoEscola();
                 }
-                
+                //List<String> listAlunos = new LinkedList();
+                //listAlunos = (List) listaAlunos.getItems();
+                //JOptionPane.showMessageDialog(null, listAlunos);
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
                 visitaEscola.setData(Date.from(cData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
@@ -290,7 +295,9 @@ public class CadastroVisitacaoEscola extends Application {
                 visitaEscola.setProfessor(txProfessor.getText());
                 visitaEscola.setAtividadesMinistradas(txAtivMinistradas.getText());
                 visitaEscola.setFaixaEtariaCriancas(txFaixaEtaria.getText());
-                //visitaEscola.setAlunos();
+                
+                //Verificar depois porque esta dando erro ao salvar a lista de string no banco
+                //visitaEscola.setAlunos(listaAlunos.getItems());
 
                 Dao.salvar(visitaEscola);
                 
