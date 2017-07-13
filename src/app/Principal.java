@@ -80,10 +80,6 @@ public class Principal extends Application {
     public void setMonitor(Monitor m){
         monitor = m;
     }
-    
-    
-    
-
 
     @Override
     public void start(Stage parent) {
