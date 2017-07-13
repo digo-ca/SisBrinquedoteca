@@ -142,7 +142,6 @@ public class Principal extends Application {
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.initOwner(parent);
-        //Principal.stage = stage;
         stage.show();
     }
     
