@@ -105,7 +105,7 @@ public class Principal extends Application {
         
         GridPane.setHalignment(sair, HPos.LEFT);
         sair.setPrefSize(100, 40);
-        grid.add(sair, 0, 3);
+        grid.add(sair, 0, 27);
         
         
         grid.getStyleClass().add("grid");
