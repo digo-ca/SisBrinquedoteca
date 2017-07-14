@@ -332,6 +332,7 @@ public class CadastroCrianca extends Application {
                     Logger.getLogger(CadastroCrianca.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 cbResponsavel.setItems(FXCollections.observableArrayList(Dao.consultarTodos(Responsavel.class)));
+                cbResponsavel.getItems().removeAll(tabela.getItems());
             }
         });
     }
