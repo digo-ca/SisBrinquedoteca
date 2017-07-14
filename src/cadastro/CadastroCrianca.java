@@ -144,6 +144,7 @@ public class CadastroCrianca extends Application {
         pane.getChildren().add(txNome);
         dpNascimento = new JFXDatePicker();
         dpNascimento.setPromptText("Data de Nascimento");
+        dpNascimento.setEditable(false);
         //txIdade.setLabelFloat(true);
         pane.getChildren().add(dpNascimento);
         txEscola = new JFXTextField();
