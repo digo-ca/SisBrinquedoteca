@@ -272,8 +272,6 @@ public class CadastroCrianca extends Application {
                 crianca.setFoto(bImagem);
                 Dao.salvar(crianca);
                 CadastroCrianca.getStage().hide();
-               
-                CadastroCrianca.getStage().close();
             }
         });
 
