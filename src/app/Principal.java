@@ -24,11 +24,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.HPos;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -99,12 +101,11 @@ public class Principal extends Application {
         grid.add(bDiario, 0, 0);
         GridPane.setHalignment(listar, HPos.LEFT);
         listar.setPrefSize(100, 40);
-        
-        
         grid.add(listar, 0, 1);
+        
         GridPane.setHalignment(sair, HPos.LEFT);
         sair.setPrefSize(100, 40);
-        grid.add(sair, 0, 26);
+        grid.add(sair, 0, 3);
         
         
         grid.getStyleClass().add("grid");
@@ -181,7 +182,10 @@ public class Principal extends Application {
         sair = new Button("Sair");
 
         // Add menuItems to the Menus
-        MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemMonitor, itemVisita, itemVisitaEscola);
+        if(monitor.getSupervisor()){
+            MenuCad.getItems().add(itemMonitor);
+        }
+        MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
         mListar.getItems().addAll(itemLCrianca, itemLResp);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
