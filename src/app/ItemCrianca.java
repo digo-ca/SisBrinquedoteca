@@ -24,6 +24,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
+import persistencia.Dao;
 
 /**
  *
@@ -47,30 +48,29 @@ public class ItemCrianca extends Application {
     private static int index;
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage parent) throws Exception {
         initComponents();
-        
+        initValues();
         initListeners();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.setTitle("Criança");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.show();
-        
-        ItemCrianca.stage = stage;
+        stage.showAndWait();
     }
 
     public void initComponents() {
+        stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(600, 270);
         img = new ImageView();
         lFoto = new Label("   Foto");
         lFoto.setStyle("-fx-border-color: blue");
         lFoto.setPrefSize(200, 220);
-        lNome = new Label(/*crianca.getNome()*/ "Nome: "+crianca.getNome());
-        lIdade = new Label(/*crianca.getIdade() + ""*/"Idade: "+crianca.getIdade());
-        tabelaResponsaveis = new TableView(FXCollections.observableArrayList(crianca.getResponsaveis()));
+        lNome = new Label();
+        lIdade = new Label();
+        tabelaResponsaveis = new TableView();
         
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
@@ -91,6 +91,12 @@ public class ItemCrianca extends Application {
         
     }
     
+    public void initValues(){
+        lNome.setText("Nome: "+crianca.getNome());
+        lIdade.setText("Idade: "+crianca.getIdade());
+        tabelaResponsaveis.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
+    }
+    
     public void initListeners(){
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -98,16 +104,19 @@ public class ItemCrianca extends Application {
                 CadastroCrianca cadastro = new CadastroCrianca();
                 cadastro.setCrianca(crianca);
                 try {
-                    cadastro.start(new Stage());
+                    cadastro.start(ItemCrianca.getStage());
                 } catch (Exception ex) {
                     Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                crianca = (Crianca) Dao.busca(crianca.getId(), Crianca.class);;
+                initValues();
             }
         });
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ItemCrianca.getStage().close();
+                ItemCrianca.getStage().hide();
+                
             }
         });
     }

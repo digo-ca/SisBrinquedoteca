@@ -254,7 +254,7 @@ public class CadastroCrianca extends Application {
         btCancelar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroCrianca.getStage().close();
+                CadastroCrianca.getStage().hide();
             }
         });
 
@@ -270,7 +270,7 @@ public class CadastroCrianca extends Application {
                 crianca.setResponsaveis(tabela.getItems());
                 crianca.setFoto(bImagem);
                 Dao.salvar(crianca);
-                CadastroCrianca.getStage().close();
+                CadastroCrianca.getStage().hide();
             }
         });
 

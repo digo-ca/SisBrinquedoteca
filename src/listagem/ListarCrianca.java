@@ -44,23 +44,23 @@ public class ListarCrianca extends Application{
     private Button sair;
     //private Button detalhes;
     
-    ObservableList<Crianca> criancas = FXCollections.observableArrayList(Dao.listar(Crianca.class));
+    private ObservableList<Crianca> criancas ;
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage parent) throws Exception {
         initComponents();
-        
+        initValues();
         initListeners();
         Scene scene = new Scene(pane);
+        stage.initOwner(parent);
         stage.setScene(scene);
         stage.setTitle("Tabela de Crianças");
         stage.setResizable(false);
         stage.show();
-        
-        ListarCrianca.stage = stage;
     }
     
     public void initComponents(){
+        stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(795, 595);
         
@@ -78,7 +78,6 @@ public class ListarCrianca extends Application{
         colunaIdade.setCellValueFactory(new PropertyValueFactory("idade"));
         colunaDetalhes.setCellValueFactory(new PropertyValueFactory("detalhes"));
         
-        tabela.setItems(criancas);
         tabela.setPrefSize(785, 550);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         
@@ -93,6 +92,11 @@ public class ListarCrianca extends Application{
         
         
         pane.getChildren().addAll(txPesquisa, tabela, sair);
+    }
+    
+    private void initValues() {
+        criancas = FXCollections.observableArrayList(Dao.listar(Crianca.class));
+        tabela.setItems(criancas);
     }
     
     public void initLayout(){
@@ -132,10 +136,11 @@ public class ListarCrianca extends Application{
                 ItemCrianca.setIndex(tabela.getSelectionModel().getSelectedIndex());
                 
                 try {
-                    new ItemCrianca().start(new Stage());
+                    new ItemCrianca().start(ListarCrianca.getStage());
                 } catch (Exception ex) {
                     Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                criancas.setAll(Dao.listar(Crianca.class));
             }
         });
     }
@@ -156,5 +161,5 @@ public class ListarCrianca extends Application{
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }
