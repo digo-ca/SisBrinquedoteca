@@ -9,6 +9,8 @@ import cadastro.CadastroOcorrencia;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXDialog;
+import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import entidade.Brinquedo;
 import entidade.DiarioDeBordo;
@@ -31,6 +33,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
@@ -66,6 +70,8 @@ public class DiarioBordo extends Application{
     private TableColumn descricao;
     private TableColumn colunaMonitor;
     
+    private StackPane stackPane;
+    
     Monitor monitor;
     DiarioDeBordo db;
     
@@ -96,7 +102,7 @@ public class DiarioBordo extends Application{
                 
                 Dao.salvar(db);
                 dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                txMAbriu.setText(db.getMonitorAbriu()+"");
+                preencheTela(db);
             }
         }
         //==================================================================================================================
@@ -234,10 +240,10 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if(cbBrinquedos.getSelectionModel().getSelectedIndex() != -1){
-                    //db.getBrinquedosMaisUsados().add((Brinquedo) cbBrinquedos.getSelectionModel().getSelectedItem());
-                    //Dao.salvar(db);
+                    db.getBrinquedosMaisUsados().add((Brinquedo) cbBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().add(cbBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().remove(cbBrinquedos.getSelectionModel().getSelectedItem());
+                    Dao.salvar(db);
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
                 }
@@ -247,8 +253,10 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if(tabelaBrinquedos.getSelectionModel().getSelectedIndex() != -1){
+                    db.getBrinquedosMaisUsados().remove((Brinquedo) tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().add(tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().remove(tabelaBrinquedos.getSelectionModel().getSelectedItem());
+                    Dao.salvar(db);
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
