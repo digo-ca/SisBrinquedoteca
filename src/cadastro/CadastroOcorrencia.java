@@ -86,6 +86,7 @@ public class CadastroOcorrencia extends Application{
         taDescricao.setPrefSize(220, 100);
         pane.getChildren().add(taDescricao);
         cbMonitor = new JFXComboBox(listMonitor);
+        cbMonitor.getSelectionModel().select(monitor);
         cbMonitor.setDisable(true);
         pane.getChildren().add(cbMonitor);
         
