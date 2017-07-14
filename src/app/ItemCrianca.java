@@ -7,6 +7,8 @@ package app;
 
 import cadastro.CadastroCrianca;
 import entidade.Crianca;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
@@ -37,7 +39,7 @@ public class ItemCrianca extends Application {
     private Label lFoto;
     private Label lNome;
     //private Label lNome;
-    private Label lIdade;
+    private Label lNascimento;
     private TableView tabelaResponsaveis;
     private TableColumn colunaId;
     private TableColumn colunaNome;
@@ -69,7 +71,7 @@ public class ItemCrianca extends Application {
         lFoto.setStyle("-fx-border-color: blue");
         lFoto.setPrefSize(200, 220);
         lNome = new Label();
-        lIdade = new Label();
+        lNascimento = new Label();
         tabelaResponsaveis = new TableView();
         
         colunaId = new TableColumn("Id");
@@ -85,15 +87,15 @@ public class ItemCrianca extends Application {
         
         bEditar = new Button("Editar");
         bSair = new Button("Sair");
-        pane.getChildren().addAll(lNome, lFoto, lIdade, bEditar, bSair, tabelaResponsaveis);
+        pane.getChildren().addAll(lNome, lFoto, lNascimento, bEditar, bSair, tabelaResponsaveis);
         
         initLayout();
         
     }
     
-    public void initValues(){
+    public void initValues() throws ParseException{
         lNome.setText("Nome: "+crianca.getNome());
-        lIdade.setText("Idade: "+crianca.getIdade());
+        lNascimento.setText("Data de nascimento: "+crianca.getNascimento());
         tabelaResponsaveis.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
     }
     
@@ -109,7 +111,11 @@ public class ItemCrianca extends Application {
                     Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 crianca = (Crianca) Dao.busca(crianca.getId(), Crianca.class);;
-                initValues();
+                try {
+                    initValues();
+                } catch (ParseException ex) {
+                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         bSair.setOnAction(new EventHandler<ActionEvent>() {
@@ -126,8 +132,8 @@ public class ItemCrianca extends Application {
         lFoto.setLayoutY(10);
         lNome.setLayoutX(250);
         lNome.setLayoutY(10);
-        lIdade.setLayoutX(250);
-        lIdade.setLayoutY(50);
+        lNascimento.setLayoutX(250);
+        lNascimento.setLayoutY(50);
         bEditar.setLayoutX(602);
         bEditar.setLayoutY(255);
         bSair.setLayoutX(560);

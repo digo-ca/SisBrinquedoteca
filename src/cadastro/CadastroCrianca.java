@@ -7,6 +7,7 @@ package cadastro;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import entidade.Crianca;
 import entidade.Estado;
@@ -19,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +68,7 @@ public class CadastroCrianca extends Application {
     private Label lFoto;
 
     private JFXTextField txNome;
-    private JFXTextField txIdade;
+    private JFXDatePicker dpNascimento;
     private JFXTextField txEscola;
     private JFXComboBox cbResponsavel;
 
@@ -139,10 +142,10 @@ public class CadastroCrianca extends Application {
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
         pane.getChildren().add(txNome);
-        txIdade = new JFXTextField();
-        txIdade.setPromptText("Idade");
-        txIdade.setLabelFloat(true);
-        pane.getChildren().add(txIdade);
+        dpNascimento = new JFXDatePicker();
+        dpNascimento.setPromptText("Data de Nascimento");
+        //txIdade.setLabelFloat(true);
+        pane.getChildren().add(dpNascimento);
         txEscola = new JFXTextField();
         txEscola.setPrefWidth(220);
         txEscola.setPromptText("Escola");
@@ -204,8 +207,8 @@ public class CadastroCrianca extends Application {
 
         txNome.setLayoutX(10);
         txNome.setLayoutY(20);
-        txIdade.setLayoutX(10);
-        txIdade.setLayoutY(70);
+        dpNascimento.setLayoutX(10);
+        dpNascimento.setLayoutY(70);
         txEscola.setLayoutX(10);
         txEscola.setLayoutY(120);
         cbResponsavel.setLayoutX(10);
@@ -266,7 +269,7 @@ public class CadastroCrianca extends Application {
                     crianca = new Crianca();
                 }
                 crianca.setNome(txNome.getText());
-                crianca.setIdade(Integer.parseInt(txIdade.getText()));
+                crianca.setNascimento(Date.from(dpNascimento.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
                 crianca.setEscola(txEscola.getText());
                 crianca.setResponsaveis(tabela.getItems());
                 crianca.setFoto(bImagem);
@@ -352,7 +355,8 @@ public class CadastroCrianca extends Application {
 
     public void preencheTela() {
         txNome.setText(crianca.getNome());
-        txIdade.setText(crianca.getIdade() + "");
+        //txIdade.setText(crianca.getIdade() + "");
+        dpNascimento.setValue(crianca.getNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         txEscola.setText(crianca.getEscola());
         tabela.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
         cbResponsavel.getItems().removeAll(crianca.getResponsaveis());

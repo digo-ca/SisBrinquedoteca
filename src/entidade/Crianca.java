@@ -1,6 +1,7 @@
 package entidade;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
@@ -22,7 +23,8 @@ public class Crianca implements Serializable{
     private String nome;
 
     @Column(nullable = false)
-    private Integer idade;
+    @Temporal(TemporalType.DATE)
+    private Date nascimento;
 
     @Column(length = 100)
     private String escola;
@@ -59,12 +61,12 @@ public class Crianca implements Serializable{
         this.nome = nome;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public Date getNascimento() {
+        return nascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setNascimento(Date nascimento) {
+        this.nascimento = nascimento;
     }
 
     public String getEscola() {
