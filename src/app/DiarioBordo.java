@@ -102,7 +102,7 @@ public class DiarioBordo extends Application{
                 
                 Dao.salvar(db);
                 dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                txMAbriu.setText(db.getMonitorAbriu()+"");
+                preencheTela(db);
             }
         }
         //==================================================================================================================
@@ -240,12 +240,12 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if(cbBrinquedos.getSelectionModel().getSelectedIndex() != -1){
-                    //db.getBrinquedosMaisUsados().add((Brinquedo) cbBrinquedos.getSelectionModel().getSelectedItem());
-                    //Dao.salvar(db);
+                    db.getBrinquedosMaisUsados().add((Brinquedo) cbBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().add(cbBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().remove(cbBrinquedos.getSelectionModel().getSelectedItem());
+                    Dao.salvar(db);
                 }else{
-                    //JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
+                    JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
                 }
             }
         });
@@ -253,8 +253,10 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if(tabelaBrinquedos.getSelectionModel().getSelectedIndex() != -1){
+                    db.getBrinquedosMaisUsados().remove((Brinquedo) tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().add(tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().remove(tabelaBrinquedos.getSelectionModel().getSelectedItem());
+                    Dao.salvar(db);
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
