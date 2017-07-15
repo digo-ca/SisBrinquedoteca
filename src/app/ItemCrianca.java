@@ -7,6 +7,11 @@ package app;
 
 import cadastro.CadastroCrianca;
 import entidade.Crianca;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
@@ -14,6 +19,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.Button;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -25,7 +31,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
+import javax.imageio.ImageIO;
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+import javax.swing.ImageIcon;
 import persistencia.Dao;
 
 /**
@@ -48,7 +59,7 @@ public class ItemCrianca extends Application {
     private static Stage stage;
     private static Crianca crianca;
     private static int index;
-    
+
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
@@ -69,37 +80,52 @@ public class ItemCrianca extends Application {
         img = new ImageView();
         lFoto = new Label("   Foto");
         lFoto.setStyle("-fx-border-color: blue");
-        lFoto.setPrefSize(200, 220);
+        //lFoto.setPrefSize(200, 220);
+        lFoto.setMaxSize(200, 220);
         lNome = new Label();
         lNascimento = new Label();
         tabelaResponsaveis = new TableView();
-        
+
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
-        
+
         colunaId.setCellValueFactory(new PropertyValueFactory("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
-        
+
         tabelaResponsaveis.getColumns().addAll(colunaId, colunaNome);
         //tabelaResponsaveis.setDisable(true);
         tabelaResponsaveis.setPrefSize(400, 150);
         tabelaResponsaveis.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
+
         bEditar = new Button("Editar");
         bSair = new Button("Sair");
         pane.getChildren().addAll(lNome, lFoto, lNascimento, bEditar, bSair, tabelaResponsaveis);
-        
+
         initLayout();
-        
+
     }
-    
-    public void initValues() throws ParseException{
-        lNome.setText("Nome: "+crianca.getNome());
-        lNascimento.setText("Data de nascimento: "+crianca.getNascimento());
+
+    public void initValues() throws ParseException, SQLException, SerialException, IOException{
+        lNome.setText("Nome: " + crianca.getNome());
+        lNascimento.setText("Data de nascimento: " + crianca.getNascimento());
         tabelaResponsaveis.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
+        //exibeFoto();
     }
     
-    public void initListeners(){
+    public void exibeFoto() throws IOException{
+        byte[] foto = null;
+        BufferedImage buffer = null;
+        buffer = ImageIO.read(new ByteArrayInputStream(crianca.getFoto()));
+        Image imagem = SwingFXUtils.toFXImage(buffer, null);
+        img.setImage(imagem);
+        img.setFitHeight(lFoto.getHeight());
+        img.setFitWidth(lFoto.getWidth());
+        
+        lFoto.setText("");
+        lFoto.setGraphic(img);
+    }
+
+    public void initListeners() {
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -115,6 +141,10 @@ public class ItemCrianca extends Application {
                     initValues();
                 } catch (ParseException ex) {
                     Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -122,12 +152,12 @@ public class ItemCrianca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 ItemCrianca.getStage().hide();
-                
+
             }
         });
     }
-    
-    public void initLayout(){
+
+    public void initLayout() {
         lFoto.setLayoutX(10);
         lFoto.setLayoutY(10);
         lNome.setLayoutX(250);
@@ -138,7 +168,7 @@ public class ItemCrianca extends Application {
         bEditar.setLayoutY(255);
         bSair.setLayoutX(560);
         bSair.setLayoutY(255);
-        
+
         tabelaResponsaveis.setLayoutX(250);
         tabelaResponsaveis.setLayoutY(80);
     }
@@ -162,8 +192,7 @@ public class ItemCrianca extends Application {
     public static void setIndex(int index) {
         ItemCrianca.index = index;
     }
-    
-    
+
     public static void main(String[] args) {
         launch(args);
     }
