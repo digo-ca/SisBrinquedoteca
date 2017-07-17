@@ -33,6 +33,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.AccessibleRole;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -127,7 +128,8 @@ public class CadastroCrianca extends Application {
         pane.setPrefSize(600, 400); //definindo o tamanho da janela de Login
         pane.getStyleClass().add("pane");
 
-        lFoto = new Label("            Foto");
+        lFoto = new Label("Foto");
+        lFoto.setAlignment(Pos.CENTER);
         //lFoto.setStyle("-fx-border-color: blue");
         lFoto.getStyleClass().add("lFoto");
         //lFoto.setPrefSize(105, 120);
@@ -314,9 +316,9 @@ public class CadastroCrianca extends Application {
             @Override
             public void handle(MouseEvent event) {
                 if (crianca == null) {
-                    lFoto.setText("      Inserir Foto");
+                    lFoto.setText("Inserir Foto");
                 } else {
-                    lFoto.setText("      Alterar Foto");
+                    lFoto.setText("Alterar Foto");
                 }
 
             }
