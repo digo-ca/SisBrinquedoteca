@@ -34,6 +34,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import listagem.ListarCrianca;
 import persistencia.Dao;
@@ -87,6 +88,9 @@ public class Principal extends Application {
     public void start(Stage parent) {
         initComponents();
         BorderPane root = new BorderPane();
+        BorderPane rootGrid = new BorderPane();
+        VBox vboxSuperior = new VBox();
+        VBox vboxInferior = new VBox();
         
         root.setTop(menuBar);
         root.getStyleClass().add("raiz");
@@ -94,23 +98,18 @@ public class Principal extends Application {
         scene.getStylesheets().add("css/style.css");
         //Scene scene = new Scene(root, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
         
-        GridPane.setHalignment(bDiario, HPos.LEFT);
+        vboxSuperior.getChildren().addAll(bDiario,listar);
+        vboxInferior.getChildren().add(sair);
+
+        rootGrid.setTop(vboxSuperior);
+        rootGrid.setBottom(vboxInferior);
+
         bDiario.setPrefSize(100, 40);
-        
-        
-        grid.add(bDiario, 0, 0);
-        GridPane.setHalignment(listar, HPos.LEFT);
         listar.setPrefSize(100, 40);
-        grid.add(listar, 0, 1);
+        sair.setPrefSize(100, 40);  
         
-        GridPane.setHalignment(sair, HPos.LEFT);
-        sair.setPrefSize(100, 40);
-        grid.add(sair, 0, 27);
-        
-        
-        grid.getStyleClass().add("grid");
-        grid.setVgap(20);
-        root.setLeft(grid);
+        rootGrid.getStyleClass().add("grid");
+        root.setLeft(rootGrid);
         
         itemSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
