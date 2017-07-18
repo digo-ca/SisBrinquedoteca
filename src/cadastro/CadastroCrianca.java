@@ -378,7 +378,6 @@ public class CadastroCrianca extends Application {
         img.setImage(imagem);
         img.setFitWidth(lFoto.getMaxWidth());
         img.setFitHeight(lFoto.getMaxHeight());
-        //img.setPreserveRatio(true);
         
         lFoto.setText("");
         lFoto.setGraphic(img);
