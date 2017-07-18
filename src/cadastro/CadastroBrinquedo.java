@@ -65,6 +65,8 @@ public class CadastroBrinquedo extends Application {
 
     private JFXTextField txNome;
     private JFXTextField txFabricante;
+    private JFXTextField txFaixaEtaria;
+    
     private JFXComboBox cbEstado;
     private JFXComboBox cbClassificacao;
 
@@ -115,7 +117,7 @@ public class CadastroBrinquedo extends Application {
 
     private void initComponents() {
         pane = new AnchorPane();
-        pane.setPrefSize(400, 250);
+        pane.setPrefSize(500, 300);
         pane.getStyleClass().add("pane");
 
         lFoto = new Label("            Foto");
@@ -136,13 +138,18 @@ public class CadastroBrinquedo extends Application {
         txFabricante.setLabelFloat(true);
         txFabricante.setPrefWidth(250);
         pane.getChildren().add(txFabricante);
+        
+        txFaixaEtaria = new JFXTextField();
+        txFaixaEtaria.setPromptText("Faixa Etária: ex 5-10");
+        txFaixaEtaria.setLabelFloat(true);
+        pane.getChildren().add(txFaixaEtaria);
+        
         cbEstado = new JFXComboBox(FXCollections.observableArrayList(Estado.values()));
         cbEstado.setPromptText("Estado");
         cbEstado.setLabelFloat(true);
-        //cbEstado.setEditable(true);
-
-        //cbEstado.setItems();
         pane.getChildren().add(cbEstado);
+        
+        
 
         cbClassificacao = new JFXComboBox(FXCollections.observableArrayList(classificacoes));
         cbClassificacao.setPromptText("Classificação");
@@ -161,7 +168,7 @@ public class CadastroBrinquedo extends Application {
     }
 
     private void initLayout() {
-        lFoto.setLayoutX(320);
+        lFoto.setLayoutX(420);
         lFoto.setLayoutY(10);
 
         txNome.setLayoutX(10);
@@ -169,14 +176,17 @@ public class CadastroBrinquedo extends Application {
         txFabricante.setLayoutX(10);
         txFabricante.setLayoutY(70);
         cbEstado.setLayoutX(10);
-        cbEstado.setLayoutY(120);
+        cbEstado.setLayoutY(170);
         cbClassificacao.setLayoutX(10);
-        cbClassificacao.setLayoutY(170);
+        cbClassificacao.setLayoutY(220);
+        
+        txFaixaEtaria.setLayoutX(10);
+        txFaixaEtaria.setLayoutY(120);
 
-        btCadastrar.setLayoutX(360);
-        btCadastrar.setLayoutY(230);
-        btCancelar.setLayoutX(290);
-        btCancelar.setLayoutY(230);
+        btCadastrar.setLayoutX(457);
+        btCadastrar.setLayoutY(280);
+        btCancelar.setLayoutX(390);
+        btCancelar.setLayoutY(280);
     }
 
     private void initListeners() {
@@ -190,8 +200,8 @@ public class CadastroBrinquedo extends Application {
                 b.setEstado((Estado) cbEstado.getSelectionModel().getSelectedItem());
                 b.setClassificacao((Classificacao) cbClassificacao.getSelectionModel().getSelectedItem());
                 b.setFoto(bImagem);
+                b.setFaixaEtaria(txFaixaEtaria.getText());
                 Dao.salvar(b);
-                //JOptionPane.showMessageDialog(null, "Brinquedo Cadastrado");
                 CadastroBrinquedo.getStage().hide();
             }
         });

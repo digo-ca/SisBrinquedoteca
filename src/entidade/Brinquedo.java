@@ -43,6 +43,17 @@ public class Brinquedo implements Serializable {
     
     private byte[] foto;
     
+    @Column(name = "faixa_etaria")
+    private String faixaEtaria;
+
+    public String getFaixaEtaria() {
+        return faixaEtaria;
+    }
+
+    public void setFaixaEtaria(String faixaEtaria) {
+        this.faixaEtaria = faixaEtaria;
+    }
+    
     @ManyToOne
     private Classificacao classificacao;
 
