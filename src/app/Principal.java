@@ -327,6 +327,18 @@ public class Principal extends Application {
                 }
             }
         });
+        alteraSenha.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AlteraSenha novaSenha = new AlteraSenha();
+                novaSenha.setMonitor(monitor);
+                try {
+                    novaSenha.start(Principal.stage);
+                } catch (Exception ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
     }
     
     public static Stage getStage() {
