@@ -7,6 +7,7 @@ package app;
 
 import listagem.ListarResponsavel;
 import cadastro.CadastroBrinquedo;
+import cadastro.CadastroClassificacao;
 import cadastro.CadastroCrianca;
 import cadastro.CadastroEscola;
 import cadastro.CadastroLivro;
@@ -63,6 +64,7 @@ public class Principal extends Application {
     private MenuItem itemMonitor;
     private MenuItem itemVisita;
     private MenuItem itemVisitaEscola;
+    private MenuItem itemClassificacao;
     
     private MenuItem itemLCrianca;
     private MenuItem itemSair;
@@ -164,6 +166,7 @@ public class Principal extends Application {
         itemMonitor = new MenuItem("Monitor");
         itemVisita = new MenuItem("Visita");
         itemVisitaEscola = new MenuItem("Visita de Escola");
+        itemClassificacao = new MenuItem("Classificação");
 
         itemLCrianca = new MenuItem("Criança");
         itemLResp = new MenuItem("Responsável");
@@ -182,7 +185,7 @@ public class Principal extends Application {
 
         // Add menuItems to the Menus
         if(monitor.getSupervisor()){
-            MenuCad.getItems().add(itemMonitor);
+            MenuCad.getItems().addAll(itemMonitor, itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
         mListar.getItems().addAll(itemLCrianca, itemLResp);
@@ -275,6 +278,17 @@ public class Principal extends Application {
                 cve.setMonitor(monitor);
                 try {
                     cve.start(Principal.stage);
+                } catch (Exception ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        itemClassificacao.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    new CadastroClassificacao().start(Principal.stage);
                 } catch (Exception ex) {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }
