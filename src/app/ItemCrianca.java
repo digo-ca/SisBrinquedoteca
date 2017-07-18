@@ -67,6 +67,7 @@ public class ItemCrianca extends Application {
         stage.setTitle("Criança");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(parent);
         stage.showAndWait();
     }
 
