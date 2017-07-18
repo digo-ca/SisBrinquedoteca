@@ -12,6 +12,7 @@ import com.jfoenix.controls.JFXTextField;
 import entidade.Crianca;
 import entidade.Estado;
 import entidade.Responsavel;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -30,6 +31,7 @@ import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -52,6 +54,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 import javax.management.Notification;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -343,6 +346,7 @@ public class CadastroCrianca extends Application {
         });
     }
 
+
     private ObservableList<Responsavel> findItens() {
         ObservableList<Responsavel> itensEncontrados = FXCollections.observableArrayList();
 
@@ -356,16 +360,28 @@ public class CadastroCrianca extends Application {
         return itensEncontrados;
     }
 
-    public void preencheTela() {
+    public void preencheTela() throws IOException {
         txNome.setText(crianca.getNome());
         //txIdade.setText(crianca.getIdade() + "");
         dpNascimento.setValue(crianca.getNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         txEscola.setText(crianca.getEscola());
         tabela.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
         cbResponsavel.getItems().removeAll(crianca.getResponsaveis());
-        //Convertendo byte para imagem
-        byte[] b = null;
-
+        exibeFoto();
+    }
+    
+    public void exibeFoto() throws IOException{
+        byte[] foto = null;
+        BufferedImage buffer = null;
+        buffer = ImageIO.read(new ByteArrayInputStream(crianca.getFoto()));
+        Image imagem = SwingFXUtils.toFXImage(buffer, null);                
+        img.setImage(imagem);
+        img.setFitWidth(lFoto.getMaxWidth());
+        img.setFitHeight(lFoto.getMaxHeight());
+        //img.setPreserveRatio(true);
+        
+        lFoto.setText("");
+        lFoto.setGraphic(img);
     }
 
     public static Stage getStage() {
