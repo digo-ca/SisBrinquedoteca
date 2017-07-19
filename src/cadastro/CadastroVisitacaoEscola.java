@@ -286,7 +286,7 @@ public class CadastroVisitacaoEscola extends Application {
                 }
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
-                visitaEscola.setData(Date.from(cData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                visitaEscola.setData(cData.getValue());
                 visitaEscola.setPeriodo((Periodo) cbPeriodo.getSelectionModel().getSelectedItem());
                 visitaEscola.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
                 visitaEscola.setEscola((Escola) cbEscola.getSelectionModel().getSelectedItem());

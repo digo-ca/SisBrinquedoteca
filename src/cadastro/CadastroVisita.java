@@ -189,7 +189,7 @@ public class CadastroVisita extends Application{
                 if(visita == null){
                     visita = new Visita();
                 }
-                visita.setDia(Date.from(cData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                visita.setDia(cData.getValue());
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 try {
                     visita.setHoraEntrada(sdf.parse(tpHoraEntrada.getValue()+""));
@@ -224,7 +224,7 @@ public class CadastroVisita extends Application{
     }
     
     public void preencheTela(){
-        cData.setValue(visita.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        cData.setValue(visita.getDia());
         tpHoraEntrada.setValue(LocalTime.parse((CharSequence) visita.getHoraEntrada()));
         tpHoraSaida.setValue(LocalTime.parse((CharSequence) visita.getHoraSaida()));
         cbCrianca.getSelectionModel().select(visita.getCrianca());

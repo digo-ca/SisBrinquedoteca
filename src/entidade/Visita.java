@@ -6,6 +6,7 @@
 package entidade;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,8 +30,8 @@ public class Visita implements Serializable {
     
     
     //verificar esses atributos///////////////////////////////////////////////////
-    @Temporal(TemporalType.DATE)
-    private Date dia;
+    //@Temporal(TemporalType.DATE)
+    private LocalDate dia;
     
     @Column(name = "hora_entrada")
     @Temporal(TemporalType.TIME)
@@ -54,11 +55,11 @@ public class Visita implements Serializable {
         this.id = id;
     }
 
-    public Date getDia() {
+    public LocalDate getDia() {
         return dia;
     }
 
-    public void setDia(Date dia) {
+    public void setDia(LocalDate dia) {
         this.dia = dia;
     }
 

@@ -6,6 +6,7 @@
 package entidade;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -30,8 +31,8 @@ public class VisitacaoEscola implements Serializable{
     private Integer id;
     
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date data;
+    //@Temporal(TemporalType.DATE)
+    private LocalDate data;
     
     @Column(nullable = false)
     private Periodo periodo;
@@ -64,11 +65,11 @@ public class VisitacaoEscola implements Serializable{
         this.id = id;
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(LocalDate data) {
         this.data = data;
     }
     
