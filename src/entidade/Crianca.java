@@ -1,7 +1,7 @@
 package entidade;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.*;
 
@@ -22,9 +22,9 @@ public class Crianca implements Serializable{
     @Column(length = 50)
     private String nome;
 
-    @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date nascimento;
+    //Column(nullable = false)
+//    @Temporal(TemporalType.DATE)
+    private LocalDate nascimento;
 
     @Column(length = 100)
     private String escola;
@@ -34,7 +34,7 @@ public class Crianca implements Serializable{
     
     @ManyToMany
     @JoinTable(name = "Crianca_Responsavel")
-    private List<Responsavel> responsaveis;
+    private List<Responsavel> responsaveis;    
 
     //Getters e Setters===============================
     public List<Responsavel> getResponsaveis() {
@@ -61,11 +61,11 @@ public class Crianca implements Serializable{
         this.nome = nome;
     }
 
-    public Date getNascimento() {
+    public LocalDate getNascimento() {
         return nascimento;
     }
 
-    public void setNascimento(Date nascimento) {
+    public void setNascimento(LocalDate nascimento) {
         this.nascimento = nascimento;
     }
 
