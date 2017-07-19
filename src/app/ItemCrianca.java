@@ -12,6 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Button;
@@ -33,7 +35,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialException;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**
@@ -106,7 +107,7 @@ public class ItemCrianca extends Application {
 
     public void initValues() throws ParseException, SQLException, SerialException, IOException{
         lNome.setText("Nome: " + crianca.getNome());
-        lNascimento.setText("Data de nascimento: " + crianca.getNascimento());
+        lNascimento.setText("Data de nascimento: " + (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(crianca.getNascimento())));
         tabelaResponsaveis.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
         if(crianca.getFoto() != null)
             exibeFoto();

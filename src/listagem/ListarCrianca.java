@@ -7,21 +7,18 @@ package listagem;
 
 import app.ItemCrianca;
 import entidade.Crianca;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -29,7 +26,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**
@@ -43,7 +39,7 @@ public class ListarCrianca extends Application {
     private TableView tabela;
     private TableColumn colunaId;
     private TableColumn colunaNome;
-    private TableColumn colunaIdade;
+    private TableColumn<Crianca, LocalDate> colunaNascimento;
     private TableColumn colunaDetalhes;
 
     private static Stage stage;
@@ -77,14 +73,31 @@ public class ListarCrianca extends Application {
         tabela = new TableView();
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
-        colunaIdade = new TableColumn("Idade");
+        colunaNascimento = new TableColumn("D. Nascimento");
         colunaDetalhes = new TableColumn("Detalhes");
 
         colunaId.setCellValueFactory(new PropertyValueFactory("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
-        colunaIdade.setCellValueFactory(new PropertyValueFactory("idade"));
+        colunaNascimento.setCellValueFactory(new PropertyValueFactory("nascimento"));
         colunaDetalhes.setCellValueFactory(new PropertyValueFactory("detalhes"));
 
+        DateTimeFormatter myDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        colunaNascimento.setCellFactory(column -> {
+            return new TableCell<Crianca, LocalDate>() {
+                @Override
+                protected void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (item == null || empty) {
+                        setText(null);
+                        setStyle("");
+                    } else {
+                        setText(myDateFormatter.format(item));
+                    }
+                }
+            };
+        });
         tabela.setPrefSize(785, 550);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -93,8 +106,7 @@ public class ListarCrianca extends Application {
         //detalhes = new Button("Detalhes");
         //colunaDetalhes.setGraphic(detalhes);
         initLayout();
-        tabela.getColumns().addAll(colunaId, colunaNome, colunaIdade, colunaDetalhes);
-
+        tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento, colunaDetalhes);
         pane.getChildren().addAll(txPesquisa, tabela, sair);
     }
 
@@ -149,20 +161,6 @@ public class ListarCrianca extends Application {
             });
             return row;
         });
-//        tabela.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-//                ItemCrianca.setCrianca((Crianca) tabela.getSelectionModel().getSelectedItem());
-//                
-//                ItemCrianca.setIndex(tabela.getSelectionModel().getSelectedIndex());
-//                
-//                try {
-//                    new ItemCrianca().start(ListarCrianca.getStage());
-//                } catch (Exception ex) {
-//                    Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
     }
 
     public ObservableList<Crianca> findItens() {
@@ -180,5 +178,5 @@ public class ListarCrianca extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    
 }
