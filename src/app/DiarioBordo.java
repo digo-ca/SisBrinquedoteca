@@ -58,6 +58,7 @@ public class DiarioBordo extends Application{
     private JFXButton bAddBrinquedos;
     private JFXButton bRemoveBrinquedos;
     private JFXButton bAddOcorrencia;
+    private JFXButton bEditaOcorrencia;
     private JFXButton bRemoveOcorrencia;
     
     
@@ -131,16 +132,19 @@ public class DiarioBordo extends Application{
         dpData.setEditable(false);
         pane.getChildren().add(dpData);
         txMAbriu = new JFXTextField();
+        txMAbriu.setEditable(false);
         txMAbriu.setPrefWidth(220);
         txMAbriu.setPromptText("Monitor Abriu");
         txMAbriu.setLabelFloat(true);
         pane.getChildren().add(txMAbriu);
         txMFechou = new JFXTextField();
+        txMFechou.setEditable(false);
         txMFechou.setPrefWidth(220);
         txMFechou.setPromptText("Monitor Fechou");
         txMFechou.setLabelFloat(true);
         pane.getChildren().add(txMFechou);
         txVisitas = new JFXTextField();
+        txVisitas.setEditable(false);
         txVisitas.setPrefWidth(90);
         txVisitas.setPromptText("Visitas");
         txVisitas.setLabelFloat(true);
@@ -152,15 +156,24 @@ public class DiarioBordo extends Application{
         pane.getChildren().add(cbBrinquedos);
         
         bAddBrinquedos = new JFXButton("Adicionar Brinquedo");
+        bAddBrinquedos.setPrefWidth(150);
         bAddBrinquedos.getStyleClass().add("btAddBrinquedo");
         pane.getChildren().add(bAddBrinquedos);
         bRemoveBrinquedos = new JFXButton("Remover Brinquedo");
+        bRemoveBrinquedos.setPrefWidth(150);
         bRemoveBrinquedos.getStyleClass().add("btRemoveBrinquedo");
         pane.getChildren().add(bRemoveBrinquedos);
         bAddOcorrencia = new JFXButton("Adicionar Ocorrência");
+        bAddOcorrencia.setPrefWidth(150);
         bAddOcorrencia.getStyleClass().add("btAddOcorrencia");
         pane.getChildren().add(bAddOcorrencia);
+        
+        bEditaOcorrencia = new JFXButton("Editar");
+        bEditaOcorrencia.setPrefWidth(150);
+        pane.getChildren().add(bEditaOcorrencia);
+        
         bRemoveOcorrencia = new JFXButton("Remover Ocorrência");
+        bRemoveOcorrencia.setPrefWidth(150);
         bRemoveOcorrencia.getStyleClass().add("btRemoveOcorrencia");
         pane.getChildren().add(bRemoveOcorrencia);
         
@@ -213,8 +226,10 @@ public class DiarioBordo extends Application{
         bRemoveBrinquedos.setLayoutY(242);
         bAddOcorrencia.setLayoutX(10);
         bAddOcorrencia.setLayoutY(340);
+        bEditaOcorrencia.setLayoutX(10);
+        bEditaOcorrencia.setLayoutY(380);
         bRemoveOcorrencia.setLayoutX(10);
-        bRemoveOcorrencia.setLayoutY(380);
+        bRemoveOcorrencia.setLayoutY(420);
         
         tabelaBrinquedos.setLayoutX(200);
         tabelaBrinquedos.setLayoutY(100);
@@ -227,12 +242,20 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 List<DiarioDeBordo> listaDiario = Dao.listar(DiarioDeBordo.class);
+                int existe = -1;
                 Date data = new Date();
                 data = Date.from(dpData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
                 for(int i = 0; i < listaDiario.size(); i++){
                     if(listaDiario.get(i).getDia().equals(data)){
                         preencheTela(listaDiario.get(i));
+                        existe = 0;
+                        //i = listaDiario.size();
                     }
+                }
+                if(existe == -1){
+                    txMAbriu.setText("");
+                    txMFechou.setText("");
+                    txVisitas.setText("");
                 }
             }
         });
@@ -272,8 +295,25 @@ public class DiarioBordo extends Application{
                 } catch (Exception ex) {
                     Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                tabelaOcorrencia.setItems(FXCollections.observableArrayList(Dao.listar(ItemDiarioDeBordo.class)));
                 //tabelaOcorrencia.getItems().clear();
                 //tabelaOcorrencia.setItems(FXCollections.observableArrayList(Dao.listar(ItemDiarioDeBordo.class)));
+            }
+        });
+        bEditaOcorrencia.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
+                    CadastroOcorrencia cad = new CadastroOcorrencia();
+                    cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    try {
+                        cad.start(DiarioBordo.stage);
+                    } catch (Exception ex) {
+                        Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
+                }
             }
         });
         bRemoveOcorrencia.setOnAction(new EventHandler<ActionEvent>() {

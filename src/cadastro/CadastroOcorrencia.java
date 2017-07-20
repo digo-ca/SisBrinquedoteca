@@ -48,6 +48,7 @@ public class CadastroOcorrencia extends Application{
     private JFXButton btCancelar;
     
     private Monitor monitor;
+    private ItemDiarioDeBordo ocorrencia;
     
     ObservableList<Monitor> listMonitor = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
     
@@ -55,10 +56,18 @@ public class CadastroOcorrencia extends Application{
         monitor = m;
     }
     
+    public void setOcorrencia(ItemDiarioDeBordo item){
+        ocorrencia = item;
+    }
+    
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(ocorrencia != null){
+            preencheTela();
+        }
+        
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro Ocorrência");
@@ -125,7 +134,9 @@ public class CadastroOcorrencia extends Application{
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ItemDiarioDeBordo ocorrencia = new ItemDiarioDeBordo();
+                if(ocorrencia == null){
+                    ocorrencia = new ItemDiarioDeBordo();
+                }
                 ocorrencia.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
                 ocorrencia.setDescricao(taDescricao.getText());
                 
@@ -135,6 +146,11 @@ public class CadastroOcorrencia extends Application{
                 
             }
         });
+    }
+    
+    public void preencheTela(){
+        cbMonitor.getSelectionModel().select(monitor);
+        taDescricao.setText(ocorrencia.getDescricao());
     }
     
     public static Stage getStage(){
