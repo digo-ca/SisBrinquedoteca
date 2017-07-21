@@ -7,6 +7,7 @@ package listagem;
 
 import cadastro.CadastroResponsavel;
 import com.jfoenix.controls.JFXButton;
+import entidade.Monitor;
 import entidade.Responsavel;
 import static java.awt.PageAttributes.MediaType.E;
 import static java.lang.Math.E;
@@ -54,6 +55,8 @@ public class ListarResponsavel extends Application {
     private JFXButton bRemover;
     private JFXButton bSair;
     private static Stage stage;
+    
+    private Monitor monitor;
 
     TableColumn colunaId;
     TableColumn colunaNome;
@@ -64,6 +67,10 @@ public class ListarResponsavel extends Application {
 
     List<Responsavel> responsaveis = Dao.listar(Responsavel.class);
     ObservableList<Responsavel> listItens = FXCollections.observableArrayList(responsaveis);
+    
+    public void setMonitor(Monitor m){
+        monitor = m;
+    }
 
     @Override
     public void start(Stage parent) {
@@ -91,7 +98,8 @@ public class ListarResponsavel extends Application {
         pane.getChildren().add(bEditar);
 
         bRemover = new JFXButton("Remover");
-        pane.getChildren().add(bRemover);
+        if(monitor.getSupervisor())
+            pane.getChildren().add(bRemover);
 
         bSair = new JFXButton("Sair");
         pane.getChildren().add(bSair);
