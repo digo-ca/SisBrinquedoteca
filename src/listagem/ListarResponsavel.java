@@ -59,6 +59,9 @@ public class ListarResponsavel extends Application {
     TableColumn colunaNome;
     TableColumn colunaTelefone;
     TableColumn colunaEndereco;
+    TableColumn colunaNumeroVinculo;
+    TableColumn colunaVinculo;
+    
     List<Responsavel> responsaveis = Dao.listar(Responsavel.class);
     ObservableList<Responsavel> listItens = FXCollections.observableArrayList(responsaveis);
 
@@ -99,18 +102,22 @@ public class ListarResponsavel extends Application {
         colunaNome = new TableColumn<>("Nome");
         colunaTelefone = new TableColumn<>("Telefone");
         colunaEndereco = new TableColumn<>("Endereço");
+        colunaNumeroVinculo = new TableColumn<>("Número de Vínculo");
+        colunaVinculo = new TableColumn<>("Vínculo");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colunaTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         colunaEndereco.setCellValueFactory(new PropertyValueFactory<>("endereco"));
+        colunaNumeroVinculo.setCellValueFactory(new PropertyValueFactory<>("numeroVinculo"));
+        colunaVinculo.setCellValueFactory(new PropertyValueFactory<>("vinculo"));
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 550);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         initLayout();
-        tabela.getColumns().addAll(colunaId, colunaNome, colunaTelefone, colunaEndereco);
+        tabela.getColumns().addAll(colunaId, colunaNome, colunaTelefone, colunaEndereco, colunaNumeroVinculo, colunaVinculo);
         pane.getChildren().addAll(txPesquisa, tabela);
     }
 
@@ -179,6 +186,8 @@ public class ListarResponsavel extends Application {
                             Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
                 }
             }
         });
