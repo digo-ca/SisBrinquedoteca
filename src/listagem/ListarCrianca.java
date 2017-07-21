@@ -40,7 +40,6 @@ public class ListarCrianca extends Application {
     private TableColumn colunaId;
     private TableColumn colunaNome;
     private TableColumn<Crianca, LocalDate> colunaNascimento;
-    private TableColumn colunaDetalhes;
 
     private static Stage stage;
 
@@ -74,12 +73,10 @@ public class ListarCrianca extends Application {
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
         colunaNascimento = new TableColumn("D. Nascimento");
-        colunaDetalhes = new TableColumn("Detalhes");
 
         colunaId.setCellValueFactory(new PropertyValueFactory("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory("nome"));
         colunaNascimento.setCellValueFactory(new PropertyValueFactory("nascimento"));
-        colunaDetalhes.setCellValueFactory(new PropertyValueFactory("detalhes"));
 
         DateTimeFormatter myDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -103,10 +100,8 @@ public class ListarCrianca extends Application {
 
         sair = new Button("Sair");
 
-        //detalhes = new Button("Detalhes");
-        //colunaDetalhes.setGraphic(detalhes);
         initLayout();
-        tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento, colunaDetalhes);
+        tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento);
         pane.getChildren().addAll(txPesquisa, tabela, sair);
     }
 
