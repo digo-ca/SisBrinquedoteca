@@ -61,7 +61,7 @@ public class ListarResponsavel extends Application {
     TableColumn colunaEndereco;
     TableColumn colunaNumeroVinculo;
     TableColumn colunaVinculo;
-    
+
     List<Responsavel> responsaveis = Dao.listar(Responsavel.class);
     ObservableList<Responsavel> listItens = FXCollections.observableArrayList(responsaveis);
 
@@ -171,22 +171,24 @@ public class ListarResponsavel extends Application {
                 }
             }
         });
-        
+
         bRemover.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(tabela.getSelectionModel().getSelectedIndex() != -1){
-                    if(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0){
+                if (tabela.getSelectionModel().getSelectedIndex() != -1) {
+                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
                         try {
                             Dao.remover((Responsavel) tabela.getSelectionModel().getSelectedItem());
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
-                        } catch (RollbackException re){
+                        } catch (RollbackException re) {
                             JOptionPane.showMessageDialog(null, "Impossível remover item, pois o mesmo está alocado a uma criança");
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                        ObservableList<Responsavel> list = FXCollections.observableArrayList(Dao.consultarTodos(Responsavel.class));
+                        tabela.getItems().clear();
+                        tabela.setItems(list);
                     }
-                }else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
                 }
             }
