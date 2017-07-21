@@ -309,7 +309,7 @@ public class Principal extends Application {
         itemLResp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                new ListarResponsavel().start(new Stage());
+                new ListarResponsavel().start(Principal.stage);
             }
         });
         
