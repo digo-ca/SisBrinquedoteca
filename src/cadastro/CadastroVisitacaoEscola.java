@@ -309,7 +309,7 @@ public class CadastroVisitacaoEscola extends Application {
                     List<ItemDiarioDeBordo>  list = new LinkedList<>();
                     list.add(item);
 
-                    diario.setDia(new Date(System.currentTimeMillis()));
+                    diario.setDia(LocalDate.now());
                     diario.setMonitorAbriu(monitor);
                     
                     diario.setOcorrencias(list);

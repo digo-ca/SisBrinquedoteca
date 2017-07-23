@@ -22,8 +22,8 @@ public class Crianca implements Serializable{
     @Column(length = 50)
     private String nome;
 
-    //Column(nullable = false)
 //    @Temporal(TemporalType.DATE)
+    @Column(nullable = false, columnDefinition = "DATE")
     private LocalDate nascimento;
 
     @Column(length = 100)
