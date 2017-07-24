@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.HPos;
@@ -39,6 +40,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import listagem.ListarCrianca;
 import listagem.ListarEscola;
+import listagem.ListarLivro;
 import persistencia.Dao;
 
 /**
@@ -74,6 +76,7 @@ public class Principal extends Application {
     private Menu itemNomeUser;
     private MenuItem itemLResp;
     private MenuItem itemLEscola;
+    private MenuItem itemLLivro;
     
     private Button bDiario;
     private Button listar;
@@ -175,6 +178,7 @@ public class Principal extends Application {
         itemLCrianca = new MenuItem("Criança");
         itemLResp = new MenuItem("Responsável");
         itemLEscola = new MenuItem("Escola");
+        itemLLivro = new MenuItem("Livro");
         
         
         itemSair = new MenuItem("Sair");
@@ -193,7 +197,7 @@ public class Principal extends Application {
             MenuCad.getItems().addAll(itemMonitor, itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola);
+        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
@@ -326,6 +330,15 @@ public class Principal extends Application {
                 ListarEscola le = new ListarEscola();
                 le.setMonitor(monitor);
                 le.start(Principal.stage);
+            }
+        });
+        
+        itemLLivro.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarLivro lLivro = new ListarLivro();
+                lLivro.setMonitor(monitor);
+                lLivro.start(Principal.stage);
             }
         });
         

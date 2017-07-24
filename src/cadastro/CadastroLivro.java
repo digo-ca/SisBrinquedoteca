@@ -50,10 +50,19 @@ public class CadastroLivro extends Application{
     private Button btCadastrar;
     private Button btCancelar;
     
+    private Livro livro;
+    
+    public void setLivro(Livro l){
+        livro = l;
+    }
+    
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(livro != null){
+            preencheTela();
+        }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de Livros");
@@ -138,7 +147,9 @@ public class CadastroLivro extends Application{
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Livro livro = new Livro();
+                if(livro == null)
+                    livro = new Livro();
+                
                 livro.setTitulo(txTitulo.getText());
                 livro.setAutor(txAutor.getText());
                 livro.setEditora(txEditora.getText());
@@ -149,6 +160,14 @@ public class CadastroLivro extends Application{
                 CadastroLivro.getStage().close();
             }
         });
+    }
+    
+    public void preencheTela(){
+        txTitulo.setText(livro.getTitulo());
+        txAutor.setText(livro.getAutor());
+        txEditora.setText(livro.getEditora());
+        taObservacoes.setText(livro.getObservacoes());
+        cbEstado.getSelectionModel().select(livro.getEstado());
     }
     
     public static Stage getStage(){
