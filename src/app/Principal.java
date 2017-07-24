@@ -368,6 +368,13 @@ public class Principal extends Application {
             }
         });
         
+        itemLVisitaEscola.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                
+            }
+        });
+        
         bDiario.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
