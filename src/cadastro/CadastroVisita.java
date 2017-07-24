@@ -86,6 +86,10 @@ public class CadastroVisita extends Application{
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        
+        if(visita != null){
+            preencheTela();
+        }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de Visitas");
@@ -191,13 +195,12 @@ public class CadastroVisita extends Application{
                 }
                 visita.setDia(cData.getValue());
                 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                try {
-                    visita.setHoraEntrada(sdf.parse(tpHoraEntrada.getValue()+""));
-                    visita.setHoraSaida(sdf.parse(tpHoraSaida.getValue()+""));
+                
+                    //visita.setHoraEntrada(sdf.parse(tpHoraEntrada.getValue()+""));
+                    visita.setHoraEntrada(tpHoraEntrada.getValue());
+                    //visita.setHoraSaida(sdf.parse(tpHoraSaida.getValue()+""));
+                    visita.setHoraSaida(tpHoraSaida.getValue());
                     //visita.setHoraEntrada(tpHoraEntrada.getValue()+"");
-                } catch (ParseException ex) {
-                    Logger.getLogger(CadastroVisita.class.getName()).log(Level.SEVERE, null, ex);
-                }
                 
                 visita.setCrianca((Crianca) cbCrianca.getSelectionModel().getSelectedItem());
                 visita.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
@@ -225,8 +228,9 @@ public class CadastroVisita extends Application{
     
     public void preencheTela(){
         cData.setValue(visita.getDia());
-        tpHoraEntrada.setValue(LocalTime.parse((CharSequence) visita.getHoraEntrada()));
-        tpHoraSaida.setValue(LocalTime.parse((CharSequence) visita.getHoraSaida()));
+        tpHoraEntrada.setValue(visita.getHoraEntrada());
+        //tpHoraSaida.setValue(LocalTime.parse((CharSequence) visita.getHoraSaida()));
+        tpHoraSaida.setValue(visita.getHoraSaida());
         cbCrianca.getSelectionModel().select(visita.getCrianca());
         cbMonitor.getSelectionModel().select(visita.getMonitor());
     }

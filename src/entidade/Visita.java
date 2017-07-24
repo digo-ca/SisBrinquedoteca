@@ -7,6 +7,7 @@ package entidade;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,12 +35,12 @@ public class Visita implements Serializable {
     private LocalDate dia;
     
     @Column(name = "hora_entrada")
-    @Temporal(TemporalType.TIME)
-    private Date horaEntrada;
+    //@Temporal(TemporalType.TIME)
+    private LocalTime horaEntrada;
     
     @Column(name = "hora_saida")
-    @Temporal(TemporalType.TIME)
-    private Date horaSaida;
+    //@Temporal(TemporalType.TIME)
+    private LocalTime horaSaida;
     
     @ManyToOne
     private Crianca crianca;
@@ -63,19 +64,19 @@ public class Visita implements Serializable {
         this.dia = dia;
     }
 
-    public Date getHoraEntrada() {
+    public LocalTime getHoraEntrada() {
         return horaEntrada;
     }
 
-    public void setHoraEntrada(Date horaEntrada) {
+    public void setHoraEntrada(LocalTime horaEntrada) {
         this.horaEntrada = horaEntrada;
     }
 
-    public Date getHoraSaida() {
+    public LocalTime getHoraSaida() {
         return horaSaida;
     }
 
-    public void setHoraSaida(Date horaSaida) {
+    public void setHoraSaida(LocalTime horaSaida) {
         this.horaSaida = horaSaida;
     }
 
