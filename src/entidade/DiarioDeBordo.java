@@ -41,8 +41,9 @@ public class DiarioDeBordo implements Serializable {
     private Integer id;
     
     
-    @Temporal(TemporalType.DATE)
-    private Date dia;
+//    @Temporal(TemporalType.DATE)
+    @Column(columnDefinition = "DATE")
+    private LocalDate dia;
     
       //@Column(name = "brinquedos_mais_usados")
       @ManyToMany(cascade = CascadeType.ALL)
@@ -72,11 +73,11 @@ public class DiarioDeBordo implements Serializable {
         this.id = id;
     }
 
-    public Date getDia() {
+    public LocalDate getDia() {
         return dia;
     }
 
-    public void setDia(Date dia) {
+    public void setDia(LocalDate dia) {
         this.dia = dia;
     }
 

@@ -209,7 +209,7 @@ public class CadastroVisita extends Application{
                 DiarioDeBordo d;
                 if(Dao.consultarDiarioHoje().isEmpty()){
                     d = new DiarioDeBordo();
-                    d.setDia(new Date(System.currentTimeMillis()));
+                    d.setDia(LocalDate.now());
                     d.setMonitorAbriu(monitor);
                     d.setVisitasNoDia(1);
                 }else{
