@@ -41,6 +41,7 @@ import javafx.stage.Stage;
 import listagem.ListarCrianca;
 import listagem.ListarEscola;
 import listagem.ListarLivro;
+import listagem.ListarMonitor;
 import persistencia.Dao;
 
 /**
@@ -77,6 +78,10 @@ public class Principal extends Application {
     private MenuItem itemLResp;
     private MenuItem itemLEscola;
     private MenuItem itemLLivro;
+    private MenuItem itemLMonitor;
+    private MenuItem itemLVisita;
+    private MenuItem itemLVisitaEscola;
+    private MenuItem itemLClassificacao;
     
     private Button bDiario;
     private Button listar;
@@ -179,6 +184,10 @@ public class Principal extends Application {
         itemLResp = new MenuItem("Responsável");
         itemLEscola = new MenuItem("Escola");
         itemLLivro = new MenuItem("Livro");
+        itemLMonitor = new MenuItem("Monitor");
+        itemLVisita = new MenuItem("Visita");
+        itemLVisitaEscola = new MenuItem("Visita de Escola");
+        itemLClassificacao = new MenuItem("Classificação");
         
         
         itemSair = new MenuItem("Sair");
@@ -197,7 +206,7 @@ public class Principal extends Application {
             MenuCad.getItems().addAll(itemMonitor, itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro);
+        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemClassificacao);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
@@ -339,6 +348,20 @@ public class Principal extends Application {
                 ListarLivro lLivro = new ListarLivro();
                 lLivro.setMonitor(monitor);
                 lLivro.start(Principal.stage);
+            }
+        });
+        itemLMonitor.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarMonitor lm = new ListarMonitor();
+                lm.setMonitor(monitor);
+                lm.start(Principal.stage);
+            }
+        });
+        itemLVisita.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ////////////////////////////
             }
         });
         

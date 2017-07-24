@@ -38,6 +38,12 @@ public class CadastroMonitor extends Application {
 
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
+    
+    private Monitor monitor;
+    
+    public void setMonitor(Monitor m){
+        monitor = m;
+    }
 
     @Override
     public void start(Stage parent) throws Exception {
@@ -134,19 +140,20 @@ public class CadastroMonitor extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (pfSenha.getText().equals(pfComfirmacaoSenha.getText())) {
-                    Monitor m = new Monitor();
-                    m.setNome(txNome.getText());
-                    m.setNomeUsuario(txNomeUser.getText());
-                    m.setSenha(pfSenha.getText());
-                    m.setSupervisor(chSupervisor.isSelected());
+                    if(monitor == null)
+                        monitor = new Monitor();
+                    monitor.setNome(txNome.getText());
+                    monitor.setNomeUsuario(txNomeUser.getText());
+                    monitor.setSenha(pfSenha.getText());
+                    monitor.setSupervisor(chSupervisor.isSelected());
 
-                    Dao.salvar(m);
-                    CadastroMonitor.getStage().close();
+                    Dao.salvar(monitor);
+                    CadastroMonitor.getStage().hide();
 
                     if (Dao.consultarTodos(Monitor.class).size() == 1) {
                         Principal principal = new Principal();
-                        principal.setMonitor(m);
-                        principal.start(new Stage());
+                        principal.setMonitor(monitor);
+                        principal.start(CadastroMonitor.stage);
                     }
                 } else {
                     final String cssDefault = "-fx-border-color: red;-fx-border-width: 1;";
@@ -155,6 +162,12 @@ public class CadastroMonitor extends Application {
                 }
             }
         });
+    }
+    
+    public void preencheTela(){
+        txNome.setText(monitor.getNome());
+       // if(monitor.getSupervisor())
+            //chSupervisor.
     }
 
     public static Stage getStage() {

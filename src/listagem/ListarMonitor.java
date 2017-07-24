@@ -1,8 +1,7 @@
 package listagem;
 
-import cadastro.CadastroLivro;
+import cadastro.CadastroMonitor;
 import com.jfoenix.controls.JFXButton;
-import entidade.Livro;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -29,7 +28,7 @@ import persistencia.Dao;
  *
  * @author Ivanildo
  */
-public class ListarLivro extends Application{
+public class ListarMonitor extends Application{
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -41,14 +40,10 @@ public class ListarLivro extends Application{
     private Monitor monitor;
 
     TableColumn colunaId;
-    TableColumn colunaTitulo;
-    TableColumn colunaAutor;
-    TableColumn colunaEditora;
-    TableColumn colunaObservacoes;
-    TableColumn colunaEstado;
+    TableColumn colunaNome;
 
-    List<Livro> livros = Dao.listar(Livro.class);
-    ObservableList<Livro> listItens = FXCollections.observableArrayList(livros);
+    List<Monitor> monitores = Dao.listar(Monitor.class);
+    ObservableList<Monitor> listItens = FXCollections.observableArrayList(monitores);
     
     public void setMonitor(Monitor m){
         monitor = m;
@@ -90,24 +85,16 @@ public class ListarLivro extends Application{
         //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
-        colunaTitulo = new TableColumn<>("Título");
-        colunaAutor = new TableColumn<>("Autor");
-        colunaEditora = new TableColumn<>("Editora");
-        colunaObservacoes = new TableColumn<>("Observações");
-        colunaEstado = new TableColumn<>("Estado");
+        colunaNome = new TableColumn<>("Nome");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
-        colunaAutor.setCellValueFactory(new PropertyValueFactory<>("autor"));
-        colunaEditora.setCellValueFactory(new PropertyValueFactory<>("editora"));
-        colunaObservacoes.setCellValueFactory(new PropertyValueFactory<>("observacoes"));
-        colunaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 550);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
-        tabela.getColumns().addAll(colunaId, colunaTitulo, colunaAutor, colunaEditora, colunaObservacoes, colunaEstado);
+        tabela.getColumns().addAll(colunaId, colunaNome);
         pane.getChildren().addAll(txPesquisa, tabela);
     }
 
@@ -138,25 +125,25 @@ public class ListarLivro extends Application{
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ListarLivro.stage.hide();
+                ListarMonitor.stage.hide();
             }
         });
 
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroLivro cl = new CadastroLivro();
+                CadastroMonitor cm = new CadastroMonitor();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    cl.setLivro((Livro) tabela.getSelectionModel().getSelectedItem());
+                    cm.setMonitor((Monitor) tabela.getSelectionModel().getSelectedItem());
                     
                     try {
-                        cl.start(ListarLivro.stage);
+                        cm.start(ListarMonitor.stage);
                     } catch (Exception ex) {
-                        Logger.getLogger(ListarLivro.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
                     
-                    ObservableList<Livro> list = FXCollections.observableArrayList(Dao.consultarTodos(Livro.class));
+                    ObservableList<Monitor> list = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
                     tabela.getItems().clear();
                     tabela.setItems(list);
                 } else {
@@ -171,13 +158,15 @@ public class ListarLivro extends Application{
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
                         
+                        
                         try {
-                            Dao.remover((Livro) tabela.getSelectionModel().getSelectedItem());
+                            Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
-                            Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         
-                        ObservableList<Livro> list = FXCollections.observableArrayList(Dao.consultarTodos(Livro.class));
+                        
+                        ObservableList<Monitor> list = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
                         tabela.getItems().clear();
                         tabela.setItems(list);
                     }
@@ -188,11 +177,11 @@ public class ListarLivro extends Application{
         });
     }
 
-    private ObservableList<Livro> findItens() {
-        ObservableList<Livro> itensEncontrados = FXCollections.observableArrayList();
+    private ObservableList<Monitor> findItens() {
+        ObservableList<Monitor> itensEncontrados = FXCollections.observableArrayList();
 
         for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getTitulo().equals(txPesquisa.getText())) {
+            if (listItens.get(i).getNome().equals(txPesquisa.getText())) {
                 itensEncontrados.add(listItens.get(i));
             }
         }
