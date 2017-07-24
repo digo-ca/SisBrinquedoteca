@@ -41,29 +41,38 @@ public class CadastroEscola  extends Application{
     
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
+    private Escola escola;
+    
+    public void setEscola(Escola e){
+        escola = e;
+    }
     
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        initLayout();
+        
+        if(escola != null){
+            preencheTela();
+        }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro Escola");
         
         stage.setScene(scene);
         stage.setResizable(false);
-        initLayout();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
         
         //CadastroEscola.stage = stage;
-        CadastroEscola.stage.showAndWait();
+        stage.showAndWait();
     }
     
     private void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(550, 290); //definindo o tamanho da janela de Login
+        pane.setPrefSize(550, 290);
         pane.getStyleClass().add("pane");
         
         txNome = new JFXTextField();
@@ -96,6 +105,7 @@ public class CadastroEscola  extends Application{
         btCancelar = new JFXButton("Cancelar");
         btCancelar.getStyleClass().add("btCancelar");
         pane.getChildren().add(btCancelar);
+        
     }
     private void initLayout(){
         txNome.setLayoutX(10);
@@ -126,7 +136,8 @@ public class CadastroEscola  extends Application{
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Escola escola = new Escola();
+                if(escola == null)
+                    escola = new Escola();
                 
                 escola.setNome(txNome.getText());
                 escola.setEndereco(txEndereco.getText());
@@ -138,6 +149,14 @@ public class CadastroEscola  extends Application{
                 CadastroEscola.getStage().hide();
             }
         });
+    }
+    
+    public void preencheTela(){
+        txNome.setText(escola.getNome());
+        txEndereco.setText(escola.getEndereco());
+        txResponsavel.setText(escola.getResponsavel());
+        txCgResponsavel.setText(escola.getCargoResponsavel());
+        txTelefone.setText(escola.getTelefone());
     }
     
     public static Stage getStage(){

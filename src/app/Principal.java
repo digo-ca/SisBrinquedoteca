@@ -38,6 +38,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import listagem.ListarCrianca;
+import listagem.ListarEscola;
 import persistencia.Dao;
 
 /**
@@ -66,10 +67,13 @@ public class Principal extends Application {
     private MenuItem itemVisitaEscola;
     private MenuItem itemClassificacao;
     
+    
+    //Menus de listagem
     private MenuItem itemLCrianca;
     private MenuItem itemSair;
     private Menu itemNomeUser;
     private MenuItem itemLResp;
+    private MenuItem itemLEscola;
     
     private Button bDiario;
     private Button listar;
@@ -170,6 +174,7 @@ public class Principal extends Application {
 
         itemLCrianca = new MenuItem("Criança");
         itemLResp = new MenuItem("Responsável");
+        itemLEscola = new MenuItem("Escola");
         
         
         itemSair = new MenuItem("Sair");
@@ -188,7 +193,7 @@ public class Principal extends Application {
             MenuCad.getItems().addAll(itemMonitor, itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca, itemLResp);
+        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
@@ -312,6 +317,15 @@ public class Principal extends Application {
                 ListarResponsavel lr = new ListarResponsavel();
                 lr.setMonitor(monitor);
                 lr.start(Principal.stage);
+            }
+        });
+        
+        itemLEscola.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarEscola le = new ListarEscola();
+                le.setMonitor(monitor);
+                le.start(Principal.stage);
             }
         });
         
