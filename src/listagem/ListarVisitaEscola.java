@@ -1,18 +1,13 @@
 package listagem;
 
-import cadastro.CadastroVisita;
+import cadastro.CadastroVisitacaoEscola;
 import com.jfoenix.controls.JFXButton;
-import entidade.Crianca;
 import entidade.Monitor;
-import entidade.Visita;
+import entidade.VisitacaoEscola;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,11 +26,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.persistence.RollbackException;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-public class ListarVisita extends Application{
+/**
+ *
+ * @author Ivanildo
+ */
+public class ListarVisitaEscola extends Application{
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -48,13 +46,12 @@ public class ListarVisita extends Application{
 
     TableColumn colunaId;
     TableColumn colunaData;
-    TableColumn colunaHEntrada;
-    TableColumn colunaHSaida;
-    TableColumn colunaCrianca;
+    TableColumn colunaPeriodo;
     TableColumn colunaMonitor;
+    TableColumn colunaEscola;
 
-    List<Visita> visitas = Dao.listar(Visita.class);
-    ObservableList<Visita> listItens = FXCollections.observableArrayList(visitas);
+    List<VisitacaoEscola> visitas = Dao.listar(VisitacaoEscola.class);
+    ObservableList<VisitacaoEscola> listItens = FXCollections.observableArrayList(visitas);
     
     public void setMonitor(Monitor m){
         monitor = m;
@@ -92,26 +89,23 @@ public class ListarVisita extends Application{
         bSair = new JFXButton("Sair");
         pane.getChildren().add(bSair);
 
-        //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
         colunaData = new TableColumn<>("Data");
-        colunaHEntrada = new TableColumn<>("Hora de Entrada");
-        colunaHSaida = new TableColumn<>("Hora de Saída");
-        colunaCrianca = new TableColumn<>("Criança");
+        colunaPeriodo = new TableColumn<>("Período");
         colunaMonitor = new TableColumn<>("Monitor");
+        colunaEscola = new TableColumn<>("Escola");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaData.setCellValueFactory(new PropertyValueFactory<>("dia"));
-        colunaHEntrada.setCellValueFactory(new PropertyValueFactory<>("horaEntrada"));
-        colunaHSaida.setCellValueFactory(new PropertyValueFactory<>("horaSaida"));
-        colunaCrianca.setCellValueFactory(new PropertyValueFactory<>("crianca"));
+        colunaData.setCellValueFactory(new PropertyValueFactory<>("data"));
+        colunaPeriodo.setCellValueFactory(new PropertyValueFactory<>("periodo"));
         colunaMonitor.setCellValueFactory(new PropertyValueFactory<>("monitor"));
+        colunaEscola.setCellValueFactory(new PropertyValueFactory<>("escola"));
         
         DateTimeFormatter myDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         colunaData.setCellFactory(column -> {
-            return new TableCell<Visita, LocalDate>() {
+            return new TableCell<VisitacaoEscola, LocalDate>() {
                 @Override
                 protected void updateItem(LocalDate item, boolean empty) {
                     super.updateItem(item, empty);
@@ -126,30 +120,13 @@ public class ListarVisita extends Application{
             };
         });
         
-        DateTimeFormatter myTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        colunaHEntrada.setCellFactory((Object column) -> {
-            return new TableCell<Visita, LocalTime>() {
-                @Override
-                protected void updateItem(LocalTime item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        setText(myTimeFormatter.format(item));
-                    }
-                }
-            };
-        });
-        
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 550);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         initLayout();
-        tabela.getColumns().addAll(colunaId, colunaData, colunaHEntrada, colunaHSaida, colunaCrianca, colunaMonitor);
+        tabela.getColumns().addAll(colunaId, colunaData, colunaPeriodo, colunaMonitor, colunaEscola);
         pane.getChildren().addAll(txPesquisa, tabela);
     }
 
@@ -180,22 +157,22 @@ public class ListarVisita extends Application{
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ListarVisita.stage.hide();
+                ListarVisitaEscola.stage.hide();
             }
         });
 
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroVisita cv = new CadastroVisita();
+                CadastroVisitacaoEscola cv = new CadastroVisitacaoEscola();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    cv.setVisita((Visita) tabela.getSelectionModel().getSelectedItem());
+                    cv.setVisitaEscola((VisitacaoEscola) tabela.getSelectionModel().getSelectedItem());
                     try {
-                        cv.start(ListarVisita.stage);
+                        cv.start(ListarVisitaEscola.stage);
                     } catch (Exception ex) {
-                        Logger.getLogger(ListarVisita.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    ObservableList<Visita> list = FXCollections.observableArrayList(Dao.consultarTodos(Visita.class));
+                    ObservableList<VisitacaoEscola> list = FXCollections.observableArrayList(Dao.consultarTodos(VisitacaoEscola.class));
                     tabela.getItems().clear();
                     tabela.setItems(list);
                 } else {
@@ -210,11 +187,11 @@ public class ListarVisita extends Application{
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
                         try {
-                            Dao.remover((Visita) tabela.getSelectionModel().getSelectedItem());
+                            Dao.remover((VisitacaoEscola) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
-                            Logger.getLogger(ListarVisita.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        ObservableList<Visita> list = FXCollections.observableArrayList(Dao.consultarTodos(Visita.class));
+                        ObservableList<VisitacaoEscola> list = FXCollections.observableArrayList(Dao.consultarTodos(VisitacaoEscola.class));
                         tabela.getItems().clear();
                         tabela.setItems(list);
                     }
@@ -225,11 +202,11 @@ public class ListarVisita extends Application{
         });
     }
 
-    private ObservableList<Visita> findItens() {
-        ObservableList<Visita> itensEncontrados = FXCollections.observableArrayList();
+    private ObservableList<VisitacaoEscola> findItens() {
+        ObservableList<VisitacaoEscola> itensEncontrados = FXCollections.observableArrayList();
 
         for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getCrianca().getNome().equals(txPesquisa.getText())) {
+            if (listItens.get(i).getEscola().equals(txPesquisa.getText())) {
                 itensEncontrados.add(listItens.get(i));
             }
         }
