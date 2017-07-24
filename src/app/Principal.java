@@ -42,6 +42,7 @@ import listagem.ListarCrianca;
 import listagem.ListarEscola;
 import listagem.ListarLivro;
 import listagem.ListarMonitor;
+import listagem.ListarVisita;
 import persistencia.Dao;
 
 /**
@@ -361,7 +362,9 @@ public class Principal extends Application {
         itemLVisita.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ////////////////////////////
+                ListarVisita lv = new ListarVisita();
+                lv.setMonitor(monitor);
+                lv.start(Principal.stage);
             }
         });
         
