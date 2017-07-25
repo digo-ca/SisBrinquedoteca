@@ -156,9 +156,7 @@ public class ListarLivro extends Application{
                     }
                     
                     
-                    ObservableList<Livro> list = FXCollections.observableArrayList(Dao.consultarTodos(Livro.class));
-                    tabela.getItems().clear();
-                    tabela.setItems(list);
+                    tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
@@ -177,9 +175,8 @@ public class ListarLivro extends Application{
                             Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         
-                        ObservableList<Livro> list = FXCollections.observableArrayList(Dao.consultarTodos(Livro.class));
-                        tabela.getItems().clear();
-                        tabela.setItems(list);
+                        if(!Dao.listar(Livro.class).contains(tabela.getSelectionModel().getSelectedItem()))
+                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");

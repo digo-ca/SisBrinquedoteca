@@ -27,7 +27,6 @@ public class Responsavel implements Serializable {
     @Column(name = "numero_vinculo")
     private Integer numeroVinculo;
     
-    @Column(length = 15)
     private String vinculo;
 
     @ManyToMany(mappedBy = "responsaveis")

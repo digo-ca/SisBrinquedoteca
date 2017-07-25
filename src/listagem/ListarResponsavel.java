@@ -171,9 +171,8 @@ public class ListarResponsavel extends Application {
                     } catch (Exception ex) {
                         Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    ObservableList<Responsavel> list = FXCollections.observableArrayList(Dao.consultarTodos(Responsavel.class));
-                    tabela.getItems().clear();
-                    tabela.setItems(list);
+                    
+                    tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum responsável selecionado na tabela");
                 }
@@ -192,9 +191,9 @@ public class ListarResponsavel extends Application {
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        ObservableList<Responsavel> list = FXCollections.observableArrayList(Dao.consultarTodos(Responsavel.class));
-                        tabela.getItems().clear();
-                        tabela.setItems(list);
+                        
+                        if(!Dao.listar(Responsavel.class).contains(tabela.getSelectionModel().getSelectedItem()))
+                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");

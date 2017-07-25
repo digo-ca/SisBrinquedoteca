@@ -192,7 +192,9 @@ public class ListarCrianca extends Application {
                         }catch(RollbackException re){
                             JOptionPane.showMessageDialog(null, "Impossível excluir o item selecionado, pois o mesmo está inserido em uma visita");
                         }
-                        tabela.refresh();
+                        
+                        if(!Dao.listar(Crianca.class).contains(tabela.getSelectionModel().getSelectedItem()))
+                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 }else{
                     JOptionPane.showMessageDialog(null, "Selecione um item na tabela");

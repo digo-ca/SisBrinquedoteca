@@ -181,9 +181,8 @@ public class ListarVisitaEscola extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    ObservableList<VisitacaoEscola> list = FXCollections.observableArrayList(Dao.consultarTodos(VisitacaoEscola.class));
-                    tabela.getItems().clear();
-                    tabela.setItems(list);
+                    
+                    tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
@@ -200,9 +199,9 @@ public class ListarVisitaEscola extends Application{
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        ObservableList<VisitacaoEscola> list = FXCollections.observableArrayList(Dao.consultarTodos(VisitacaoEscola.class));
-                        tabela.getItems().clear();
-                        tabela.setItems(list);
+                        
+                        if(!Dao.listar(VisitacaoEscola.class).contains(tabela.getSelectionModel().getSelectedItem()))
+                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");

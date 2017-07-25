@@ -143,9 +143,7 @@ public class ListarMonitor extends Application{
                     }
                     
                     
-                    ObservableList<Monitor> list = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
-                    tabela.getItems().clear();
-                    tabela.setItems(list);
+                    tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
@@ -165,10 +163,8 @@ public class ListarMonitor extends Application{
                             Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         
-                        
-                        ObservableList<Monitor> list = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
-                        tabela.getItems().clear();
-                        tabela.setItems(list);
+                        if(!Dao.listar(Monitor.class).contains(tabela.getSelectionModel().getSelectedItem()))
+                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
