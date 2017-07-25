@@ -205,10 +205,11 @@ public class Principal extends Application {
 
         // Add menuItems to the Menus
         if(monitor.getSupervisor()){
-            MenuCad.getItems().addAll(itemMonitor, itemClassificacao);
+            MenuCad.getItems().add(itemMonitor);
+            MenuCad.getItems().add(itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemClassificacao);
+        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLClassificacao);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar

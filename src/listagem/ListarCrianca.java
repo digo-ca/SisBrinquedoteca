@@ -30,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.persistence.RollbackException;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
@@ -188,6 +189,8 @@ public class ListarCrianca extends Application {
                             Dao.remover(tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                        }catch(RollbackException re){
+                            JOptionPane.showMessageDialog(null, "Impossível excluir o item selecionado, pois o mesmo está inserido em uma visita");
                         }
                         tabela.refresh();
                     }
