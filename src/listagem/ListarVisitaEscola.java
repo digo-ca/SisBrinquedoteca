@@ -1,7 +1,10 @@
 package listagem;
 
+import app.ItemCrianca;
+import app.ItemVisitaEscola;
 import cadastro.CadastroVisitacaoEscola;
 import com.jfoenix.controls.JFXButton;
+import entidade.Crianca;
 import entidade.Monitor;
 import entidade.VisitacaoEscola;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -20,6 +23,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -50,8 +54,7 @@ public class ListarVisitaEscola extends Application{
     TableColumn colunaMonitor;
     TableColumn colunaEscola;
 
-    List<VisitacaoEscola> visitas = Dao.listar(VisitacaoEscola.class);
-    ObservableList<VisitacaoEscola> listItens = FXCollections.observableArrayList(visitas);
+    ObservableList<VisitacaoEscola> visitas;
     
     public void setMonitor(Monitor m){
         monitor = m;
@@ -60,8 +63,9 @@ public class ListarVisitaEscola extends Application{
     @Override
     public void start(Stage parent) {
         initComponents();
-
+        initValues();
         initListeners();
+        initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
         stage.setTitle("Tabela no JavaFX");
@@ -74,7 +78,7 @@ public class ListarVisitaEscola extends Application{
     public void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(795, 595);
+        pane.setPrefSize(795, 445);
 
         txPesquisa = new TextField();
         txPesquisa.setPromptText("Pesquisar");
@@ -120,14 +124,19 @@ public class ListarVisitaEscola extends Application{
             };
         });
         
+        
 
-        tabela.setItems(listItens);
-        tabela.setPrefSize(785, 550);
+        tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
-        initLayout();
         tabela.getColumns().addAll(colunaId, colunaData, colunaPeriodo, colunaMonitor, colunaEscola);
         pane.getChildren().addAll(txPesquisa, tabela);
+    }
+    
+    private void initValues(){
+        visitas = FXCollections.observableArrayList(Dao.listar(VisitacaoEscola.class));
+        tabela.setItems(visitas);
+        tabela.refresh();
     }
 
     public void initLayout() {
@@ -200,14 +209,31 @@ public class ListarVisitaEscola extends Application{
                 }
             }
         });
+        tabela.setRowFactory(tv -> {
+            TableRow<VisitacaoEscola> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    ItemVisitaEscola.setVisita(row.getItem());
+                    try {
+                        new ItemVisitaEscola().start(ListarVisitaEscola.stage);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    initValues();
+                }
+
+            });
+            return row;
+        });
     }
 
     private ObservableList<VisitacaoEscola> findItens() {
         ObservableList<VisitacaoEscola> itensEncontrados = FXCollections.observableArrayList();
 
-        for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getEscola().equals(txPesquisa.getText())) {
-                itensEncontrados.add(listItens.get(i));
+        for (int i = 0; i < visitas.size(); i++) {
+            if (visitas.get(i).getEscola().equals(txPesquisa.getText())) {
+                itensEncontrados.add(visitas.get(i));
             }
         }
         //if(listItens)
