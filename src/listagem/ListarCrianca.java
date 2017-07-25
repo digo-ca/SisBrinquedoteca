@@ -6,7 +6,11 @@
 package listagem;
 
 import app.ItemCrianca;
+import cadastro.CadastroCrianca;
+import com.jfoenix.controls.JFXButton;
 import entidade.Crianca;
+import entidade.Monitor;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -26,6 +30,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**
@@ -43,10 +48,18 @@ public class ListarCrianca extends Application {
 
     private static Stage stage;
 
-    private Button sair;
+    private JFXButton sair;
+    private JFXButton editar;
+    private JFXButton remover;
     //private Button detalhes;
 
     private ObservableList<Crianca> criancas;
+    private Monitor monitor;
+    
+    public void setMonitor(Monitor m){
+        monitor = m;
+    }
+    
 
     @Override
     public void start(Stage parent) throws Exception {
@@ -98,11 +111,15 @@ public class ListarCrianca extends Application {
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        sair = new Button("Sair");
-
+        sair = new JFXButton("Sair");
+        editar = new JFXButton("Editar");
+        remover = new JFXButton("Remover");
+        
         initLayout();
         tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento);
-        pane.getChildren().addAll(txPesquisa, tabela, sair);
+        pane.getChildren().addAll(txPesquisa, tabela, sair, editar);
+        if(monitor.getSupervisor())
+            pane.getChildren().add(remover);
     }
 
     private void initValues() {
@@ -119,6 +136,10 @@ public class ListarCrianca extends Application {
 
         sair.setLayoutX(10);
         sair.setLayoutY(10);
+        editar.setLayoutX(50);
+        editar.setLayoutY(10);
+        remover.setLayoutX(100);
+        remover.setLayoutY(10);
     }
 
     public static Stage getStage() {
@@ -140,6 +161,43 @@ public class ListarCrianca extends Application {
                 ListarCrianca.getStage().close();
             }
         });
+        editar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CadastroCrianca edita = new CadastroCrianca();
+                if(tabela.getSelectionModel().getSelectedIndex() != -1){
+                    edita.setCrianca((Crianca) tabela.getSelectionModel().getSelectedItem());
+                    try {
+                        edita.start(ListarCrianca.stage);
+                    } catch (Exception ex) {
+                        Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    tabela.refresh();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                }
+            }
+        });
+        
+        remover.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(tabela.getSelectionModel().getSelectedIndex() != -1){
+                    if(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0){
+                        try {
+                            Dao.remover(tabela.getSelectionModel().getSelectedItem());
+                        } catch (SQLIntegrityConstraintViolationException ex) {
+                            Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        tabela.refresh();
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                }
+            }
+        });
+        
+        
         tabela.setRowFactory(tv -> {
             TableRow<Crianca> row = new TableRow<>();
             row.setOnMouseClicked(event -> {

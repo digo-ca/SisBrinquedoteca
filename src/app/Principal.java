@@ -318,8 +318,10 @@ public class Principal extends Application {
         itemLCrianca.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                ListarCrianca lc = new ListarCrianca();
+                lc.setMonitor(monitor);
                 try {
-                    new ListarCrianca().start(stage);
+                    lc.start(Principal.stage);
                 } catch (Exception ex) {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }

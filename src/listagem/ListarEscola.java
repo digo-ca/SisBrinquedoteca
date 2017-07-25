@@ -162,9 +162,7 @@ public class ListarEscola extends Application{
                         Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
-                    ObservableList<Escola> list = FXCollections.observableArrayList(Dao.consultarTodos(Escola.class));
-                    tabela.getItems().clear();
-                    tabela.setItems(list);
+                    tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }

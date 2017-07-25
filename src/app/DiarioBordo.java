@@ -101,12 +101,12 @@ public class DiarioBordo extends Application{
             if(JOptionPane.showConfirmDialog(null, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?")==0){
                 db = new DiarioDeBordo();
 //                db.setDia(new Date(System.currentTimeMillis()));
-                  db.setDia(LocalDate.now());
+                db.setDia(LocalDate.now());
                 db.setMonitorAbriu(monitor);
                 
                 Dao.salvar(db);
 //                dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                  dpData.setValue(db.getDia());
+                dpData.setValue(db.getDia());
                 preencheTela(db);
             }
         }
