@@ -80,7 +80,7 @@ public class ListarEscola extends Application{
     public void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(795, 595);
+        pane.setPrefSize(795, 445);
 
         txPesquisa = new TextField();
         txPesquisa.setPromptText("Pesquisar");
@@ -112,7 +112,7 @@ public class ListarEscola extends Application{
         colunaTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
 
         tabela.setItems(listItens);
-        tabela.setPrefSize(785, 550);
+        tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaNome, colunaEndereco, colunaResponsavel, colunaCgResponsavel, colunaTelefone);

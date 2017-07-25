@@ -89,7 +89,7 @@ public class ListarResponsavel extends Application {
     public void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(795, 595);
+        pane.setPrefSize(795, 445);
 
         txPesquisa = new TextField();
         txPesquisa.setPromptText("Pesquisar");
@@ -121,7 +121,7 @@ public class ListarResponsavel extends Application {
         colunaVinculo.setCellValueFactory(new PropertyValueFactory<>("vinculo"));
 
         tabela.setItems(listItens);
-        tabela.setPrefSize(785, 550);
+        tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         initLayout();
