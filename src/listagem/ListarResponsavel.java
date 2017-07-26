@@ -95,14 +95,10 @@ public class ListarResponsavel extends Application {
         txPesquisa.setPromptText("Pesquisar");
 
         bEditar = new JFXButton("Editar");
-        pane.getChildren().add(bEditar);
 
         bRemover = new JFXButton("Remover");
-        if(monitor.getSupervisor())
-            pane.getChildren().add(bRemover);
 
         bSair = new JFXButton("Sair");
-        pane.getChildren().add(bSair);
 
         //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
@@ -126,7 +122,9 @@ public class ListarResponsavel extends Application {
 
         initLayout();
         tabela.getColumns().addAll(colunaId, colunaNome, colunaTelefone, colunaEndereco, colunaNumeroVinculo, colunaVinculo);
-        pane.getChildren().addAll(txPesquisa, tabela);
+        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
+        if(monitor.getSupervisor())
+            pane.getChildren().add(bRemover);
     }
 
     public void initLayout() {

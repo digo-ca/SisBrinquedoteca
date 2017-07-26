@@ -18,7 +18,7 @@ public class Responsavel implements Serializable {
     @Column(length = 50/*, nullable = false*/)
     private String nome;
     
-    @Column(length = 12/*, nullable = false*/)
+    @Column(length = 30/*, nullable = false*/)
     private String telefone;
     
     @Column(length = 100/*, nullable = false*/)

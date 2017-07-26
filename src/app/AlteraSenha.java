@@ -120,6 +120,8 @@ public class AlteraSenha extends Application{
                         Dao.salvar(monitor);
                         
                         AlteraSenha.getStage().hide();
+                        
+                        JOptionPane.showMessageDialog(null, "Senha Alterada com sucesso!");
                     }else{
                         JOptionPane.showMessageDialog(null, "Os campos 'Nova senha' e 'Confimação de senha' devem serem identicos");
                     }

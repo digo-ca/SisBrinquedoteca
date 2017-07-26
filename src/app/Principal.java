@@ -38,6 +38,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import listagem.ListarBrinquedo;
 import listagem.ListarCrianca;
 import listagem.ListarEscola;
 import listagem.ListarLivro;
@@ -75,6 +76,7 @@ public class Principal extends Application {
     
     //Menus de listagem
     private MenuItem itemLCrianca;
+    private MenuItem itemLBrinquedo;
     private MenuItem itemSair;
     private Menu itemNomeUser;
     private MenuItem itemLResp;
@@ -183,6 +185,7 @@ public class Principal extends Application {
         itemClassificacao = new MenuItem("Classificação");
 
         itemLCrianca = new MenuItem("Criança");
+        itemLBrinquedo = new MenuItem("Brinquedo");
         itemLResp = new MenuItem("Responsável");
         itemLEscola = new MenuItem("Escola");
         itemLLivro = new MenuItem("Livro");
@@ -209,7 +212,7 @@ public class Principal extends Application {
             MenuCad.getItems().add(itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLClassificacao);
+        mListar.getItems().addAll(itemLCrianca,itemLBrinquedo, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLClassificacao);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
@@ -323,6 +326,18 @@ public class Principal extends Application {
                 lc.setMonitor(monitor);
                 try {
                     lc.start(Principal.stage);
+                } catch (Exception ex) {
+                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        itemLBrinquedo.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarBrinquedo lb = new ListarBrinquedo();
+                lb.setMonitor(monitor);
+                try {
+                    lb.start(Principal.stage);
                 } catch (Exception ex) {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }

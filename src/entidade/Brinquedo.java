@@ -45,6 +45,9 @@ public class Brinquedo implements Serializable {
     
     @Column(name = "faixa_etaria")
     private String faixaEtaria;
+    
+    @ManyToOne
+    private Classificacao classificacao;
 
     public String getFaixaEtaria() {
         return faixaEtaria;
@@ -53,10 +56,6 @@ public class Brinquedo implements Serializable {
     public void setFaixaEtaria(String faixaEtaria) {
         this.faixaEtaria = faixaEtaria;
     }
-    
-    @ManyToOne
-    private Classificacao classificacao;
-
     public byte[] getFoto() {
         return foto;
     }

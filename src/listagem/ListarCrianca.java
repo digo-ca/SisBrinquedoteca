@@ -118,7 +118,7 @@ public class ListarCrianca extends Application {
         
         initLayout();
         tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento);
-        pane.getChildren().addAll(txPesquisa, tabela, sair, editar);
+        pane.getChildren().addAll(tabela, txPesquisa, sair, editar);
         if(monitor.getSupervisor())
             pane.getChildren().add(remover);
     }

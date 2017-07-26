@@ -1,18 +1,10 @@
 package listagem;
 
-import cadastro.CadastroVisita;
+import cadastro.CadastroBrinquedo;
 import com.jfoenix.controls.JFXButton;
-import entidade.Crianca;
+import entidade.Brinquedo;
 import entidade.Monitor;
-import entidade.Visita;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -31,11 +22,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.persistence.RollbackException;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-public class ListarVisita extends Application{
+public class ListarBrinquedo extends Application{
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -47,14 +37,14 @@ public class ListarVisita extends Application{
     private Monitor monitor;
 
     TableColumn colunaId;
-    TableColumn colunaData;
-    TableColumn colunaHEntrada;
-    TableColumn colunaHSaida;
-    TableColumn colunaCrianca;
-    TableColumn colunaMonitor;
+    TableColumn colunaNome;
+    TableColumn colunaFabricante;
+    TableColumn colunaEstado;
+    TableColumn colunaFaixaEtaria;
+    TableColumn colunaClassificacao;
 
-    List<Visita> visitas = Dao.listar(Visita.class);
-    ObservableList<Visita> listItens = FXCollections.observableArrayList(visitas);
+    List<Brinquedo> brinquedos = Dao.listar(Brinquedo.class);
+    ObservableList<Brinquedo> listItens = FXCollections.observableArrayList(brinquedos);
     
     public void setMonitor(Monitor m){
         monitor = m;
@@ -65,9 +55,10 @@ public class ListarVisita extends Application{
         initComponents();
 
         initListeners();
+        initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Tabela no JavaFX");
+        stage.setTitle("Tabela Livro");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
@@ -85,67 +76,30 @@ public class ListarVisita extends Application{
         bEditar = new JFXButton("Editar");
 
         bRemover = new JFXButton("Remover");
-        
+
         bSair = new JFXButton("Sair");
-        
+
         //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
-        colunaData = new TableColumn<>("Data");
-        colunaHEntrada = new TableColumn<>("Hora de Entrada");
-        colunaHSaida = new TableColumn<>("Hora de Saída");
-        colunaCrianca = new TableColumn<>("Criança");
-        colunaMonitor = new TableColumn<>("Monitor");
+        colunaNome = new TableColumn<>("Nome");
+        colunaFabricante = new TableColumn<>("Fabricante");
+        colunaEstado = new TableColumn<>("Estado");
+        colunaFaixaEtaria = new TableColumn<>("Observações");
+        colunaClassificacao = new TableColumn<>("Classificação");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaData.setCellValueFactory(new PropertyValueFactory<>("dia"));
-        colunaHEntrada.setCellValueFactory(new PropertyValueFactory<>("horaEntrada"));
-        colunaHSaida.setCellValueFactory(new PropertyValueFactory<>("horaSaida"));
-        colunaCrianca.setCellValueFactory(new PropertyValueFactory<>("crianca"));
-        colunaMonitor.setCellValueFactory(new PropertyValueFactory<>("monitor"));
-        
-        DateTimeFormatter myDateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        colunaData.setCellFactory(column -> {
-            return new TableCell<Visita, LocalDate>() {
-                @Override
-                protected void updateItem(LocalDate item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        setText(myDateFormatter.format(item));
-                    }
-                }
-            };
-        });
-        
-        DateTimeFormatter myTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        colunaHEntrada.setCellFactory((Object column) -> {
-            return new TableCell<Visita, LocalTime>() {
-                @Override
-                protected void updateItem(LocalTime item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        setText(myTimeFormatter.format(item));
-                    }
-                }
-            };
-        });
-        
+        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colunaFabricante.setCellValueFactory(new PropertyValueFactory<>("fabricante"));
+        colunaEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        colunaFaixaEtaria.setCellValueFactory(new PropertyValueFactory<>("faixaEtaria"));
+        colunaClassificacao.setCellValueFactory(new PropertyValueFactory<>("classificacao"));
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
-        initLayout();
-        tabela.getColumns().addAll(colunaId, colunaData, colunaHEntrada, colunaHSaida, colunaCrianca, colunaMonitor);
+        tabela.getColumns().addAll(colunaId, colunaNome, colunaFabricante, colunaEstado, colunaClassificacao, colunaFaixaEtaria);
         pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
         if(monitor.getSupervisor())
             pane.getChildren().add(bRemover);
@@ -178,21 +132,23 @@ public class ListarVisita extends Application{
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ListarVisita.stage.hide();
+                ListarBrinquedo.stage.hide();
             }
         });
 
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroVisita cv = new CadastroVisita();
+                CadastroBrinquedo cb = new CadastroBrinquedo();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    cv.setVisita((Visita) tabela.getSelectionModel().getSelectedItem());
+                    cb.setBrinquedo((Brinquedo) tabela.getSelectionModel().getSelectedItem());
+                    
                     try {
-                        cv.start(ListarVisita.stage);
+                        cb.start(ListarBrinquedo.stage);
                     } catch (Exception ex) {
-                        Logger.getLogger(ListarVisita.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    
                     
                     tabela.refresh();
                 } else {
@@ -206,12 +162,14 @@ public class ListarVisita extends Application{
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
+                        
                         try {
-                            Dao.remover((Visita) tabela.getSelectionModel().getSelectedItem());
+                            Dao.remover((Brinquedo) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
-                            Logger.getLogger(ListarVisita.class.getName()).log(Level.SEVERE, null, ex);
+                            Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        if(!(Dao.listar(Visita.class).contains((Visita)tabela.getSelectionModel().getSelectedItem())))
+                        
+                        if(!Dao.listar(Brinquedo.class).contains(tabela.getSelectionModel().getSelectedItem()))
                             tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
@@ -221,21 +179,18 @@ public class ListarVisita extends Application{
         });
     }
 
-    private ObservableList<Visita> findItens() {
-        ObservableList<Visita> itensEncontrados = FXCollections.observableArrayList();
+    private ObservableList<Brinquedo> findItens() {
+        ObservableList<Brinquedo> itensEncontrados = FXCollections.observableArrayList();
 
         for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getCrianca().getNome().equals(txPesquisa.getText())) {
+            if (listItens.get(i).getNome().equals(txPesquisa.getText())) {
                 itensEncontrados.add(listItens.get(i));
             }
         }
-        //if(listItens)
-
         return itensEncontrados;
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 }

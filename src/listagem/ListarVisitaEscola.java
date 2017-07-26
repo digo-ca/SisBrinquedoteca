@@ -84,15 +84,11 @@ public class ListarVisitaEscola extends Application{
         txPesquisa.setPromptText("Pesquisar");
 
         bEditar = new JFXButton("Editar");
-        pane.getChildren().add(bEditar);
 
         bRemover = new JFXButton("Remover");
-        if(monitor.getSupervisor())
-            pane.getChildren().add(bRemover);
-
+        
         bSair = new JFXButton("Sair");
-        pane.getChildren().add(bSair);
-
+        
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
         colunaData = new TableColumn<>("Data");
@@ -130,7 +126,9 @@ public class ListarVisitaEscola extends Application{
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaData, colunaPeriodo, colunaMonitor, colunaEscola);
-        pane.getChildren().addAll(txPesquisa, tabela);
+        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
+        if(monitor.getSupervisor())
+            pane.getChildren().add(bRemover);
     }
     
     private void initValues(){
