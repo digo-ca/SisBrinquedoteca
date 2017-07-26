@@ -270,8 +270,8 @@ public class CadastroBrinquedo extends Application {
         buffer = ImageIO.read(new ByteArrayInputStream(brinquedo.getFoto()));
         Image imagem = SwingFXUtils.toFXImage(buffer, null);                
         img.setImage(imagem);
-        img.setFitWidth(lFoto.getMaxWidth());
-        img.setFitHeight(lFoto.getMaxHeight());
+        img.setFitWidth(lFoto.getPrefWidth());
+        img.setFitHeight(lFoto.getPrefHeight());
         
         lFoto.setText("");
         lFoto.setGraphic(img);

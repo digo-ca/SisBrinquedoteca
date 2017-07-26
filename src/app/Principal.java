@@ -256,7 +256,7 @@ public class Principal extends Application {
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    new CadastroEscola().start(new Stage());
+                    new CadastroEscola().start(Principal.stage);
                 } catch (Exception ex) {
                     Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                 }

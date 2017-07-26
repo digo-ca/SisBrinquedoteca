@@ -9,8 +9,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.skins.JFXTextAreaSkin;
+import entidade.DiarioDeBordo;
 import entidade.ItemDiarioDeBordo;
 import entidade.Monitor;
+import java.time.LocalDate;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
@@ -140,7 +142,19 @@ public class CadastroOcorrencia extends Application{
                 ocorrencia.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
                 ocorrencia.setDescricao(taDescricao.getText());
                 
-                Dao.salvar(ocorrencia);
+                DiarioDeBordo diario;
+                if(Dao.consultarDiarioHoje().isEmpty()){
+                    diario = new DiarioDeBordo();
+                    diario.setDia(LocalDate.now());
+                    diario.setMonitorAbriu(monitor);
+                    diario.getOcorrencias().add(ocorrencia);
+                    Dao.salvar(diario);
+                }else{
+                    diario = Dao.consultarDiarioHoje().get(0);
+                    diario.getOcorrencias().add(ocorrencia);
+                    
+                    Dao.salvar(diario);
+                }
                 
                 CadastroOcorrencia.getStage().close();
                 

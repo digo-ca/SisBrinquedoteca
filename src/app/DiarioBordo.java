@@ -299,9 +299,7 @@ public class DiarioBordo extends Application{
                 } catch (Exception ex) {
                     Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                tabelaOcorrencia.setItems(FXCollections.observableArrayList(Dao.listar(ItemDiarioDeBordo.class)));
-                //tabelaOcorrencia.getItems().clear();
-                //tabelaOcorrencia.setItems(FXCollections.observableArrayList(Dao.listar(ItemDiarioDeBordo.class)));
+                tabelaOcorrencia.refresh();
             }
         });
         bEditaOcorrencia.setOnAction(new EventHandler<ActionEvent>() {
@@ -315,6 +313,7 @@ public class DiarioBordo extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    tabelaOcorrencia.refresh();
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                 }
@@ -325,12 +324,12 @@ public class DiarioBordo extends Application{
             public void handle(ActionEvent event) {
                 if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
                     try {
-                        //db.getOcorrencias().remove(tabelaOcorrencia.getSelectionModel().getSelectedItem());
                         Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     } catch (SQLIntegrityConstraintViolationException ex) {
                         Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    tabelaOcorrencia.getItems().remove(tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    if(!Dao.listar(ItemDiarioDeBordo.class).contains(tabelaOcorrencia.getSelectionModel().getSelectedItem()))
+                        tabelaOcorrencia.getItems().remove(tabelaOcorrencia.getSelectionModel().getSelectedItem());
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                 }
