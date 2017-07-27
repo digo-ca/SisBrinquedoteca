@@ -2,6 +2,7 @@ package listagem;
 
 import cadastro.CadastroBrinquedo;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXCheckBox;
 import entidade.Brinquedo;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -32,6 +33,7 @@ public class ListarBrinquedo extends Application{
     private JFXButton bEditar;
     private JFXButton bRemover;
     private JFXButton bSair;
+    private JFXCheckBox chDetalhes;
     private static Stage stage;
     
     private Monitor monitor;
@@ -79,7 +81,6 @@ public class ListarBrinquedo extends Application{
 
         bSair = new JFXButton("Sair");
 
-        //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
         colunaNome = new TableColumn<>("Nome");
@@ -148,8 +149,6 @@ public class ListarBrinquedo extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    
                     tabela.refresh();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");

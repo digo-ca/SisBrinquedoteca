@@ -36,6 +36,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
@@ -117,6 +118,7 @@ public class DiarioBordo extends Application{
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Diário de Bordo");
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
         stage.showAndWait();
     }
@@ -149,7 +151,7 @@ public class DiarioBordo extends Application{
         pane.getChildren().add(txMFechou);
         txVisitas = new JFXTextField();
         txVisitas.setEditable(false);
-        txVisitas.setPrefWidth(90);
+        txVisitas.setPrefWidth(50);
         txVisitas.setPromptText("Visitas");
         txVisitas.setLabelFloat(true);
         pane.getChildren().add(txVisitas);
@@ -219,7 +221,7 @@ public class DiarioBordo extends Application{
         txMAbriu.setLayoutY(20);
         txMFechou.setLayoutX(580);
         txMFechou.setLayoutY(20);
-        txVisitas.setLayoutX(840);
+        txVisitas.setLayoutX(878);
         txVisitas.setLayoutY(20);
         cbBrinquedos.setLayoutX(10);
         cbBrinquedos.setLayoutY(110);
@@ -253,7 +255,6 @@ public class DiarioBordo extends Application{
                     if(listaDiario.get(i).getDia().equals(data)){
                         preencheTela(listaDiario.get(i));
                         existe = 0;
-                        //i = listaDiario.size();
                     }
                 }
                 if(existe == -1){
