@@ -196,7 +196,7 @@ public class DiarioBordo extends Application{
         
         pane.getChildren().add(tabelaBrinquedos);
         
-        tabelaOcorrencia = new TableView(FXCollections.observableArrayList(Dao.listar(ItemDiarioDeBordo.class)));
+        tabelaOcorrencia = new TableView();
         id = new TableColumn("Id");
         descricao = new TableColumn("Descrição");
         colunaMonitor = new TableColumn("Monitor");
@@ -348,8 +348,10 @@ public class DiarioBordo extends Application{
         if(diario.getVisitasNoDia() >= 0)
             txVisitas.setText(diario.getVisitasNoDia()+"");
         
-        if(diario.getBrinquedosMaisUsados() != null)
+        if(diario.getBrinquedosMaisUsados() != null){
             tabelaBrinquedos.setItems(FXCollections.observableArrayList(diario.getBrinquedosMaisUsados()));
+            cbBrinquedos.getItems().removeAll(tabelaBrinquedos.getItems());
+        }
         
         if(diario.getOcorrencias() != null)
             tabelaOcorrencia.setItems(FXCollections.observableArrayList(diario.getOcorrencias()));
