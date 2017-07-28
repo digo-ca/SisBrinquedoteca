@@ -7,6 +7,7 @@ package entidade;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -42,8 +43,9 @@ public class DiarioDeBordo implements Serializable {
     
     
 //    @Temporal(TemporalType.DATE)
-    @Column(columnDefinition = "DATE")
-    private LocalDate dia;
+    //@Column(columnDefinition = "DATE")
+    @Temporal(TemporalType.DATE)
+    private Date dia;
     
       //@Column(name = "brinquedos_mais_usados")
       @ManyToMany(cascade = CascadeType.ALL)
@@ -74,11 +76,13 @@ public class DiarioDeBordo implements Serializable {
     }
 
     public LocalDate getDia() {
-        return dia;
+        return dia.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        //return dia;
     }
 
     public void setDia(LocalDate dia) {
-        this.dia = dia;
+        this.dia = Date.from(dia.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        //this.dia = dia;
     }
 
     public List<Brinquedo> getBrinquedosMaisUsados() {

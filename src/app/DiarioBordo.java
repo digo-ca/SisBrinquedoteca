@@ -300,7 +300,8 @@ public class DiarioBordo extends Application{
                 } catch (Exception ex) {
                     Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                tabelaOcorrencia.refresh();
+                tabelaOcorrencia.getItems().clear();
+                tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
             }
         });
         bEditaOcorrencia.setOnAction(new EventHandler<ActionEvent>() {
