@@ -151,7 +151,8 @@ public class CadastroOcorrencia extends Application{
                     Dao.salvar(diario);
                 }else{
                     diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().add(ocorrencia);
+                    if(!diario.getOcorrencias().contains(ocorrencia))
+                        diario.getOcorrencias().add(ocorrencia);
                     
                     Dao.salvar(diario);
                 }

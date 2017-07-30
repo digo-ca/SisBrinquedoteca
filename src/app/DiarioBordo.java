@@ -16,11 +16,13 @@ import entidade.Brinquedo;
 import entidade.DiarioDeBordo;
 import entidade.ItemDiarioDeBordo;
 import entidade.Monitor;
+import java.awt.Color;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -29,11 +31,14 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -249,15 +254,16 @@ public class DiarioBordo extends Application{
             public void handle(ActionEvent event) {
                 List<DiarioDeBordo> listaDiario = Dao.listar(DiarioDeBordo.class);
                 int existe = -1;
-                Date data = new Date();
-                data = Date.from(dpData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+//                Date data = new Date();
+//                data = Date.from(dpData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
                 for(int i = 0; i < listaDiario.size(); i++){
-                    if(listaDiario.get(i).getDia().equals(data)){
+                    if(listaDiario.get(i).getDia().equals(dpData.getValue())){
                         preencheTela(listaDiario.get(i));
                         existe = 0;
                     }
                 }
                 if(existe == -1){
+                    preencheTela(null);
                     txMAbriu.setText("");
                     txMFechou.setText("");
                     txVisitas.setText("");
@@ -310,6 +316,7 @@ public class DiarioBordo extends Application{
                 if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    cad.setMonitor(monitor);
                     try {
                         cad.start(DiarioBordo.stage);
                     } catch (Exception ex) {
@@ -325,13 +332,17 @@ public class DiarioBordo extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
+                    DiarioDeBordo diario;
+                    diario = Dao.consultarDiarioHoje().get(0);
+                    diario.getOcorrencias().remove((ItemDiarioDeBordo)tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    Dao.salvar(diario);
                     try {
                         Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     } catch (SQLIntegrityConstraintViolationException ex) {
                         Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, ex);
                     }
-                    if(!Dao.listar(ItemDiarioDeBordo.class).contains(tabelaOcorrencia.getSelectionModel().getSelectedItem()))
-                        tabelaOcorrencia.getItems().remove(tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
                 }else{
                     JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                 }
@@ -339,23 +350,52 @@ public class DiarioBordo extends Application{
         });
     }
     
+    public void abilitaDesabilitaComponets(Boolean b){
+        tabelaOcorrencia.setDisable(b);
+            tabelaBrinquedos.setDisable(b);
+            txVisitas.setDisable(b);
+            txMAbriu.setDisable(b);
+            txMFechou.setDisable(b);
+            cbBrinquedos.setDisable(b);
+            bAddBrinquedos.setDisable(b);
+            bAddOcorrencia.setDisable(b);
+            bEditaOcorrencia.setDisable(b);
+            bRemoveBrinquedos.setDisable(b);
+            bRemoveOcorrencia.setDisable(b);
+            if(b){
+                tabelaOcorrencia.setItems(null);
+                tabelaBrinquedos.setItems(null);
+            }
+            if(b)
+                dpData.setStyle("-fx-border-color: red;-fx-border-width: 2;");
+            else
+                dpData.setStyle("-fx-border-width: 0;");
+                
+    }
+    
     public void preencheTela(DiarioDeBordo diario){
-        if(diario.getMonitorAbriu() != null)
+        if(diario == null){
+            abilitaDesabilitaComponets(true);
+            new Alert(Alert.AlertType.NONE, "Não há um diário cadastrado para esta data", ButtonType.OK).show();
+        }else{
+            abilitaDesabilitaComponets(false);
+//        if(diario.getMonitorAbriu() != null)
             txMAbriu.setText(diario.getMonitorAbriu()+"");
         
-        if(diario.getMonitorFechou() != null)
+//        if(diario.getMonitorFechou() != null)
             txMFechou.setText(diario.getMonitorFechou()+"");
         
-        if(diario.getVisitasNoDia() >= 0)
+ //       if(diario.getVisitasNoDia() >= 0)
             txVisitas.setText(diario.getVisitasNoDia()+"");
         
-        if(diario.getBrinquedosMaisUsados() != null){
+//        if(diario.getBrinquedosMaisUsados() != null){
             tabelaBrinquedos.setItems(FXCollections.observableArrayList(diario.getBrinquedosMaisUsados()));
             cbBrinquedos.getItems().removeAll(tabelaBrinquedos.getItems());
-        }
+//        }
         
-        if(diario.getOcorrencias() != null)
+  //      if(diario.getOcorrencias() != null)
             tabelaOcorrencia.setItems(FXCollections.observableArrayList(diario.getOcorrencias()));
+        }
     }
     
     public static void main(String[] args) {
