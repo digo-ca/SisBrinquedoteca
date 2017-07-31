@@ -50,74 +50,75 @@ import persistencia.Dao;
  *
  * @author Ivanildo
  */
-public class DiarioBordo extends Application{
+public class DiarioBordo extends Application {
+
     private AnchorPane pane;
     private static Stage stage;
     private Label lData;
-    
+
     private JFXDatePicker dpData;
     private JFXTextField txMAbriu;
     private JFXTextField txMFechou;
     private JFXTextField txVisitas;
     private JFXComboBox cbBrinquedos;
-    
+
     //Botões
     private JFXButton bAddBrinquedos;
     private JFXButton bRemoveBrinquedos;
     private JFXButton bAddOcorrencia;
     private JFXButton bEditaOcorrencia;
     private JFXButton bRemoveOcorrencia;
-    
-    
+
     private TableView tabelaBrinquedos;
     private TableColumn colunaId;
     private TableColumn colunaNome;
-    
+
     private TableView tabelaOcorrencia;
     private TableColumn id;
     private TableColumn descricao;
     private TableColumn colunaMonitor;
-    
+
     private StackPane stackPane;
-    
+
     Monitor monitor;
     DiarioDeBordo db;
-    
-    public void setDiario(DiarioDeBordo diario){
+
+    public void setDiario(DiarioDeBordo diario) {
         db = diario;
     }
-    
-    public void setMonitor(Monitor m){
+
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
-    
+
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initLayout();
         initListeners();
-        
+
         //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
-        if(!Dao.consultarDiarioHoje().isEmpty()){
-            db = Dao.consultarDiarioHoje().get(0);  
+        if (!Dao.consultarDiarioHoje().isEmpty()) {
+            db = Dao.consultarDiarioHoje().get(0);
             preencheTela(db);
 //            dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             dpData.setValue(db.getDia());
-        }else{
-            if(JOptionPane.showConfirmDialog(null, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?")==0){
-                db = new DiarioDeBordo();
-//                db.setDia(new Date(System.currentTimeMillis()));
-                db.setDia(LocalDate.now());
-                db.setMonitorAbriu(monitor);
-                
-                Dao.salvar(db);
-//                dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                dpData.setValue(db.getDia());
-                preencheTela(db);
-            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.showAndWait().ifPresent(b -> {
+                if (b == ButtonType.YES) {
+                    db = new DiarioDeBordo();
+                    db.setDia(LocalDate.now());
+                    db.setMonitorAbriu(monitor);
+
+                    Dao.salvar(db);
+                    dpData.setValue(db.getDia());
+                    preencheTela(db);
+                }
+            });
         }
         //==================================================================================================================
-        
+
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
@@ -127,17 +128,16 @@ public class DiarioBordo extends Application{
         stage.initOwner(parent);
         stage.showAndWait();
     }
-    
-    
-    public void initComponents(){
+
+    public void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(900, 600);
         pane.getStyleClass().add("pane");
-        
+
         lData = new Label("Dia");
         pane.getChildren().add(lData);
-        
+
         dpData = new JFXDatePicker();
         dpData.setPrefWidth(110);
         dpData.setEditable(false);
@@ -165,7 +165,7 @@ public class DiarioBordo extends Application{
         cbBrinquedos.setPromptText("Selecione o Brinquedo");
         cbBrinquedos.setLabelFloat(true);
         pane.getChildren().add(cbBrinquedos);
-        
+
         bAddBrinquedos = new JFXButton("Adicionar Brinquedo");
         bAddBrinquedos.setPrefWidth(150);
         bAddBrinquedos.getStyleClass().add("btAddBrinquedo");
@@ -178,48 +178,48 @@ public class DiarioBordo extends Application{
         bAddOcorrencia.setPrefWidth(150);
         bAddOcorrencia.getStyleClass().add("btAddOcorrencia");
         pane.getChildren().add(bAddOcorrencia);
-        
+
         bEditaOcorrencia = new JFXButton("Editar");
         bEditaOcorrencia.setPrefWidth(150);
         pane.getChildren().add(bEditaOcorrencia);
-        
+
         bRemoveOcorrencia = new JFXButton("Remover Ocorrência");
         bRemoveOcorrencia.setPrefWidth(150);
         bRemoveOcorrencia.getStyleClass().add("btRemoveOcorrencia");
         pane.getChildren().add(bRemoveOcorrencia);
-        
+
         tabelaBrinquedos = new TableView();
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
-        
+
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        
+
         tabelaBrinquedos.setPrefSize(729, 170);
         tabelaBrinquedos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaBrinquedos.getColumns().addAll(colunaId, colunaNome);
-        
+
         pane.getChildren().add(tabelaBrinquedos);
-        
+
         tabelaOcorrencia = new TableView();
         id = new TableColumn("Id");
         descricao = new TableColumn("Descrição");
         colunaMonitor = new TableColumn("Monitor");
-        
+
         id.setCellValueFactory(new PropertyValueFactory("id"));
         descricao.setCellValueFactory(new PropertyValueFactory("descricao"));
         colunaMonitor.setCellValueFactory(new PropertyValueFactory("monitor"));
-        
+
         tabelaOcorrencia.setPrefSize(729, 170);
         tabelaOcorrencia.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaOcorrencia.getColumns().addAll(id, descricao, colunaMonitor);
         pane.getChildren().add(tabelaOcorrencia);
     }
-    
-    public void initLayout(){
+
+    public void initLayout() {
         lData.setLayoutX(10);
         lData.setLayoutY(23);
-        
+
         dpData.setLayoutX(50);
         dpData.setLayoutY(20);
         txMAbriu.setLayoutX(290);
@@ -230,7 +230,7 @@ public class DiarioBordo extends Application{
         txVisitas.setLayoutY(20);
         cbBrinquedos.setLayoutX(10);
         cbBrinquedos.setLayoutY(110);
-        
+
         bAddBrinquedos.setLayoutX(10);
         bAddBrinquedos.setLayoutY(200);
         bRemoveBrinquedos.setLayoutX(10);
@@ -241,14 +241,14 @@ public class DiarioBordo extends Application{
         bEditaOcorrencia.setLayoutY(380);
         bRemoveOcorrencia.setLayoutX(10);
         bRemoveOcorrencia.setLayoutY(420);
-        
+
         tabelaBrinquedos.setLayoutX(200);
         tabelaBrinquedos.setLayoutY(100);
         tabelaOcorrencia.setLayoutX(200);
         tabelaOcorrencia.setLayoutY(340);
     }
-    
-    public void initListeners(){
+
+    public void initListeners() {
         dpData.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -256,13 +256,13 @@ public class DiarioBordo extends Application{
                 int existe = -1;
 //                Date data = new Date();
 //                data = Date.from(dpData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
-                for(int i = 0; i < listaDiario.size(); i++){
-                    if(listaDiario.get(i).getDia().equals(dpData.getValue())){
+                for (int i = 0; i < listaDiario.size(); i++) {
+                    if (listaDiario.get(i).getDia().equals(dpData.getValue())) {
                         preencheTela(listaDiario.get(i));
                         existe = 0;
                     }
                 }
-                if(existe == -1){
+                if (existe == -1) {
                     preencheTela(null);
                     txMAbriu.setText("");
                     txMFechou.setText("");
@@ -273,26 +273,28 @@ public class DiarioBordo extends Application{
         bAddBrinquedos.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(cbBrinquedos.getSelectionModel().getSelectedIndex() != -1){
+                if (cbBrinquedos.getSelectionModel().getSelectedIndex() != -1) {
                     db.getBrinquedosMaisUsados().add((Brinquedo) cbBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().add(cbBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().remove(cbBrinquedos.getSelectionModel().getSelectedItem());
                     Dao.salvar(db);
-                }else{
-                    JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
+                } else {
+                    //JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um brinquedo acima para adiciona-lo", ButtonType.OK).show();
                 }
             }
         });
         bRemoveBrinquedos.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(tabelaBrinquedos.getSelectionModel().getSelectedIndex() != -1){
+                if (tabelaBrinquedos.getSelectionModel().getSelectedIndex() != -1) {
                     db.getBrinquedosMaisUsados().remove((Brinquedo) tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().add(tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     tabelaBrinquedos.getItems().remove(tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     Dao.salvar(db);
-                }else{
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                } else {
+                    //JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
                 }
             }
         });
@@ -313,7 +315,7 @@ public class DiarioBordo extends Application{
         bEditaOcorrencia.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
+                if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     cad.setMonitor(monitor);
@@ -323,18 +325,19 @@ public class DiarioBordo extends Application{
                         Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     tabelaOcorrencia.refresh();
-                }else{
-                    JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
+                } else {
+                    //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item para ser editado na tabela", ButtonType.OK).show();
                 }
             }
         });
         bRemoveOcorrencia.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1){
+                if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
                     DiarioDeBordo diario;
                     diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().remove((ItemDiarioDeBordo)tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     Dao.salvar(diario);
                     try {
                         Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
@@ -343,61 +346,63 @@ public class DiarioBordo extends Application{
                         JOptionPane.showMessageDialog(null, ex);
                     }
                     tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
-                }else{
-                    JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
+                } else {
+                    //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
                 }
             }
         });
     }
-    
-    public void abilitaDesabilitaComponets(Boolean b){
+
+    public void abilitaDesabilitaComponets(Boolean b) {
         tabelaOcorrencia.setDisable(b);
-            tabelaBrinquedos.setDisable(b);
-            txVisitas.setDisable(b);
-            txMAbriu.setDisable(b);
-            txMFechou.setDisable(b);
-            cbBrinquedos.setDisable(b);
-            bAddBrinquedos.setDisable(b);
-            bAddOcorrencia.setDisable(b);
-            bEditaOcorrencia.setDisable(b);
-            bRemoveBrinquedos.setDisable(b);
-            bRemoveOcorrencia.setDisable(b);
-            if(b){
-                tabelaOcorrencia.setItems(null);
-                tabelaBrinquedos.setItems(null);
-            }
-            if(b)
-                dpData.setStyle("-fx-border-color: red;-fx-border-width: 2;");
-            else
-                dpData.setStyle("-fx-border-width: 0;");
-                
+        tabelaBrinquedos.setDisable(b);
+        txVisitas.setDisable(b);
+        txMAbriu.setDisable(b);
+        txMFechou.setDisable(b);
+        cbBrinquedos.setDisable(b);
+        bAddBrinquedos.setDisable(b);
+        bAddOcorrencia.setDisable(b);
+        bEditaOcorrencia.setDisable(b);
+        bRemoveBrinquedos.setDisable(b);
+        bRemoveOcorrencia.setDisable(b);
+        if (b) {
+            tabelaOcorrencia.setItems(null);
+            tabelaBrinquedos.setItems(null);
+        }
+        if (b) {
+            dpData.setStyle("-fx-border-color: red;-fx-border-width: 2;");
+        } else {
+            dpData.setStyle("-fx-border-width: 0;");
+        }
+
     }
-    
-    public void preencheTela(DiarioDeBordo diario){
-        if(diario == null){
+
+    public void preencheTela(DiarioDeBordo diario) {
+        if (diario == null) {
             abilitaDesabilitaComponets(true);
             new Alert(Alert.AlertType.NONE, "Não há um diário cadastrado para esta data", ButtonType.OK).show();
-        }else{
+        } else {
             abilitaDesabilitaComponets(false);
 //        if(diario.getMonitorAbriu() != null)
-            txMAbriu.setText(diario.getMonitorAbriu()+"");
-        
+            txMAbriu.setText(diario.getMonitorAbriu() + "");
+
 //        if(diario.getMonitorFechou() != null)
-            txMFechou.setText(diario.getMonitorFechou()+"");
-        
- //       if(diario.getVisitasNoDia() >= 0)
-            txVisitas.setText(diario.getVisitasNoDia()+"");
-        
+            txMFechou.setText(diario.getMonitorFechou() + "");
+
+            //       if(diario.getVisitasNoDia() >= 0)
+            txVisitas.setText(diario.getVisitasNoDia() + "");
+
 //        if(diario.getBrinquedosMaisUsados() != null){
             tabelaBrinquedos.setItems(FXCollections.observableArrayList(diario.getBrinquedosMaisUsados()));
             cbBrinquedos.getItems().removeAll(tabelaBrinquedos.getItems());
 //        }
-        
-  //      if(diario.getOcorrencias() != null)
+
+            //      if(diario.getOcorrencias() != null)
             tabelaOcorrencia.setItems(FXCollections.observableArrayList(diario.getOcorrencias()));
         }
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }

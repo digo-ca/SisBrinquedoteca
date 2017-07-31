@@ -40,6 +40,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
@@ -253,7 +254,8 @@ public class CadastroVisitacaoEscola extends Application {
                     listaAlunos.getItems().add(txAluno.getText());
                     txAluno.setText("");
                 } else {
-                   JOptionPane.showMessageDialog(null, "Informe o nome do Aluno");
+                   //JOptionPane.showMessageDialog(null, "Informe o nome do Aluno");
+                   new Alert(Alert.AlertType.NONE, "Informe o nome do Aluno", ButtonType.OK).show();
                 }
             }
         });
@@ -265,7 +267,8 @@ public class CadastroVisitacaoEscola extends Application {
                     alunos.remove(listaAlunos.getSelectionModel().getSelectedItem());
                     listaAlunos.getItems().remove(listaAlunos.getSelectionModel().getSelectedItem());
                 } else {
-                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                    //JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela", ButtonType.OK).show();
                 }
             }
         });
