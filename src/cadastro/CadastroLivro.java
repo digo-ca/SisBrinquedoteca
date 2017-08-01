@@ -125,9 +125,9 @@ public class CadastroLivro extends Application{
         cbEstado.setLayoutX(10);
         cbEstado.setLayoutY(155);
         
-        lObservacoes.setLayoutX(280);
+        lObservacoes.setLayoutX(343);
         lObservacoes.setLayoutY(20);
-        taObservacoes.setLayoutX(280);
+        taObservacoes.setLayoutX(343);
         taObservacoes.setLayoutY(50);
         
         

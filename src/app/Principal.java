@@ -88,7 +88,6 @@ public class Principal extends Application {
     private MenuItem itemLClassificacao;
     
     private Button bDiario;
-    private Button listar;
     private Button sair;
     
     
@@ -116,14 +115,13 @@ public class Principal extends Application {
         scene.getStylesheets().add("css/style.css");
         //Scene scene = new Scene(root, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
         
-        vboxSuperior.getChildren().addAll(bDiario,listar);
+        vboxSuperior.getChildren().addAll(bDiario);
         vboxInferior.getChildren().add(sair);
 
         rootGrid.setTop(vboxSuperior);
         rootGrid.setBottom(vboxInferior);
 
         bDiario.setPrefSize(100, 40);
-        listar.setPrefSize(100, 40);
         sair.setPrefSize(100, 40);  
         
         rootGrid.getStyleClass().add("grid");
@@ -203,7 +201,6 @@ public class Principal extends Application {
         
         grid = new GridPane();
         bDiario = new Button("Exibir Diário");
-        listar = new Button("Listar");
         sair = new Button("Sair");
 
         // Add menuItems to the Menus
