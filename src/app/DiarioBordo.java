@@ -30,10 +30,12 @@ import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -55,6 +57,8 @@ public class DiarioBordo extends Application {
     private AnchorPane pane;
     private static Stage stage;
     private Label lData;
+    private Label lOcorrencia;
+    private Label lBrinquedo;
 
     private JFXDatePicker dpData;
     private JFXTextField txMAbriu;
@@ -79,6 +83,16 @@ public class DiarioBordo extends Application {
     private TableColumn colunaMonitor;
 
     private StackPane stackPane;
+    
+    private Separator sBrinquedoCima;
+    private Separator sBrinquedoRight;
+    private Separator sBrinquedoLeft;
+    private Separator sBrinquedoBotton;
+    
+    private Separator sOcorrenciaCima;
+    private Separator sOcorrenciaRight;
+    private Separator sOcorrenciaBotton;
+    private Separator sOcorrenciaLeft;
 
     Monitor monitor;
     DiarioDeBordo db;
@@ -137,6 +151,11 @@ public class DiarioBordo extends Application {
 
         lData = new Label("Dia");
         pane.getChildren().add(lData);
+        lOcorrencia = new Label("Ocorrências");
+        pane.getChildren().add(lOcorrencia);
+        
+        lBrinquedo = new Label("Brinquedos mais usados");
+        pane.getChildren().add(lBrinquedo);
 
         dpData = new JFXDatePicker();
         dpData.setPrefWidth(110);
@@ -161,7 +180,7 @@ public class DiarioBordo extends Application {
         txVisitas.setLabelFloat(true);
         pane.getChildren().add(txVisitas);
         cbBrinquedos = new JFXComboBox(FXCollections.observableArrayList(Dao.listar(Brinquedo.class)));
-        cbBrinquedos.setPrefWidth(185);
+        cbBrinquedos.setPrefWidth(173);
         cbBrinquedos.setPromptText("Selecione o Brinquedo");
         cbBrinquedos.setLabelFloat(true);
         pane.getChildren().add(cbBrinquedos);
@@ -188,6 +207,17 @@ public class DiarioBordo extends Application {
         bRemoveOcorrencia.getStyleClass().add("btRemoveOcorrencia");
         pane.getChildren().add(bRemoveOcorrencia);
 
+        sBrinquedoCima = new Separator(Orientation.HORIZONTAL);
+        sBrinquedoCima.setPrefWidth(775);
+        sBrinquedoLeft = new Separator(Orientation.VERTICAL);
+        sBrinquedoLeft.setPrefHeight(200);
+        sBrinquedoRight = new Separator(Orientation.VERTICAL);
+        sBrinquedoRight.setPrefHeight(200);
+        sBrinquedoBotton = new Separator(Orientation.HORIZONTAL);
+        sBrinquedoBotton.setPrefWidth(915);
+        
+        pane.getChildren().addAll(sBrinquedoBotton, sBrinquedoCima, sBrinquedoLeft, sBrinquedoRight);
+        
         tabelaBrinquedos = new TableView();
         colunaId = new TableColumn("Id");
         colunaNome = new TableColumn("Nome");
@@ -195,12 +225,26 @@ public class DiarioBordo extends Application {
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
-        tabelaBrinquedos.setPrefSize(729, 170);
+        tabelaBrinquedos.setPrefSize(700, 170);
         tabelaBrinquedos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaBrinquedos.getColumns().addAll(colunaId, colunaNome);
 
         pane.getChildren().add(tabelaBrinquedos);
 
+        sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
+        sOcorrenciaCima.setPrefWidth(842);
+        
+        sOcorrenciaRight = new Separator(Orientation.VERTICAL);
+        sOcorrenciaRight.setPrefHeight(200);
+        
+        sOcorrenciaBotton = new Separator(Orientation.HORIZONTAL);
+        sOcorrenciaBotton.setPrefWidth(915);
+        
+        sOcorrenciaLeft = new Separator(Orientation.VERTICAL);
+        sOcorrenciaLeft.setPrefHeight(200);
+        
+        pane.getChildren().addAll(sOcorrenciaCima, sOcorrenciaRight, sOcorrenciaBotton, sOcorrenciaLeft);
+        
         tabelaOcorrencia = new TableView();
         id = new TableColumn("Id");
         descricao = new TableColumn("Descrição");
@@ -210,7 +254,7 @@ public class DiarioBordo extends Application {
         descricao.setCellValueFactory(new PropertyValueFactory("descricao"));
         colunaMonitor.setCellValueFactory(new PropertyValueFactory("monitor"));
 
-        tabelaOcorrencia.setPrefSize(729, 170);
+        tabelaOcorrencia.setPrefSize(700, 170);
         tabelaOcorrencia.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaOcorrencia.getColumns().addAll(id, descricao, colunaMonitor);
         pane.getChildren().add(tabelaOcorrencia);
@@ -219,6 +263,11 @@ public class DiarioBordo extends Application {
     public void initLayout() {
         lData.setLayoutX(10);
         lData.setLayoutY(23);
+        
+        lBrinquedo.setLayoutX(15);
+        lBrinquedo.setLayoutY(71);
+        lOcorrencia.setLayoutX(15);
+        lOcorrencia.setLayoutY(295);
 
         dpData.setLayoutX(50);
         dpData.setLayoutY(20);
@@ -228,24 +277,41 @@ public class DiarioBordo extends Application {
         txMFechou.setLayoutY(20);
         txVisitas.setLayoutX(878);
         txVisitas.setLayoutY(20);
-        cbBrinquedos.setLayoutX(10);
-        cbBrinquedos.setLayoutY(110);
+        cbBrinquedos.setLayoutX(25);
+        cbBrinquedos.setLayoutY(105);
 
-        bAddBrinquedos.setLayoutX(10);
-        bAddBrinquedos.setLayoutY(200);
-        bRemoveBrinquedos.setLayoutX(10);
-        bRemoveBrinquedos.setLayoutY(242);
-        bAddOcorrencia.setLayoutX(10);
+        bAddBrinquedos.setLayoutX(25);
+        bAddBrinquedos.setLayoutY(195);
+        bRemoveBrinquedos.setLayoutX(25);
+        bRemoveBrinquedos.setLayoutY(238);
+        bAddOcorrencia.setLayoutX(25);
         bAddOcorrencia.setLayoutY(340);
-        bEditaOcorrencia.setLayoutX(10);
+        bEditaOcorrencia.setLayoutX(25);
         bEditaOcorrencia.setLayoutY(380);
-        bRemoveOcorrencia.setLayoutX(10);
+        bRemoveOcorrencia.setLayoutX(25);
         bRemoveOcorrencia.setLayoutY(420);
 
-        tabelaBrinquedos.setLayoutX(200);
-        tabelaBrinquedos.setLayoutY(100);
-        tabelaOcorrencia.setLayoutX(200);
-        tabelaOcorrencia.setLayoutY(340);
+        sBrinquedoCima.setLayoutX(150);
+        sBrinquedoCima.setLayoutY(80);
+        sBrinquedoLeft.setLayoutX(10);
+        sBrinquedoLeft.setLayoutY(80);
+        sBrinquedoRight.setLayoutX(924);
+        sBrinquedoRight.setLayoutY(80);
+        sBrinquedoBotton.setLayoutX(11);
+        sBrinquedoBotton.setLayoutY(280);
+        tabelaBrinquedos.setLayoutX(210);
+        tabelaBrinquedos.setLayoutY(95);
+        
+        sOcorrenciaCima.setLayoutX(85);
+        sOcorrenciaCima.setLayoutY(305);
+        sOcorrenciaRight.setLayoutX(924);
+        sOcorrenciaRight.setLayoutY(305);
+        sOcorrenciaBotton.setLayoutX(11);
+        sOcorrenciaBotton.setLayoutY(504);
+        sOcorrenciaLeft.setLayoutX(10);
+        sOcorrenciaLeft.setLayoutY(305);
+        tabelaOcorrencia.setLayoutX(210);
+        tabelaOcorrencia.setLayoutY(320);
     }
 
     public void initListeners() {
@@ -387,8 +453,8 @@ public class DiarioBordo extends Application {
 //        if(diario.getMonitorAbriu() != null)
             txMAbriu.setText(diario.getMonitorAbriu() + "");
 
-//        if(diario.getMonitorFechou() != null)
-            txMFechou.setText(diario.getMonitorFechou() + "");
+            if(diario.getMonitorFechou() != null)
+                txMFechou.setText(diario.getMonitorFechou() + "");
 
             //       if(diario.getVisitasNoDia() >= 0)
             txVisitas.setText(diario.getVisitasNoDia() + "");
