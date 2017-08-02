@@ -180,10 +180,7 @@ public class ListarVisita extends Application{
                         return true;
                     }else if ((user.getDia()+ "").toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    }else if ((user.getMonitor()+ "").toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
                     }
-
                     return false;
                 });
             });

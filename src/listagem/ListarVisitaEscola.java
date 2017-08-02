@@ -6,21 +6,27 @@ import cadastro.CadastroVisitacaoEscola;
 import com.jfoenix.controls.JFXButton;
 import entidade.Crianca;
 import entidade.Monitor;
+import entidade.Visita;
 import entidade.VisitacaoEscola;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -33,10 +39,6 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
 public class ListarVisitaEscola extends Application{
     private AnchorPane pane;
     private TextField txPesquisa;
@@ -54,7 +56,8 @@ public class ListarVisitaEscola extends Application{
     TableColumn colunaMonitor;
     TableColumn colunaEscola;
 
-    ObservableList<VisitacaoEscola> visitas;
+    List<VisitacaoEscola> visitas = Dao.listar(VisitacaoEscola.class);
+    ObservableList<VisitacaoEscola> listItens = FXCollections.observableArrayList(visitas);
     
     public void setMonitor(Monitor m){
         monitor = m;
@@ -63,7 +66,7 @@ public class ListarVisitaEscola extends Application{
     @Override
     public void start(Stage parent) {
         initComponents();
-        initValues();
+//        initValues();
         initListeners();
         initLayout();
         Scene scene = new Scene(pane);
@@ -124,6 +127,7 @@ public class ListarVisitaEscola extends Application{
 
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
+        tabela.setItems(listItens);
 
         tabela.getColumns().addAll(colunaId, colunaData, colunaPeriodo, colunaMonitor, colunaEscola);
         pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
@@ -131,11 +135,11 @@ public class ListarVisitaEscola extends Application{
             pane.getChildren().add(bRemover);
     }
     
-    private void initValues(){
-        visitas = FXCollections.observableArrayList(Dao.listar(VisitacaoEscola.class));
-        tabela.setItems(visitas);
-        tabela.refresh();
-    }
+//    private void initValues(){
+//        visitas = FXCollections.observableArrayList(Dao.listar(VisitacaoEscola.class));
+//        tabela.setItems(visitas);
+//        tabela.refresh();
+//    }
 
     public void initLayout() {
         bSair.setLayoutX(10);
@@ -152,15 +156,33 @@ public class ListarVisitaEscola extends Application{
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
-        });
+        FilteredList<VisitacaoEscola> filteredData = new FilteredList<>(listItens, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super VisitacaoEscola>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getEscola().getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if ((user.getMonitor()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }else if ((user.getProfessor()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }else if ((user.getPeriodo()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
 
+                    return false;
+                });
+            });
+            SortedList<VisitacaoEscola> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
+        });
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -179,10 +201,11 @@ public class ListarVisitaEscola extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    tabela.refresh();
+                    listItens.setAll(Dao.listar(VisitacaoEscola.class));
+                    tabela.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -191,18 +214,17 @@ public class ListarVisitaEscola extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
                         try {
                             Dao.remover((VisitacaoEscola) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                        if(!Dao.listar(VisitacaoEscola.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
+                        listItens.setAll(Dao.listar(VisitacaoEscola.class));
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -216,28 +238,14 @@ public class ListarVisitaEscola extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(ListarVisitaEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    initValues();
+                    listItens.setAll(Dao.listar(VisitacaoEscola.class));
                 }
 
             });
             return row;
         });
     }
-
-    private ObservableList<VisitacaoEscola> findItens() {
-        ObservableList<VisitacaoEscola> itensEncontrados = FXCollections.observableArrayList();
-
-        for (int i = 0; i < visitas.size(); i++) {
-            if (visitas.get(i).getEscola().equals(txPesquisa.getText())) {
-                itensEncontrados.add(visitas.get(i));
-            }
-        }
-        //if(listItens)
-
-        return itensEncontrados;
-    }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
