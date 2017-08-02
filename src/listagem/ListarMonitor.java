@@ -5,15 +5,20 @@ import com.jfoenix.controls.JFXButton;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -21,14 +26,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
-public class ListarMonitor extends Application{
+public class ListarMonitor extends Application {
+
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -36,7 +37,7 @@ public class ListarMonitor extends Application{
     private JFXButton bRemover;
     private JFXButton bSair;
     private static Stage stage;
-    
+
     private Monitor monitor;
 
     TableColumn colunaId;
@@ -44,8 +45,8 @@ public class ListarMonitor extends Application{
 
     List<Monitor> monitores = Dao.listar(Monitor.class);
     ObservableList<Monitor> listItens = FXCollections.observableArrayList(monitores);
-    
-    public void setMonitor(Monitor m){
+
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
 
@@ -91,9 +92,11 @@ public class ListarMonitor extends Application{
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaNome);
-        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
-        if(monitor.getSupervisor())
+        pane.getChildren().addAll(tabela, txPesquisa, bSair);
+        if (monitor.getSupervisor()) {
             pane.getChildren().add(bRemover);
+            pane.getChildren().add(bEditar);
+        }
     }
 
     public void initLayout() {
@@ -111,13 +114,28 @@ public class ListarMonitor extends Application{
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
+        FilteredList<Monitor> filteredData = new FilteredList<>(listItens, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super Monitor>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if ((user.getNomeUsuario() + "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+            SortedList<Monitor> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
         });
 
         bSair.setOnAction(new EventHandler<ActionEvent>() {
@@ -133,17 +151,17 @@ public class ListarMonitor extends Application{
                 CadastroMonitor cm = new CadastroMonitor();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     cm.setMonitor((Monitor) tabela.getSelectionModel().getSelectedItem());
-                    
+
                     try {
                         cm.start(ListarMonitor.stage);
                     } catch (Exception ex) {
                         Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    
-                    tabela.refresh();
+                    listItens.setAll(Dao.listar(Monitor.class));
+                    tabela.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -152,34 +170,28 @@ public class ListarMonitor extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
-                        
-                        
-                        try {
-                            Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
-                        } catch (SQLIntegrityConstraintViolationException ex) {
-                            Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
+                        if (!monitor.equals((Monitor) tabela.getSelectionModel().getSelectedItem())) {
+                            try {
+                                Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
+                            } catch (SQLIntegrityConstraintViolationException ex) {
+                                Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+
+                            listItens.setAll(Dao.listar(Monitor.class));
+                            tabela.requestFocus();
+                        }else{
+                            new Alert(Alert.AlertType.NONE, "Você não pode se auto remover!", ButtonType.OK).showAndWait();
+                            tabela.requestFocus();
+                            
                         }
-                        
-                        if(!Dao.listar(Monitor.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
-    }
-
-    private ObservableList<Monitor> findItens() {
-        ObservableList<Monitor> itensEncontrados = FXCollections.observableArrayList();
-
-        for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getNome().equals(txPesquisa.getText())) {
-                itensEncontrados.add(listItens.get(i));
-            }
-        }
-        return itensEncontrados;
     }
 
     public static void main(String[] args) {

@@ -6,20 +6,15 @@ import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import entidade.Monitor;
-import java.awt.Color;
+import java.util.List;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
@@ -49,6 +44,9 @@ public class CadastroMonitor extends Application {
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(monitor != null){
+            preencheTela();
+        }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro Monitor");
@@ -165,9 +163,16 @@ public class CadastroMonitor extends Application {
     }
     
     public void preencheTela(){
+        List<Monitor> monitores = Dao.listar(Monitor.class);
         txNome.setText(monitor.getNome());
-       // if(monitor.getSupervisor())
-            //chSupervisor.
+        txNomeUser.setText(monitor.getNomeUsuario());
+        chSupervisor.setSelected(monitor.getSupervisor());
+        chSupervisor.setDisable(true);
+        for (Monitor m : monitores) {
+            if(m.getSupervisor() && !m.equals(monitor)){
+                chSupervisor.setDisable(false);
+            }
+        }
     }
 
     public static Stage getStage() {
