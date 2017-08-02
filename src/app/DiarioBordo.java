@@ -83,17 +83,17 @@ public class DiarioBordo extends Application {
     private TableColumn colunaMonitor;
 
     private StackPane stackPane;
-    
+
     private Separator sBrinquedoCima;
     private Separator sBrinquedoRight;
     private Separator sBrinquedoLeft;
     private Separator sBrinquedoBotton;
-    
+
     private Separator sOcorrenciaCima;
     private Separator sOcorrenciaRight;
     private Separator sOcorrenciaBotton;
     private Separator sOcorrenciaLeft;
-    
+
     private JFXButton bFechar;
 
     Monitor monitor;
@@ -120,7 +120,7 @@ public class DiarioBordo extends Application {
 //            dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             dpData.setValue(db.getDia());
         } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO);
             alert.showAndWait().ifPresent(b -> {
                 if (b == ButtonType.YES) {
                     db = new DiarioDeBordo();
@@ -155,7 +155,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(lData);
         lOcorrencia = new Label("Ocorrências");
         pane.getChildren().add(lOcorrencia);
-        
+
         lBrinquedo = new Label("Brinquedos mais usados");
         pane.getChildren().add(lBrinquedo);
 
@@ -217,9 +217,9 @@ public class DiarioBordo extends Application {
         sBrinquedoRight.setPrefHeight(200);
         sBrinquedoBotton = new Separator(Orientation.HORIZONTAL);
         sBrinquedoBotton.setPrefWidth(913);
-        
+
         pane.getChildren().addAll(sBrinquedoBotton, sBrinquedoCima, sBrinquedoLeft, sBrinquedoRight);
-        
+
         tabelaBrinquedos = new TableView();
         colunaId = new TableColumn("Identificador");
         colunaNome = new TableColumn("Nome");
@@ -235,18 +235,18 @@ public class DiarioBordo extends Application {
 
         sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
         sOcorrenciaCima.setPrefWidth(847);
-        
+
         sOcorrenciaRight = new Separator(Orientation.VERTICAL);
         sOcorrenciaRight.setPrefHeight(200);
-        
+
         sOcorrenciaBotton = new Separator(Orientation.HORIZONTAL);
         sOcorrenciaBotton.setPrefWidth(913);
-        
+
         sOcorrenciaLeft = new Separator(Orientation.VERTICAL);
         sOcorrenciaLeft.setPrefHeight(195);
-        
+
         pane.getChildren().addAll(sOcorrenciaCima, sOcorrenciaRight, sOcorrenciaBotton, sOcorrenciaLeft);
-        
+
         tabelaOcorrencia = new TableView();
         id = new TableColumn("Identificador");
         descricao = new TableColumn("Descrição");
@@ -260,7 +260,7 @@ public class DiarioBordo extends Application {
         tabelaOcorrencia.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaOcorrencia.getColumns().addAll(id, descricao, colunaMonitor);
         pane.getChildren().add(tabelaOcorrencia);
-        
+
         bFechar = new JFXButton("Fechar diário");
         bFechar.getStyleClass().add("btFechaDiario");
         pane.getChildren().add(bFechar);
@@ -269,7 +269,7 @@ public class DiarioBordo extends Application {
     public void initLayout() {
         lData.setLayoutX(10);
         lData.setLayoutY(23);
-        
+
         lBrinquedo.setLayoutX(10);
         lBrinquedo.setLayoutY(71);
         lOcorrencia.setLayoutX(10);
@@ -307,7 +307,7 @@ public class DiarioBordo extends Application {
         sBrinquedoBotton.setLayoutY(280);
         tabelaBrinquedos.setLayoutX(210);
         tabelaBrinquedos.setLayoutY(95);
-        
+
         sOcorrenciaCima.setLayoutX(80);
         sOcorrenciaCima.setLayoutY(305);
         sOcorrenciaRight.setLayoutX(924);
@@ -318,7 +318,7 @@ public class DiarioBordo extends Application {
         sOcorrenciaLeft.setLayoutY(310);
         tabelaOcorrencia.setLayoutX(210);
         tabelaOcorrencia.setLayoutY(320);
-        
+
         bFechar.setLayoutX(840);
         bFechar.setLayoutY(530);
     }
@@ -428,6 +428,26 @@ public class DiarioBordo extends Application {
                 }
             }
         });
+
+        bFechar.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Alert alerta = new Alert(Alert.AlertType.CONFIRMATION, "Realmente deseja Fechar o diário de Hoje?", ButtonType.YES, ButtonType.NO);
+                alerta.showAndWait().ifPresent(b -> {
+                    if (b == ButtonType.YES) {
+                        List<DiarioDeBordo> diarios = Dao.listar(DiarioDeBordo.class);
+                        for (int i = 0; i < diarios.size(); i++) {
+                            if (diarios.get(i).getDia().equals(dpData.getValue())) {
+                                diarios.get(i).setMonitorFechou(monitor);
+                                Dao.salvar(diarios.get(i));
+                                txMFechou.setText(diarios.get(i).getMonitorFechou() + "");
+                            }
+                        }
+                        bFechar.setDisable(true);
+                    }
+                });
+            }
+        });
     }
 
     public void abilitaDesabilitaComponets(Boolean b) {
@@ -451,7 +471,6 @@ public class DiarioBordo extends Application {
         } else {
             dpData.setStyle("-fx-border-width: 0;");
         }
-
     }
 
     public void preencheTela(DiarioDeBordo diario) {
@@ -463,8 +482,13 @@ public class DiarioBordo extends Application {
 //        if(diario.getMonitorAbriu() != null)
             txMAbriu.setText(diario.getMonitorAbriu() + "");
 
-            if(diario.getMonitorFechou() != null)
+            if (diario.getMonitorFechou() != null) {
                 txMFechou.setText(diario.getMonitorFechou() + "");
+                bFechar.setDisable(true);
+            } else {
+                txMFechou.setText("");
+                bFechar.setDisable(false);
+            }
 
             //       if(diario.getVisitasNoDia() >= 0)
             txVisitas.setText(diario.getVisitasNoDia() + "");
