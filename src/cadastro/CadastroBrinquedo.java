@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,12 +35,16 @@ import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -70,29 +75,29 @@ public class CadastroBrinquedo extends Application {
     private JFXTextField txNome;
     private JFXTextField txFabricante;
     private JFXTextField txFaixaEtaria;
-    
+
     private JFXComboBox cbEstado;
     private JFXComboBox cbClassificacao;
 
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
-    
-    
+
+    private Spinner<Integer> sQuantidade;
 
     private List<Classificacao> classificacoes = Dao.listar(Classificacao.class);
 
     private FileChooser fileChooser;
     private byte[] bImagem;
-    
-    private Brinquedo brinquedo;
-    
-    public void setBrinquedo(Brinquedo b){
-        if(b != null)
-            brinquedo = b;
-    }
-    
-    //ImageView vizualizador;
 
+    private Brinquedo brinquedo;
+
+    public void setBrinquedo(Brinquedo b) {
+        if (b != null) {
+            brinquedo = b;
+        }
+    }
+
+    //ImageView vizualizador;
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
@@ -105,9 +110,10 @@ public class CadastroBrinquedo extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
 
-        if(brinquedo != null)
+        if (brinquedo != null) {
             preencheTela();
-        
+        }
+
         stage.initOwner(parent);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.showAndWait();
@@ -123,32 +129,35 @@ public class CadastroBrinquedo extends Application {
         lFoto.setStyle("-fx-border-color: blue");
         lFoto.setPrefSize(105, 120);
         pane.getChildren().add(lFoto);
-        
-        img = new ImageView();
 
+        img = new ImageView();
 
         txNome = new JFXTextField();
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
         txNome.setPrefWidth(250);
         pane.getChildren().add(txNome);
+
+        sQuantidade = new Spinner<Integer>();
+        sQuantidade.setPrefWidth(60);
+        sQuantidade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        pane.getChildren().add(sQuantidade);
+
         txFabricante = new JFXTextField();
         txFabricante.setPromptText("Fabricante");
         txFabricante.setLabelFloat(true);
         txFabricante.setPrefWidth(250);
         pane.getChildren().add(txFabricante);
-        
+
         txFaixaEtaria = new JFXTextField();
         txFaixaEtaria.setPromptText("Faixa Etária: ex 5-10");
         txFaixaEtaria.setLabelFloat(true);
         pane.getChildren().add(txFaixaEtaria);
-        
+
         cbEstado = new JFXComboBox(FXCollections.observableArrayList(Estado.values()));
         cbEstado.setPromptText("Estado");
         cbEstado.setLabelFloat(true);
         pane.getChildren().add(cbEstado);
-        
-        
 
         cbClassificacao = new JFXComboBox(FXCollections.observableArrayList(classificacoes));
         cbClassificacao.setPromptText("Classificação");
@@ -162,7 +171,7 @@ public class CadastroBrinquedo extends Application {
         btCancelar = new JFXButton("Cancelar");
         btCancelar.getStyleClass().add("btCancelar");
         pane.getChildren().add(btCancelar);
-        
+
         fileChooser = new FileChooser();
     }
 
@@ -172,13 +181,17 @@ public class CadastroBrinquedo extends Application {
 
         txNome.setLayoutX(10);
         txNome.setLayoutY(20);
+
+        sQuantidade.setLayoutX(280);
+        sQuantidade.setLayoutY(20);
+
         txFabricante.setLayoutX(10);
         txFabricante.setLayoutY(70);
         cbEstado.setLayoutX(10);
         cbEstado.setLayoutY(170);
         cbClassificacao.setLayoutX(10);
         cbClassificacao.setLayoutY(220);
-        
+
         txFaixaEtaria.setLayoutX(10);
         txFaixaEtaria.setLayoutY(120);
 
@@ -199,8 +212,9 @@ public class CadastroBrinquedo extends Application {
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(brinquedo == null)
+                if (brinquedo == null) {
                     brinquedo = new Brinquedo();
+                }
                 brinquedo.setNome(txNome.getText());
                 brinquedo.setFabricante(txFabricante.getText());
                 brinquedo.setEstado((Estado) cbEstado.getSelectionModel().getSelectedItem());
@@ -208,6 +222,26 @@ public class CadastroBrinquedo extends Application {
                 brinquedo.setFoto(bImagem);
                 brinquedo.setFaixaEtaria(txFaixaEtaria.getText());
                 Dao.salvar(brinquedo);
+                if (sQuantidade.getValue() > 1) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Salvando multiplos objetos");
+                    alert.setHeaderText("Ao clicar em OK, você irá cadastrar " + sQuantidade.getValue() + " unidades deste brinquedo");
+                    alert.setContentText("Deseja proceder com esta operação?");
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        for (int i = 1; i < sQuantidade.getValue(); i++) {
+                            brinquedo = new Brinquedo();
+                            brinquedo.setNome(txNome.getText());
+                            brinquedo.setFabricante(txFabricante.getText());
+                            brinquedo.setEstado((Estado) cbEstado.getSelectionModel().getSelectedItem());
+                            brinquedo.setClassificacao((Classificacao) cbClassificacao.getSelectionModel().getSelectedItem());
+                            brinquedo.setFoto(bImagem);
+                            brinquedo.setFaixaEtaria(txFaixaEtaria.getText());
+                            Dao.salvar(brinquedo);
+                        }
+                    }
+                }
                 CadastroBrinquedo.getStage().hide();
             }
         });
@@ -219,7 +253,7 @@ public class CadastroBrinquedo extends Application {
                 fileChooser.getExtensionFilters().addAll(new ExtensionFilter("Imagem", "*.png", "*.jpg"));
 
                 File selectedFile = fileChooser.showOpenDialog(stage);
-                
+
                 try {
                     bImagem = imageToByte(selectedFile.getPath());
                 } catch (IOException ex) {
@@ -235,7 +269,7 @@ public class CadastroBrinquedo extends Application {
                     } catch (MalformedURLException ex) {
                         Logger.getLogger(CadastroBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     img.setImage(imagem);
                     lFoto.setText("");
                     lFoto.setGraphic(img);
@@ -243,7 +277,8 @@ public class CadastroBrinquedo extends Application {
             }
         });
     }
-     //Imagem para Byte, conversão.
+    //Imagem para Byte, conversão.
+
     public byte[] imageToByte(String image) throws IOException {
         InputStream is = null;
         byte[] buffer = null;
@@ -253,30 +288,30 @@ public class CadastroBrinquedo extends Application {
         is.close();
         return buffer;
     }
-    
-    public void preencheTela() throws IOException{
+
+    public void preencheTela() throws IOException {
         txNome.setText(brinquedo.getNome());
         txFabricante.setText(brinquedo.getFabricante());
         txFaixaEtaria.setText(brinquedo.getFaixaEtaria());
         cbClassificacao.getSelectionModel().select(brinquedo.getClassificacao());
         cbEstado.getSelectionModel().select(brinquedo.getEstado());
-        if(brinquedo.getFoto() != null)
+        if (brinquedo.getFoto() != null) {
             exibeFoto();
+        }
     }
-    
-    public void exibeFoto() throws IOException{
+
+    public void exibeFoto() throws IOException {
         byte[] foto = null;
         BufferedImage buffer = null;
         buffer = ImageIO.read(new ByteArrayInputStream(brinquedo.getFoto()));
-        Image imagem = SwingFXUtils.toFXImage(buffer, null);                
+        Image imagem = SwingFXUtils.toFXImage(buffer, null);
         img.setImage(imagem);
         img.setFitWidth(lFoto.getPrefWidth());
         img.setFitHeight(lFoto.getPrefHeight());
-        
+
         lFoto.setText("");
         lFoto.setGraphic(img);
     }
-
 
     public static Stage getStage() {
         return stage;

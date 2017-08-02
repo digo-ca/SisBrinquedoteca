@@ -7,12 +7,15 @@ import entidade.Brinquedo;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -26,16 +29,17 @@ import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-public class ListarBrinquedo extends Application{
+public class ListarBrinquedo extends Application {
+
     private AnchorPane pane;
     private TextField txPesquisa;
-    private TableView tabela;
+    private TableView<Brinquedo> tabela;
     private JFXButton bEditar;
     private JFXButton bRemover;
     private JFXButton bSair;
     private JFXCheckBox chDetalhes;
     private static Stage stage;
-    
+
     private Monitor monitor;
 
     TableColumn colunaId;
@@ -48,7 +52,7 @@ public class ListarBrinquedo extends Application{
     List<Brinquedo> brinquedos = Dao.listar(Brinquedo.class);
     ObservableList<Brinquedo> listItens = FXCollections.observableArrayList(brinquedos);
     
-    public void setMonitor(Monitor m){
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
 
@@ -102,8 +106,9 @@ public class ListarBrinquedo extends Application{
 
         tabela.getColumns().addAll(colunaId, colunaNome, colunaFabricante, colunaEstado, colunaClassificacao, colunaFaixaEtaria);
         pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
-        if(monitor.getSupervisor())
+        if (monitor.getSupervisor()) {
             pane.getChildren().add(bRemover);
+        }
     }
 
     public void initLayout() {
@@ -121,13 +126,31 @@ public class ListarBrinquedo extends Application{
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
+
+        FilteredList<Brinquedo> filteredData = new FilteredList<>(listItens, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super Brinquedo>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if ((user.getEstado() + "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (user.getFabricante().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+            SortedList<Brinquedo> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
         });
 
         bSair.setOnAction(new EventHandler<ActionEvent>() {
@@ -143,13 +166,14 @@ public class ListarBrinquedo extends Application{
                 CadastroBrinquedo cb = new CadastroBrinquedo();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     cb.setBrinquedo((Brinquedo) tabela.getSelectionModel().getSelectedItem());
-                    
+
                     try {
                         cb.start(ListarBrinquedo.stage);
                     } catch (Exception ex) {
                         Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    tabela.refresh();
+                    listItens.setAll(Dao.listar(Brinquedo.class));
+                    tabela.requestFocus();
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                 }
@@ -161,15 +185,14 @@ public class ListarBrinquedo extends Application{
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
-                        
+
                         try {
                             Dao.remover((Brinquedo) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                        if(!Dao.listar(Brinquedo.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
+                        listItens.setAll(Dao.listar(Brinquedo.class));
+                        tabela.requestFocus();
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
@@ -177,18 +200,6 @@ public class ListarBrinquedo extends Application{
             }
         });
     }
-
-    private ObservableList<Brinquedo> findItens() {
-        ObservableList<Brinquedo> itensEncontrados = FXCollections.observableArrayList();
-
-        for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getNome().equals(txPesquisa.getText())) {
-                itensEncontrados.add(listItens.get(i));
-            }
-        }
-        return itensEncontrados;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }
