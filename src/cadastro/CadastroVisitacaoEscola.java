@@ -288,6 +288,7 @@ public class CadastroVisitacaoEscola extends Application {
                 //LocalDate data = cData.getValue();
                 if (visitaEscola == null) {
                     visitaEscola = new VisitacaoEscola();
+                    
                 }
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
@@ -320,8 +321,8 @@ public class CadastroVisitacaoEscola extends Application {
                     diario.setOcorrencias(list);
                 } else { //Caso tenha um cadastrado edita
                     diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().add(item);
-
+                    if(!diario.getOcorrencias().contains(item))
+                        diario.getOcorrencias().add(item);
                 }
                 Dao.salvar(diario);
 
