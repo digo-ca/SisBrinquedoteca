@@ -70,7 +70,8 @@
 }
 
 .btCadResp{
-    -fx-background-color: green;   
+    -fx-background-color: #32CD32;
+    -fx-text-fill: white;
 }
 
 

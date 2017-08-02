@@ -125,6 +125,8 @@ public class CadastroVisita extends Application{
         cData.setValue(new Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         pane.getChildren().add(cData);
         tpHoraEntrada = new JFXTimePicker();
+        if(visita == null)
+            tpHoraEntrada.setValue(LocalTime.now());
         tpHoraEntrada.setEditable(false);
         //tpHoraEntrada.setPromptText("Hora de Entrada");
         pane.getChildren().add(tpHoraEntrada);
@@ -132,7 +134,8 @@ public class CadastroVisita extends Application{
         tpHoraSaida.setEditable(false);
         pane.getChildren().add(tpHoraSaida);
         cbCrianca = new JFXComboBox(FXCollections.observableArrayList(criancas));
-        cbCrianca.setPromptText("Criança");
+        cbCrianca.setMaxWidth(220);
+        cbCrianca.setPromptText("Selecione uma Criança");
         cbCrianca.setLabelFloat(true);
         pane.getChildren().add(cbCrianca);
         cbMonitor = new JFXComboBox(FXCollections.observableArrayList(monitores));

@@ -23,7 +23,7 @@ public class Crianca implements Serializable{
     private String nome;
 
 //    @Temporal(TemporalType.DATE)
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(nullable = false/*, columnDefinition = "DATE"*/)
     private LocalDate nascimento;
 
     @Column(length = 100)

@@ -30,6 +30,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -145,7 +147,7 @@ public class CadastroCrianca extends Application {
 
         cbResponsavel = new JFXComboBox(FXCollections.observableArrayList(responsaveis));
         //cbResponsavel.setEditable(true);
-        cbResponsavel.setPrefWidth(220);
+        cbResponsavel.setPrefWidth(190);
         cbResponsavel.setPromptText("Responsável");
         cbResponsavel.setLabelFloat(true);
         pane.getChildren().add(cbResponsavel);
@@ -201,9 +203,9 @@ public class CadastroCrianca extends Application {
         dpNascimento.setLayoutY(70);
         txEscola.setLayoutX(10);
         txEscola.setLayoutY(120);
-        cbResponsavel.setLayoutX(10);
+        cbResponsavel.setLayoutX(40);
         cbResponsavel.setLayoutY(170);
-        cadResp.setLayoutX(235);
+        cadResp.setLayoutX(10);
         cadResp.setLayoutY(170);
 
         addResp.setLayoutX(395);
@@ -228,7 +230,7 @@ public class CadastroCrianca extends Application {
                     tabela.getItems().add(cbResponsavel.getSelectionModel().getSelectedItem());
                     cbResponsavel.getItems().remove(cbResponsavel.getSelectionModel().getSelectedItem());
                 } else {
-                    JOptionPane.showMessageDialog(null, "Selecione um responsável ao lado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um responsável", ButtonType.OK).show();
                 }
             }
         });
@@ -240,7 +242,7 @@ public class CadastroCrianca extends Application {
                     cbResponsavel.getItems().add(tabela.getSelectionModel().getSelectedItem());
                     tabela.getItems().remove(tabela.getSelectionModel().getSelectedIndex());
                 } else {
-                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela", ButtonType.OK).show();
                 }
             }
         });
