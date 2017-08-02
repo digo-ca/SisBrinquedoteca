@@ -114,6 +114,8 @@ public class CadastroVisitacaoEscola extends Application {
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(visitaEscola != null)
+            preencheTela();
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de visita de escola");
@@ -339,6 +341,17 @@ public class CadastroVisitacaoEscola extends Application {
                 cbEscola.setItems(lisEscola);
             }
         });
+    }
+    
+    public void preencheTela(){
+        cData.setValue(visitaEscola.getData());
+        cbPeriodo.getSelectionModel().select(visitaEscola.getPeriodo());
+        cbMonitor.getSelectionModel().select(visitaEscola.getMonitor());
+        cbEscola.getSelectionModel().select(visitaEscola.getEscola());
+        txProfessor.setText(visitaEscola.getProfessor());
+        txAtivMinistradas.setText(visitaEscola.getAtividadesMinistradas());
+        txFaixaEtaria.setText(visitaEscola.getFaixaEtariaCriancas());
+        listaAlunos.setItems(FXCollections.observableArrayList(visitaEscola.getAlunos()));
     }
 
     public static Stage getStage() {

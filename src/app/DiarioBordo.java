@@ -93,6 +93,8 @@ public class DiarioBordo extends Application {
     private Separator sOcorrenciaRight;
     private Separator sOcorrenciaBotton;
     private Separator sOcorrenciaLeft;
+    
+    private JFXButton bFechar;
 
     Monitor monitor;
     DiarioDeBordo db;
@@ -146,7 +148,7 @@ public class DiarioBordo extends Application {
     public void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
-        pane.setPrefSize(900, 600);
+        pane.setPrefSize(900, 500);
         pane.getStyleClass().add("pane");
 
         lData = new Label("Dia");
@@ -208,18 +210,18 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(bRemoveOcorrencia);
 
         sBrinquedoCima = new Separator(Orientation.HORIZONTAL);
-        sBrinquedoCima.setPrefWidth(775);
+        sBrinquedoCima.setPrefWidth(780);
         sBrinquedoLeft = new Separator(Orientation.VERTICAL);
-        sBrinquedoLeft.setPrefHeight(200);
+        sBrinquedoLeft.setPrefHeight(195);
         sBrinquedoRight = new Separator(Orientation.VERTICAL);
         sBrinquedoRight.setPrefHeight(200);
         sBrinquedoBotton = new Separator(Orientation.HORIZONTAL);
-        sBrinquedoBotton.setPrefWidth(915);
+        sBrinquedoBotton.setPrefWidth(913);
         
         pane.getChildren().addAll(sBrinquedoBotton, sBrinquedoCima, sBrinquedoLeft, sBrinquedoRight);
         
         tabelaBrinquedos = new TableView();
-        colunaId = new TableColumn("Id");
+        colunaId = new TableColumn("Identificador");
         colunaNome = new TableColumn("Nome");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -232,21 +234,21 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(tabelaBrinquedos);
 
         sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
-        sOcorrenciaCima.setPrefWidth(842);
+        sOcorrenciaCima.setPrefWidth(847);
         
         sOcorrenciaRight = new Separator(Orientation.VERTICAL);
         sOcorrenciaRight.setPrefHeight(200);
         
         sOcorrenciaBotton = new Separator(Orientation.HORIZONTAL);
-        sOcorrenciaBotton.setPrefWidth(915);
+        sOcorrenciaBotton.setPrefWidth(913);
         
         sOcorrenciaLeft = new Separator(Orientation.VERTICAL);
-        sOcorrenciaLeft.setPrefHeight(200);
+        sOcorrenciaLeft.setPrefHeight(195);
         
         pane.getChildren().addAll(sOcorrenciaCima, sOcorrenciaRight, sOcorrenciaBotton, sOcorrenciaLeft);
         
         tabelaOcorrencia = new TableView();
-        id = new TableColumn("Id");
+        id = new TableColumn("Identificador");
         descricao = new TableColumn("Descrição");
         colunaMonitor = new TableColumn("Monitor");
 
@@ -258,15 +260,19 @@ public class DiarioBordo extends Application {
         tabelaOcorrencia.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tabelaOcorrencia.getColumns().addAll(id, descricao, colunaMonitor);
         pane.getChildren().add(tabelaOcorrencia);
+        
+        bFechar = new JFXButton("Fechar diário");
+        bFechar.getStyleClass().add("btFechaDiario");
+        pane.getChildren().add(bFechar);
     }
 
     public void initLayout() {
         lData.setLayoutX(10);
         lData.setLayoutY(23);
         
-        lBrinquedo.setLayoutX(15);
+        lBrinquedo.setLayoutX(10);
         lBrinquedo.setLayoutY(71);
-        lOcorrencia.setLayoutX(15);
+        lOcorrencia.setLayoutX(10);
         lOcorrencia.setLayoutY(295);
 
         dpData.setLayoutX(50);
@@ -291,27 +297,30 @@ public class DiarioBordo extends Application {
         bRemoveOcorrencia.setLayoutX(25);
         bRemoveOcorrencia.setLayoutY(420);
 
-        sBrinquedoCima.setLayoutX(150);
+        sBrinquedoCima.setLayoutX(145);
         sBrinquedoCima.setLayoutY(80);
-        sBrinquedoLeft.setLayoutX(10);
-        sBrinquedoLeft.setLayoutY(80);
+        sBrinquedoLeft.setLayoutX(12);
+        sBrinquedoLeft.setLayoutY(85);
         sBrinquedoRight.setLayoutX(924);
         sBrinquedoRight.setLayoutY(80);
-        sBrinquedoBotton.setLayoutX(11);
+        sBrinquedoBotton.setLayoutX(13);
         sBrinquedoBotton.setLayoutY(280);
         tabelaBrinquedos.setLayoutX(210);
         tabelaBrinquedos.setLayoutY(95);
         
-        sOcorrenciaCima.setLayoutX(85);
+        sOcorrenciaCima.setLayoutX(80);
         sOcorrenciaCima.setLayoutY(305);
         sOcorrenciaRight.setLayoutX(924);
         sOcorrenciaRight.setLayoutY(305);
-        sOcorrenciaBotton.setLayoutX(11);
+        sOcorrenciaBotton.setLayoutX(13);
         sOcorrenciaBotton.setLayoutY(504);
-        sOcorrenciaLeft.setLayoutX(10);
-        sOcorrenciaLeft.setLayoutY(305);
+        sOcorrenciaLeft.setLayoutX(12);
+        sOcorrenciaLeft.setLayoutY(310);
         tabelaOcorrencia.setLayoutX(210);
         tabelaOcorrencia.setLayoutY(320);
+        
+        bFechar.setLayoutX(840);
+        bFechar.setLayoutY(530);
     }
 
     public void initListeners() {
@@ -344,6 +353,7 @@ public class DiarioBordo extends Application {
                     tabelaBrinquedos.getItems().add(cbBrinquedos.getSelectionModel().getSelectedItem());
                     cbBrinquedos.getItems().remove(cbBrinquedos.getSelectionModel().getSelectedItem());
                     Dao.salvar(db);
+                    cbBrinquedos.getSelectionModel().select(-1);
                 } else {
                     //JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
                     new Alert(Alert.AlertType.NONE, "Selecione um brinquedo acima para adiciona-lo", ButtonType.OK).show();
