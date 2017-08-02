@@ -13,15 +13,19 @@ import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -31,13 +35,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javax.persistence.RollbackException;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
 public class ListarCrianca extends Application {
 
     private AnchorPane pane;
@@ -56,11 +55,10 @@ public class ListarCrianca extends Application {
 
     private ObservableList<Crianca> criancas;
     private Monitor monitor;
-    
-    public void setMonitor(Monitor m){
+
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
-    
 
     @Override
     public void start(Stage parent) throws Exception {
@@ -115,12 +113,13 @@ public class ListarCrianca extends Application {
         sair = new JFXButton("Sair");
         editar = new JFXButton("Editar");
         remover = new JFXButton("Remover");
-        
+
         initLayout();
         tabela.getColumns().addAll(colunaId, colunaNome, colunaNascimento);
         pane.getChildren().addAll(tabela, txPesquisa, sair, editar);
-        if(monitor.getSupervisor())
+        if (monitor.getSupervisor()) {
             pane.getChildren().add(remover);
+        }
     }
 
     private void initValues() {
@@ -148,14 +147,31 @@ public class ListarCrianca extends Application {
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
+
+        FilteredList<Crianca> filteredData = new FilteredList<>(criancas, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super Crianca>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (user.getEscola().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+            SortedList<Crianca> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
         });
+
         sair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -166,43 +182,45 @@ public class ListarCrianca extends Application {
             @Override
             public void handle(ActionEvent event) {
                 CadastroCrianca edita = new CadastroCrianca();
-                if(tabela.getSelectionModel().getSelectedIndex() != -1){
+                if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     edita.setCrianca((Crianca) tabela.getSelectionModel().getSelectedItem());
                     try {
                         edita.start(ListarCrianca.stage);
                     } catch (Exception ex) {
                         Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    tabela.refresh();
-                }else{
-                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                    criancas.setAll(Dao.listar(Crianca.class));
+                    tabela.requestFocus();
+                } else {
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
-        
+
         remover.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(tabela.getSelectionModel().getSelectedIndex() != -1){
-                    if(JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0){
+                if (tabela.getSelectionModel().getSelectedIndex() != -1) {
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?",ButtonType.CANCEL,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
                         try {
                             Dao.remover(tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarCrianca.class.getName()).log(Level.SEVERE, null, ex);
-                        }catch(RollbackException re){
-                            JOptionPane.showMessageDialog(null, "Impossível excluir o item selecionado, pois o mesmo está inserido em uma visita");
+                        } catch (RollbackException re) {
+                            new Alert(Alert.AlertType.ERROR, "Impossível excluir o item selecionado, pois o mesmo está inserido em uma visita", ButtonType.OK).show();
                         }
-                        
-                        if(!Dao.listar(Crianca.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
+                        criancas.setAll(Dao.listar(Crianca.class));
+                        tabela.requestFocus();
+                    } else {
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null, "Selecione um item na tabela");
+                } else {
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
-        
-        
+
         tabela.setRowFactory(tv -> {
             TableRow<Crianca> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -221,20 +239,7 @@ public class ListarCrianca extends Application {
         });
     }
 
-    public ObservableList<Crianca> findItens() {
-        ObservableList<Crianca> itensEncontrados = FXCollections.observableArrayList();
-
-        for (int i = 0; i < criancas.size(); i++) {
-            if (criancas.get(i).getNome().equals(txPesquisa.getText())) {
-                itensEncontrados.add(criancas.get(i));
-            }
-        }
-
-        return itensEncontrados;
-    }
-
     public static void main(String[] args) {
         launch(args);
     }
-    
 }
