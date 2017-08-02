@@ -9,43 +9,32 @@ import cadastro.CadastroResponsavel;
 import com.jfoenix.controls.JFXButton;
 import entidade.Monitor;
 import entidade.Responsavel;
-import static java.awt.PageAttributes.MediaType.E;
-import static java.lang.Math.E;
-import static java.lang.StrictMath.E;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import static javafx.scene.input.KeyCode.E;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javax.persistence.RollbackException;
 import javax.swing.JOptionPane;
-import static jdk.nashorn.internal.objects.NativeMath.E;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
 public class ListarResponsavel extends Application {
 
     private AnchorPane pane;
@@ -142,13 +131,32 @@ public class ListarResponsavel extends Application {
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
+        FilteredList<Responsavel> filteredData = new FilteredList<>(listItens, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super Responsavel>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if ((user.getEndereco()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }else if ((user.getNumeroVinculo()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }else if ((user.getVinculo()+ "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+            SortedList<Responsavel> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
         });
 
         bSair.setOnAction(new EventHandler<ActionEvent>() {
@@ -169,10 +177,11 @@ public class ListarResponsavel extends Application {
                     } catch (Exception ex) {
                         Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    tabela.refresh();
+                    listItens.setAll(Dao.listar(Responsavel.class));
+                    tabela.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum responsável selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -181,7 +190,7 @@ public class ListarResponsavel extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
                         try {
                             Dao.remover((Responsavel) tabela.getSelectionModel().getSelectedItem());
                         } catch (RollbackException re) {
@@ -189,12 +198,12 @@ public class ListarResponsavel extends Application {
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                        if(!Dao.listar(Responsavel.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
+                        listItens.setAll(Dao.listar(Responsavel.class));
+                        tabela.requestFocus();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
