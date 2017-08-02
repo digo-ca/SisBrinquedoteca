@@ -6,22 +6,25 @@
 package listagem;
 
 import cadastro.CadastroEscola;
-import cadastro.CadastroResponsavel;
 import com.jfoenix.controls.JFXButton;
 import entidade.Escola;
 import entidade.Monitor;
-import entidade.Responsavel;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -29,14 +32,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.persistence.RollbackException;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
 public class ListarEscola extends Application{
      private AnchorPane pane;
     private TextField txPesquisa;
@@ -132,13 +129,30 @@ public class ListarEscola extends Application{
     }
 
     public void initListeners() {
-        txPesquisa.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (!txPesquisa.getText().equals("")) {
-                    tabela.setItems(findItens());
-                }
-            }
+        FilteredList<Escola> filteredData = new FilteredList<>(listItens, (e) -> true);
+        txPesquisa.setOnKeyReleased((e) -> {
+            txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                filteredData.setPredicate((Predicate<? super Escola>) user -> {
+                    if (newValue == null || newValue.isEmpty()) {
+                        return true;
+                    }
+                    String lowerCaseFilter = newValue.toLowerCase();
+                    if ((user.getId() + "").contains(newValue)) {
+                        return true;
+                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (user.getResponsavel().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (user.getEndereco().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false;
+                });
+            });
+            SortedList<Escola> sortedData = new SortedList<>(filteredData);
+            sortedData.comparatorProperty().bind(tabela.comparatorProperty());
+            tabela.setItems(sortedData);
         });
 
         bSair.setOnAction(new EventHandler<ActionEvent>() {
@@ -159,10 +173,11 @@ public class ListarEscola extends Application{
                     } catch (Exception ex) {
                         Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
-                    tabela.refresh();
+                    listItens.setAll(Dao.listar(Escola.class));
+                    tabela.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -171,37 +186,25 @@ public class ListarEscola extends Application{
             @Override
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?",ButtonType.CANCEL,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
                         
                         try {
                             Dao.remover((Escola) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        
-                        if(!Dao.listar(Escola.class).contains(tabela.getSelectionModel().getSelectedItem()))
-                            tabela.getItems().remove(tabela.getSelectionModel().getSelectedItem());
+                        listItens.setAll(Dao.listar(Escola.class));
+                        tabela.requestFocus();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
     }
-
-    private ObservableList<Escola> findItens() {
-        ObservableList<Escola> itensEncontrados = FXCollections.observableArrayList();
-
-        for (int i = 0; i < listItens.size(); i++) {
-            if (listItens.get(i).getNome().equals(txPesquisa.getText())) {
-                itensEncontrados.add(listItens.get(i));
-            }
-        }
-        return itensEncontrados;
-    }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
-
 }

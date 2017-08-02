@@ -8,15 +8,10 @@ import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**
@@ -80,11 +75,6 @@ public class CadastroEscola  extends Application{
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
         pane.getChildren().add(txNome);
-        txEndereco = new JFXTextField();
-        txEndereco.setPrefWidth(220);
-        txEndereco.setPromptText("Endereço");
-        txEndereco.setLabelFloat(true);
-        pane.getChildren().add(txEndereco);
         txResponsavel = new JFXTextField();
         txResponsavel.setPrefWidth(220);
         txResponsavel.setPromptText("Nome do Responsável");
@@ -98,6 +88,11 @@ public class CadastroEscola  extends Application{
         txTelefone.setPromptText("Telefone");
         txTelefone.setLabelFloat(true);
         pane.getChildren().add(txTelefone);
+        txEndereco = new JFXTextField();
+        txEndereco.setPrefWidth(220);
+        txEndereco.setPromptText("Endereço");
+        txEndereco.setLabelFloat(true);
+        pane.getChildren().add(txEndereco);
         
         btCadastrar = new JFXButton("Cadastrar");
         btCadastrar.getStyleClass().add("btCadastrar");

@@ -19,6 +19,8 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -26,7 +28,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 public class ListarBrinquedo extends Application {
@@ -175,7 +176,8 @@ public class ListarBrinquedo extends Application {
                     listItens.setAll(Dao.listar(Brinquedo.class));
                     tabela.requestFocus();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
@@ -184,7 +186,7 @@ public class ListarBrinquedo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    if (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover o item selecionado?") == 0) {
+                    if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?",ButtonType.CANCEL,ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
 
                         try {
                             Dao.remover((Brinquedo) tabela.getSelectionModel().getSelectedItem());
@@ -195,7 +197,8 @@ public class ListarBrinquedo extends Application {
                         tabela.requestFocus();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado");
+                    new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
+                    tabela.requestFocus();
                 }
             }
         });
