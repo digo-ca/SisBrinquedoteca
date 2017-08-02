@@ -99,14 +99,14 @@ public class CadastroLivro extends Application{
         txEditora.setPromptText("Editora");
         txEditora.setLabelFloat(true);
         pane.getChildren().add(txEditora);
-        taObservacoes = new TextArea();
-        taObservacoes.setWrapText(true);
-        taObservacoes.setPrefSize(220, 105);
-        pane.getChildren().add(taObservacoes);
         cbEstado = new JFXComboBox(FXCollections.observableArrayList(Estado.values()));
         cbEstado.setPromptText("Estado");
         cbEstado.setLabelFloat(true);
         pane.getChildren().add(cbEstado);
+        taObservacoes = new TextArea();
+        taObservacoes.setWrapText(true);
+        taObservacoes.setPrefSize(220, 105);
+        pane.getChildren().add(taObservacoes);
         
         btCadastrar = new Button("Cadastrar");
         btCadastrar.getStyleClass().add("btCadastrar");
