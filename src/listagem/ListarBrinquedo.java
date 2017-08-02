@@ -65,7 +65,7 @@ public class ListarBrinquedo extends Application {
         initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Tabela Livro");
+        stage.setTitle("Relatório de Brinquedos");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
@@ -91,7 +91,7 @@ public class ListarBrinquedo extends Application {
         colunaNome = new TableColumn<>("Nome");
         colunaFabricante = new TableColumn<>("Fabricante");
         colunaEstado = new TableColumn<>("Estado");
-        colunaFaixaEtaria = new TableColumn<>("Observações");
+        colunaFaixaEtaria = new TableColumn<>("Faixa Etária");
         colunaClassificacao = new TableColumn<>("Classificação");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));

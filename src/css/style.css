@@ -118,3 +118,13 @@
     -fx-background-color: red;
     -fx-text-fill: white;
 }
+
+/*===============================Diario de Bordo========================================*/
+.textOcorrencia{
+    -fx-text-font-size: 35px;
+}
+
+.btFechaDiario{
+    -fx-background-color: blueviolet;
+    -fx-text-fill: white;
+}

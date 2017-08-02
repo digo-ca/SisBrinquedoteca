@@ -114,6 +114,8 @@ public class CadastroVisitacaoEscola extends Application {
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(visitaEscola != null)
+            preencheTela();
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de visita de escola");
@@ -284,8 +286,10 @@ public class CadastroVisitacaoEscola extends Application {
             @Override
             public void handle(ActionEvent event) {
                 //LocalDate data = cData.getValue();
+                int flag = 0;
                 if (visitaEscola == null) {
                     visitaEscola = new VisitacaoEscola();
+                    flag = 1;
                 }
 
                 //Convertendo LocalDate para Date, que é o formato da data que a classe espera
@@ -300,28 +304,30 @@ public class CadastroVisitacaoEscola extends Application {
 
                 Dao.salvar(visitaEscola);
                 
-                //Salvando uma ocorrencia ao diario de bordo===================================
-                ItemDiarioDeBordo item = new ItemDiarioDeBordo();
-                item.setDescricao("Visita de Escola");
-                item.setMonitor(monitor);
-      
-                
-                if (Dao.consultarDiarioHoje().isEmpty()){ //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
-                    diario = new DiarioDeBordo();
-                    
-                    List<ItemDiarioDeBordo>  list = new LinkedList<>();
-                    list.add(item);
+                if(flag == 1){
+                    //Salvando uma ocorrencia ao diario de bordo===================================
+                    ItemDiarioDeBordo item = new ItemDiarioDeBordo();
+                    item.setDescricao("Visita de Escola");
+                    item.setMonitor(monitor);
 
-                    diario.setDia(LocalDate.now());
-                    diario.setMonitorAbriu(monitor);
-                    
-                    diario.setOcorrencias(list);
-                } else { //Caso tenha um cadastrado edita
-                    diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().add(item);
 
+                    if (Dao.consultarDiarioHoje().isEmpty()){ //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
+                        diario = new DiarioDeBordo();
+
+                        List<ItemDiarioDeBordo>  list = new LinkedList<>();
+                        list.add(item);
+
+                        diario.setDia(LocalDate.now());
+                        diario.setMonitorAbriu(monitor);
+
+                        diario.setOcorrencias(list);
+                    } else { //Caso tenha um cadastrado edita
+                        diario = Dao.consultarDiarioHoje().get(0);
+                        if(!diario.getOcorrencias().contains(item))
+                            diario.getOcorrencias().add(item);
+                    }
+                    Dao.salvar(diario);
                 }
-                Dao.salvar(diario);
 
                 CadastroVisitacaoEscola.getStage().close();
             }
@@ -339,6 +345,17 @@ public class CadastroVisitacaoEscola extends Application {
                 cbEscola.setItems(lisEscola);
             }
         });
+    }
+    
+    public void preencheTela(){
+        cData.setValue(visitaEscola.getData());
+        cbPeriodo.getSelectionModel().select(visitaEscola.getPeriodo());
+        cbMonitor.getSelectionModel().select(visitaEscola.getMonitor());
+        cbEscola.getSelectionModel().select(visitaEscola.getEscola());
+        txProfessor.setText(visitaEscola.getProfessor());
+        txAtivMinistradas.setText(visitaEscola.getAtividadesMinistradas());
+        txFaixaEtaria.setText(visitaEscola.getFaixaEtariaCriancas());
+        listaAlunos.setItems(FXCollections.observableArrayList(visitaEscola.getAlunos()));
     }
 
     public static Stage getStage() {
