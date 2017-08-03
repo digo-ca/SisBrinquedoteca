@@ -44,7 +44,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**

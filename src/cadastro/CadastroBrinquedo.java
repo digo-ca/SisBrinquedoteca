@@ -8,12 +8,9 @@ package cadastro;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import com.sun.javafx.tk.Toolkit;
 import entidade.Brinquedo;
 import entidade.Classificacao;
 import entidade.Estado;
-import java.awt.Choice;
-import static java.awt.Color.gray;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -23,7 +20,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -32,23 +28,14 @@ import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.ImageViewBuilder;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -56,9 +43,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
-import sun.plugin.com.event.COMEventHandler;
 
 /**
  *
@@ -138,9 +123,9 @@ public class CadastroBrinquedo extends Application {
         txNome.setPrefWidth(250);
         pane.getChildren().add(txNome);
 
-        sQuantidade = new Spinner<Integer>();
+        sQuantidade = new Spinner<>();
         sQuantidade.setPrefWidth(60);
-        sQuantidade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        sQuantidade.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 999, 1));
         pane.getChildren().add(sQuantidade);
 
         txFabricante = new JFXTextField();
@@ -225,11 +210,12 @@ public class CadastroBrinquedo extends Application {
                 if (sQuantidade.getValue() > 1) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Salvando multiplos objetos");
-                    alert.setHeaderText("Ao clicar em OK, você irá cadastrar " + sQuantidade.getValue() + " unidades deste brinquedo");
+                    alert.setHeaderText("Ao clicar em SIM, você irá cadastrar " + sQuantidade.getValue() + " unidades deste brinquedo");
                     alert.setContentText("Deseja proceder com esta operação?");
+                    alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
                     Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK) {
+                    if (result.get() == ButtonType.YES) {
                         for (int i = 1; i < sQuantidade.getValue(); i++) {
                             brinquedo = new Brinquedo();
                             brinquedo.setNome(txNome.getText());
