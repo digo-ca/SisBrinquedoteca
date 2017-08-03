@@ -120,8 +120,8 @@
 }
 
 /*===============================Diario de Bordo========================================*/
-.textOcorrencia{
-    -fx-text-font-size: 35px;
+.labelDiario{
+    -fx-font-size: 12pt;
 }
 
 .btFechaDiario{

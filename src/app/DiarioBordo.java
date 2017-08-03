@@ -154,9 +154,11 @@ public class DiarioBordo extends Application {
         lData = new Label("Dia");
         pane.getChildren().add(lData);
         lOcorrencia = new Label("Ocorrências");
+        lOcorrencia.getStyleClass().add("labelDiario");
         pane.getChildren().add(lOcorrencia);
 
         lBrinquedo = new Label("Brinquedos mais usados");
+        lBrinquedo.getStyleClass().add("labelDiario");
         pane.getChildren().add(lBrinquedo);
 
         dpData = new JFXDatePicker();
@@ -210,7 +212,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(bRemoveOcorrencia);
 
         sBrinquedoCima = new Separator(Orientation.HORIZONTAL);
-        sBrinquedoCima.setPrefWidth(780);
+        sBrinquedoCima.setPrefWidth(744);
         sBrinquedoLeft = new Separator(Orientation.VERTICAL);
         sBrinquedoLeft.setPrefHeight(195);
         sBrinquedoRight = new Separator(Orientation.VERTICAL);
@@ -234,7 +236,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(tabelaBrinquedos);
 
         sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
-        sOcorrenciaCima.setPrefWidth(847);
+        sOcorrenciaCima.setPrefWidth(832);
 
         sOcorrenciaRight = new Separator(Orientation.VERTICAL);
         sOcorrenciaRight.setPrefHeight(200);
@@ -271,9 +273,9 @@ public class DiarioBordo extends Application {
         lData.setLayoutY(23);
 
         lBrinquedo.setLayoutX(10);
-        lBrinquedo.setLayoutY(71);
+        lBrinquedo.setLayoutY(65);
         lOcorrencia.setLayoutX(10);
-        lOcorrencia.setLayoutY(295);
+        lOcorrencia.setLayoutY(290);
 
         dpData.setLayoutX(50);
         dpData.setLayoutY(20);
@@ -297,7 +299,7 @@ public class DiarioBordo extends Application {
         bRemoveOcorrencia.setLayoutX(25);
         bRemoveOcorrencia.setLayoutY(420);
 
-        sBrinquedoCima.setLayoutX(145);
+        sBrinquedoCima.setLayoutX(182);
         sBrinquedoCima.setLayoutY(80);
         sBrinquedoLeft.setLayoutX(12);
         sBrinquedoLeft.setLayoutY(85);
@@ -308,7 +310,7 @@ public class DiarioBordo extends Application {
         tabelaBrinquedos.setLayoutX(210);
         tabelaBrinquedos.setLayoutY(95);
 
-        sOcorrenciaCima.setLayoutX(80);
+        sOcorrenciaCima.setLayoutX(95);
         sOcorrenciaCima.setLayoutY(305);
         sOcorrenciaRight.setLayoutX(924);
         sOcorrenciaRight.setLayoutY(305);
