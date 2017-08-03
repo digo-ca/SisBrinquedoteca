@@ -66,6 +66,7 @@ public class ListarCrianca extends Application {
         initValues();
         initListeners();
         Scene scene = new Scene(pane);
+        scene.getStylesheets().add("css/style.css");
         stage.initOwner(parent);
         stage.setScene(scene);
         stage.setTitle("Tabela de Crianças");
@@ -111,6 +112,7 @@ public class ListarCrianca extends Application {
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         sair = new JFXButton("Sair");
+        //sair.getStyleClass().add("btExit");
         editar = new JFXButton("Editar");
         remover = new JFXButton("Remover");
 

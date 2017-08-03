@@ -41,6 +41,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import listagem.ListarBrinquedo;
 import listagem.ListarCrianca;
+import listagem.ListarDiarios;
 import listagem.ListarEscola;
 import listagem.ListarLivro;
 import listagem.ListarMonitor;
@@ -87,6 +88,7 @@ public class Principal extends Application {
     private MenuItem itemLVisita;
     private MenuItem itemLVisitaEscola;
     private MenuItem itemLClassificacao;
+    private MenuItem itemLDiario;
     
     private JFXButton bDiario;
     private JFXButton sair;
@@ -193,6 +195,7 @@ public class Principal extends Application {
         itemLVisita = new MenuItem("Visita");
         itemLVisitaEscola = new MenuItem("Visita de Escola");
         itemLClassificacao = new MenuItem("Classificação");
+        itemLDiario = new MenuItem("Diário de Bordo");
         
         
         itemSair = new MenuItem("Sair");
@@ -214,7 +217,7 @@ public class Principal extends Application {
             MenuCad.getItems().add(itemClassificacao);
         }
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
-        mListar.getItems().addAll(itemLCrianca,itemLBrinquedo, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLClassificacao);
+        mListar.getItems().addAll(itemLCrianca,itemLBrinquedo, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLDiario, itemLClassificacao);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
@@ -395,6 +398,15 @@ public class Principal extends Application {
                 ListarVisitaEscola lve = new ListarVisitaEscola();
                 lve.setMonitor(monitor);
                 lve.start(Principal.stage);
+            }
+        });
+        
+        itemLDiario.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarDiarios ld = new ListarDiarios();
+                ld.setMonitor(monitor);
+                ld.start(Principal.stage);
             }
         });
         

@@ -65,7 +65,7 @@ public class ListarVisita extends Application{
         initListeners();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Tabela no JavaFX");
+        stage.setTitle("Relatório de Visitas");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);

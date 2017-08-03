@@ -67,7 +67,7 @@ public class ListarEscola extends Application{
         initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Tabela Escola");
+        stage.setTitle("Relatório de Escolas");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);

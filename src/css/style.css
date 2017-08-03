@@ -204,3 +204,12 @@
     -fx-border-insets: 1 1 1 1, 0;
 }
 
+/*=============================================Telas de listagem========================================*/
+
+.btExit{
+    -fx-border-color: red;
+}
+
+.btExit:hover{
+    -fx-background-color: #FF0011;
+}

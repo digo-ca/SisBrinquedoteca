@@ -63,7 +63,7 @@ public class ListarLivro extends Application{
         initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Tabela Livro");
+        stage.setTitle("Relatório de Livros");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);

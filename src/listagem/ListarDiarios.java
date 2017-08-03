@@ -1,7 +1,8 @@
 package listagem;
 
-import cadastro.CadastroMonitor;
+import app.DiarioBordo;
 import com.jfoenix.controls.JFXButton;
+import entidade.DiarioDeBordo;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -28,8 +29,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import persistencia.Dao;
 
-public class ListarMonitor extends Application {
-
+/**
+ *
+ * @author Ivanildo
+ */
+public class ListarDiarios extends Application{
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -41,10 +45,13 @@ public class ListarMonitor extends Application {
     private Monitor monitor;
 
     TableColumn colunaId;
-    TableColumn colunaNome;
+    TableColumn colunaDia;
+    TableColumn colunaVisitas;
+    TableColumn colunaMAbriu;
+    TableColumn colunaMFechou;
 
-    List<Monitor> monitores = Dao.listar(Monitor.class);
-    ObservableList<Monitor> listItens = FXCollections.observableArrayList(monitores);
+    List<DiarioDeBordo> diarios = Dao.listar(DiarioDeBordo.class);
+    ObservableList<DiarioDeBordo> listItens = FXCollections.observableArrayList(diarios);
 
     public void setMonitor(Monitor m) {
         monitor = m;
@@ -58,7 +65,7 @@ public class ListarMonitor extends Application {
         initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Relatório de Monitores");
+        stage.setTitle("Relatório de Diário de Bordo");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
@@ -82,16 +89,22 @@ public class ListarMonitor extends Application {
         //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
-        colunaNome = new TableColumn<>("Nome");
+        colunaDia = new TableColumn<>("Data");
+        colunaVisitas = new TableColumn<>("Visitas no Dia");
+        colunaMAbriu = new TableColumn<>("Monitor Abriu");
+        colunaMFechou = new TableColumn<>("Monitor Fechou");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colunaDia.setCellValueFactory(new PropertyValueFactory<>("dia"));
+        colunaVisitas.setCellValueFactory(new PropertyValueFactory<>("visitasNoDia"));
+        colunaMAbriu.setCellValueFactory(new PropertyValueFactory<>("monitorAbriu"));
+        colunaMFechou.setCellValueFactory(new PropertyValueFactory<>("monitorFechou"));
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
-        tabela.getColumns().addAll(colunaId, colunaNome);
+        tabela.getColumns().addAll(colunaId, colunaDia, colunaVisitas, colunaMAbriu, colunaMFechou);
         pane.getChildren().addAll(tabela, txPesquisa, bSair);
         if (monitor.getSupervisor()) {
             pane.getChildren().add(bRemover);
@@ -114,26 +127,22 @@ public class ListarMonitor extends Application {
     }
 
     public void initListeners() {
-        FilteredList<Monitor> filteredData = new FilteredList<>(listItens, (e) -> true);
+        FilteredList<DiarioDeBordo> filteredData = new FilteredList<>(listItens, (e) -> true);
         txPesquisa.setOnKeyReleased((e) -> {
             txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                filteredData.setPredicate((Predicate<? super Monitor>) user -> {
+                filteredData.setPredicate((Predicate<? super DiarioDeBordo>) user -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
                     String lowerCaseFilter = newValue.toLowerCase();
                     if ((user.getId() + "").contains(newValue)) {
                         return true;
-                    } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if ((user.getNomeUsuario() + "").toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
                     }
 
                     return false;
                 });
             });
-            SortedList<Monitor> sortedData = new SortedList<>(filteredData);
+            SortedList<DiarioDeBordo> sortedData = new SortedList<>(filteredData);
             sortedData.comparatorProperty().bind(tabela.comparatorProperty());
             tabela.setItems(sortedData);
         });
@@ -141,23 +150,23 @@ public class ListarMonitor extends Application {
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ListarMonitor.stage.hide();
+                ListarDiarios.stage.hide();
             }
         });
 
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroMonitor cm = new CadastroMonitor();
+                DiarioBordo db = new DiarioBordo();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    cm.setMonitor((Monitor) tabela.getSelectionModel().getSelectedItem());
+                    db.setDiario((DiarioDeBordo) tabela.getSelectionModel().getSelectedItem());
 
                     try {
-                        cm.start(ListarMonitor.stage);
+                        db.start(ListarDiarios.stage);
                     } catch (Exception ex) {
-                        Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ListarDiarios.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    listItens.setAll(Dao.listar(Monitor.class));
+                    listItens.setAll(Dao.listar(DiarioDeBordo.class));
                     tabela.requestFocus();
                 } else {
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
@@ -171,7 +180,7 @@ public class ListarMonitor extends Application {
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
-                        if (!monitor.equals((Monitor) tabela.getSelectionModel().getSelectedItem())) {
+                        
                             try {
                                 Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
                             } catch (SQLIntegrityConstraintViolationException ex) {
@@ -180,11 +189,6 @@ public class ListarMonitor extends Application {
 
                             listItens.setAll(Dao.listar(Monitor.class));
                             tabela.requestFocus();
-                        }else{
-                            new Alert(Alert.AlertType.NONE, "Você não pode se auto remover!", ButtonType.OK).showAndWait();
-                            tabela.requestFocus();
-                            
-                        }
                     }
                 } else {
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
