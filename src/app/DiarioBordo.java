@@ -113,7 +113,7 @@ public class DiarioBordo extends Application {
         initLayout();
         initListeners();
 
-        if(db == null){
+        if (db == null) {
             //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
             if (!Dao.consultarDiarioHoje().isEmpty()) {
                 db = Dao.consultarDiarioHoje().get(0);
@@ -135,7 +135,7 @@ public class DiarioBordo extends Application {
                 });
             }
             //==================================================================================================================
-        }else{
+        } else {
             preencheTela(db);
             dpData.setValue(db.getDia());
             dpData.setDisable(true);
@@ -208,6 +208,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(bAddOcorrencia);
 
         bEditaOcorrencia = new JFXButton("Editar");
+        bEditaOcorrencia.getStyleClass().add("btEditaOcorrencia");
         bEditaOcorrencia.setPrefWidth(150);
         pane.getChildren().add(bEditaOcorrencia);
 
@@ -451,6 +452,12 @@ public class DiarioBordo extends Application {
                             }
                         }
                         bFechar.setDisable(true);
+                        cbBrinquedos.setDisable(true);
+                        bAddBrinquedos.setDisable(true);
+                        bRemoveBrinquedos.setDisable(true);
+                        bAddOcorrencia.setDisable(true);
+                        bEditaOcorrencia.setDisable(true);
+                        bRemoveOcorrencia.setDisable(true);
                     }
                 });
             }
@@ -492,6 +499,12 @@ public class DiarioBordo extends Application {
             if (diario.getMonitorFechou() != null) {
                 txMFechou.setText(diario.getMonitorFechou() + "");
                 bFechar.setDisable(true);
+                cbBrinquedos.setDisable(true);
+                bAddBrinquedos.setDisable(true);
+                bRemoveBrinquedos.setDisable(true);
+                bAddOcorrencia.setDisable(true);
+                bEditaOcorrencia.setDisable(true);
+                bRemoveOcorrencia.setDisable(true);
             } else {
                 txMFechou.setText("");
                 bFechar.setDisable(false);

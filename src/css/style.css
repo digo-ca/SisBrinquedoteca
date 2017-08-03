@@ -114,6 +114,10 @@
     -fx-text-fill: white;
 }
 
+.btEditaOcorrencia{
+    -fx-background-color: #00FF7F;
+}
+
 .btRemoveOcorrencia{
     -fx-background-color: red;
     -fx-text-fill: white;
