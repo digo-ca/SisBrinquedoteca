@@ -196,11 +196,6 @@
     -fx-background-color: #3a3a3a;
 }
 
-/*.buttonPrincipal:pressed, .buttonPrincipal:default:hover:pressed {
-  -fx-background-color: white;
-  -fx-text-fill: #1d1d1d;
-}*/
-
 .buttonPrincipalSair:focused {
     -fx-border-color: white, white;
     -fx-border-width: 1, 1;
