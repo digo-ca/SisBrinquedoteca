@@ -415,7 +415,7 @@ public class Principal extends Application {
             public void handle(ActionEvent event) {
                 DiarioBordo db = new DiarioBordo();
                 db.setMonitor(monitor);
-                db.setDiario(diario);
+                //db.setDiario(diario);
                 
                 try {
                     db.start(Principal.stage);

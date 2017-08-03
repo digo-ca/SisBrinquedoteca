@@ -113,28 +113,33 @@ public class DiarioBordo extends Application {
         initLayout();
         initListeners();
 
-        //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
-        if (!Dao.consultarDiarioHoje().isEmpty()) {
-            db = Dao.consultarDiarioHoje().get(0);
-            preencheTela(db);
+        if(db == null){
+            //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
+            if (!Dao.consultarDiarioHoje().isEmpty()) {
+                db = Dao.consultarDiarioHoje().get(0);
+                preencheTela(db);
 //            dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                dpData.setValue(db.getDia());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO);
+                alert.showAndWait().ifPresent(b -> {
+                    if (b == ButtonType.YES) {
+                        db = new DiarioDeBordo();
+                        db.setDia(LocalDate.now());
+                        db.setMonitorAbriu(monitor);
+
+                        Dao.salvar(db);
+                        dpData.setValue(db.getDia());
+                        preencheTela(db);
+                    }
+                });
+            }
+            //==================================================================================================================
+        }else{
+            preencheTela(db);
             dpData.setValue(db.getDia());
-        } else {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO);
-            alert.showAndWait().ifPresent(b -> {
-                if (b == ButtonType.YES) {
-                    db = new DiarioDeBordo();
-                    db.setDia(LocalDate.now());
-                    db.setMonitorAbriu(monitor);
-
-                    Dao.salvar(db);
-                    dpData.setValue(db.getDia());
-                    preencheTela(db);
-                }
-            });
+            dpData.setDisable(true);
         }
-        //==================================================================================================================
-
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
