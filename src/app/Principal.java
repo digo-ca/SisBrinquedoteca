@@ -15,6 +15,7 @@ import cadastro.CadastroMonitor;
 import cadastro.CadastroResponsavel;
 import cadastro.CadastroVisita;
 import cadastro.CadastroVisitacaoEscola;
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import entidade.DiarioDeBordo;
 import entidade.Monitor;
@@ -87,8 +88,8 @@ public class Principal extends Application {
     private MenuItem itemLVisitaEscola;
     private MenuItem itemLClassificacao;
     
-    private Button bDiario;
-    private Button sair;
+    private JFXButton bDiario;
+    private JFXButton sair;
     
     
     private MenuItem alteraSenha;
@@ -121,8 +122,8 @@ public class Principal extends Application {
         rootGrid.setTop(vboxSuperior);
         rootGrid.setBottom(vboxInferior);
 
-        bDiario.setPrefSize(100, 40);
-        sair.setPrefSize(100, 40);  
+        //bDiario.setPrefSize(100, 40);
+        //sair.setPrefSize(100, 40);  
         
         rootGrid.getStyleClass().add("grid");
         root.setLeft(rootGrid);
@@ -165,6 +166,7 @@ public class Principal extends Application {
         stage = new Stage();
         // Create MenuBar
         menuBar = new MenuBar();
+        //menuBar.getStyleClass().add("menu-bar");
 
         // Create menus
         MenuCad = new Menu("Cadastrar");
@@ -200,8 +202,11 @@ public class Principal extends Application {
         itemNomeUser.getItems().add(alteraSenha);
         
         grid = new GridPane();
-        bDiario = new Button("Exibir Diário");
-        sair = new Button("Sair");
+        bDiario = new JFXButton("Exibir Diário");
+        //bDiario.setPrefHeight(30);
+        bDiario.getStyleClass().add("buttonPrincipal");
+        sair = new JFXButton("Sair");
+        sair.getStyleClass().add("buttonPrincipalSair");
 
         // Add menuItems to the Menus
         if(monitor.getSupervisor()){
