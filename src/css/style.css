@@ -192,3 +192,20 @@
     -fx-text-fill: #d8d8d8;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
+.buttonPrincipalSair:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+/*.buttonPrincipal:pressed, .buttonPrincipal:default:hover:pressed {
+  -fx-background-color: white;
+  -fx-text-fill: #1d1d1d;
+}*/
+
+.buttonPrincipalSair:focused {
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
