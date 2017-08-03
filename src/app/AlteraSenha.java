@@ -16,6 +16,8 @@ import javafx.application.Preloader.StateChangeNotification;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -121,12 +123,13 @@ public class AlteraSenha extends Application{
                         
                         AlteraSenha.getStage().hide();
                         
-                        JOptionPane.showMessageDialog(null, "Senha Alterada com sucesso!");
+                        new Alert(Alert.AlertType.NONE, "Senha alterada com Sucesso!", ButtonType.OK).show();
+                        
                     }else{
-                        JOptionPane.showMessageDialog(null, "Os campos 'Nova senha' e 'Confimação de senha' devem serem identicos");
+                        new Alert(Alert.AlertType.NONE, "Os campos 'Nova senha' e 'Confimação de senha' devem serem identicos", ButtonType.OK).show();
                     }
                 }else{
-                    JOptionPane.showMessageDialog(null, "A senha atual não está correta");
+                    new Alert(Alert.AlertType.NONE, "A senha atual não está correta", ButtonType.OK).show();
                 }
             }
         });
