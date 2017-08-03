@@ -98,9 +98,11 @@ public class DiarioBordo extends Application {
 
     Monitor monitor;
     DiarioDeBordo db;
+    int edita = -1;
 
     public void setDiario(DiarioDeBordo diario) {
         db = diario;
+        edita = 1;
     }
 
     public void setMonitor(Monitor m) {
@@ -499,12 +501,14 @@ public class DiarioBordo extends Application {
             if (diario.getMonitorFechou() != null) {
                 txMFechou.setText(diario.getMonitorFechou() + "");
                 bFechar.setDisable(true);
-                cbBrinquedos.setDisable(true);
-                bAddBrinquedos.setDisable(true);
-                bRemoveBrinquedos.setDisable(true);
-                bAddOcorrencia.setDisable(true);
-                bEditaOcorrencia.setDisable(true);
-                bRemoveOcorrencia.setDisable(true);
+                if(edita == -1){
+                    cbBrinquedos.setDisable(true);
+                    bAddBrinquedos.setDisable(true);
+                    bRemoveBrinquedos.setDisable(true);
+                    bAddOcorrencia.setDisable(true);
+                    bEditaOcorrencia.setDisable(true);
+                    bRemoveOcorrencia.setDisable(true);
+                }
             } else {
                 txMFechou.setText("");
                 bFechar.setDisable(false);
