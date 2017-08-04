@@ -28,6 +28,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.RollbackException;
 import persistencia.Dao;
 
 public class ListarBrinquedo extends Application {
@@ -185,6 +186,8 @@ public class ListarBrinquedo extends Application {
                             Dao.remover((Brinquedo) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch(RollbackException rb){
+                            new Alert(Alert.AlertType.ERROR, "Impossível remover o item selecionado, pois o mesmo está inserindo em um diário de bordo", ButtonType.OK).show();
                         }
                         listItens.setAll(Dao.listar(Brinquedo.class));
                         tabela.requestFocus();

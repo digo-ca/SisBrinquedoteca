@@ -32,6 +32,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.RollbackException;
 import persistencia.Dao;
 
 public class ListarEscola extends Application{
@@ -192,6 +193,8 @@ public class ListarEscola extends Application{
                             Dao.remover((Escola) tabela.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarEscola.class.getName()).log(Level.SEVERE, null, ex);
+                        }catch(RollbackException rb){
+                            new Alert(Alert.AlertType.ERROR, "Impossível remover item, pois o mesmo está alocado a uma Visita de Escola", ButtonType.OK).show();
                         }
                         listItens.setAll(Dao.listar(Escola.class));
                         tabela.requestFocus();
