@@ -232,7 +232,7 @@ public class Principal extends Application {
         mListaVisita.getItems().addAll(itemLVisita, itemLVisitaEscola);
         mListaPatrimonio.getItems().addAll(itemLBrinquedo, itemLLivro);
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, mVisita, mPatrimonio);
-        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLMonitor, itemLDiario, mListaVisita, mListaPatrimonio);
+        mListar.getItems().addAll(itemLMonitor, itemLCrianca, itemLResp, itemLEscola, itemLDiario, mListaVisita, mListaPatrimonio);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar
