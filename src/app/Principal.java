@@ -355,7 +355,6 @@ public class Principal extends Application {
             @Override
             public void handle(ActionEvent event) {
                 ListarBrinquedo lb = new ListarBrinquedo();
-                lb.setMonitor(monitor);
                 try {
                     lb.start(Principal.stage);
                 } catch (Exception ex) {
@@ -386,7 +385,6 @@ public class Principal extends Application {
             @Override
             public void handle(ActionEvent event) {
                 ListarLivro lLivro = new ListarLivro();
-                lLivro.setMonitor(monitor);
                 lLivro.start(Principal.stage);
             }
         });

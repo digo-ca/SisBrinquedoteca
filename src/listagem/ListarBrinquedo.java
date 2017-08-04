@@ -53,10 +53,6 @@ public class ListarBrinquedo extends Application {
     List<Brinquedo> brinquedos = Dao.listar(Brinquedo.class);
     ObservableList<Brinquedo> listItens = FXCollections.observableArrayList(brinquedos);
     
-    public void setMonitor(Monitor m) {
-        monitor = m;
-    }
-
     @Override
     public void start(Stage parent) {
         initComponents();
@@ -106,10 +102,7 @@ public class ListarBrinquedo extends Application {
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaNome, colunaFabricante, colunaEstado, colunaClassificacao, colunaFaixaEtaria);
-        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
-        if (monitor.getSupervisor()) {
-            pane.getChildren().add(bRemover);
-        }
+        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar, bRemover);
     }
 
     public void initLayout() {

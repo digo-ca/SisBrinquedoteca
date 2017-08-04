@@ -50,10 +50,6 @@ public class ListarLivro extends Application{
 
     List<Livro> livros = Dao.listar(Livro.class);
     ObservableList<Livro> listItens = FXCollections.observableArrayList(livros);
-    
-    public void setMonitor(Monitor m){
-        monitor = m;
-    }
 
     @Override
     public void start(Stage parent) {
@@ -105,9 +101,7 @@ public class ListarLivro extends Application{
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaTitulo, colunaAutor, colunaEditora, colunaObservacoes, colunaEstado);
-        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar);
-        if(monitor.getSupervisor())
-            pane.getChildren().add(bRemover);
+        pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar, bRemover);
     }
 
     public void initLayout() {
