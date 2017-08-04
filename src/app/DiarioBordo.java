@@ -389,6 +389,9 @@ public class DiarioBordo extends Application {
             public void handle(ActionEvent event) {
                 CadastroOcorrencia cadastro = new CadastroOcorrencia();
                 cadastro.setMonitor(monitor);
+                if(edita == 1){
+                    cadastro.setDiario(db);
+                }
                 try {
                     cadastro.start(DiarioBordo.stage);
                 } catch (Exception ex) {
