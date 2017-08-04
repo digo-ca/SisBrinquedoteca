@@ -129,6 +129,7 @@
 }
 
 .btFechaDiario{
+    /*-fx-background-color: blueviolet;*/
     -fx-background-color: blueviolet;
     -fx-text-fill: white;
 }
