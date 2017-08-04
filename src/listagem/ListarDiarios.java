@@ -160,6 +160,7 @@ public class ListarDiarios extends Application{
                 DiarioBordo db = new DiarioBordo();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     db.setDiario((DiarioDeBordo) tabela.getSelectionModel().getSelectedItem());
+                    db.setMonitor(monitor);
 
                     try {
                         db.start(ListarDiarios.stage);

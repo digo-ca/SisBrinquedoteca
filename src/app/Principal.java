@@ -65,6 +65,8 @@ public class Principal extends Application {
     private Menu MenuCad;
     private Menu mListar;
     private Menu mUsuario;
+    private Menu mPatrimonio;
+    private Menu mVisita;
     private MenuItem itemBri;
     private MenuItem itemCri;
     private MenuItem itemResp;
@@ -74,6 +76,7 @@ public class Principal extends Application {
     private MenuItem itemVisita;
     private MenuItem itemVisitaEscola;
     private MenuItem itemClassificacao;
+    
     
     
     //Menus de listagem
@@ -174,6 +177,8 @@ public class Principal extends Application {
         MenuCad = new Menu("Cadastrar");
         mListar = new Menu("Listar");
         mUsuario = new Menu("Usuário");
+        mPatrimonio = new Menu("Patrimônio");
+        mVisita = new Menu("Visita");
 
         // Create MenuItems
         itemBri = new MenuItem("Brinquedo");
@@ -182,7 +187,7 @@ public class Principal extends Application {
         itemEscola = new MenuItem("Escola");
         itemLivro = new MenuItem("Livro");
         itemMonitor = new MenuItem("Monitor");
-        itemVisita = new MenuItem("Visita");
+        itemVisita = new MenuItem("Visita de Criança");
         itemVisitaEscola = new MenuItem("Visita de Escola");
         itemClassificacao = new MenuItem("Classificação");
 
@@ -214,9 +219,11 @@ public class Principal extends Application {
         // Add menuItems to the Menus
         if(monitor.getSupervisor()){
             MenuCad.getItems().add(itemMonitor);
-            MenuCad.getItems().add(itemClassificacao);
+            mPatrimonio.getItems().add(itemClassificacao);
         }
-        MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, itemBri, itemLivro, itemVisita, itemVisitaEscola);
+        mVisita.getItems().addAll(itemVisita, itemVisitaEscola);
+        mPatrimonio.getItems().addAll(itemBri, itemLivro);
+        MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, mVisita, mPatrimonio);
         mListar.getItems().addAll(itemLCrianca,itemLBrinquedo, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLDiario, itemLClassificacao);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 

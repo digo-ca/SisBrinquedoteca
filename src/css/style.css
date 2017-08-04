@@ -114,6 +114,10 @@
     -fx-text-fill: white;
 }
 
+.btEditaOcorrencia{
+    -fx-background-color: #00FF7F;
+}
+
 .btRemoveOcorrencia{
     -fx-background-color: red;
     -fx-text-fill: white;
@@ -125,6 +129,7 @@
 }
 
 .btFechaDiario{
+    /*-fx-background-color: blueviolet;*/
     -fx-background-color: blueviolet;
     -fx-text-fill: white;
 }
@@ -141,7 +146,7 @@
 }
 
 .menu-bar .label {
-    -fx-font-size: 12pt;
+    -fx-font-size: 10pt;
     -fx-font-family: "Segoe UI Light";
     -fx-text-fill: white;
     -fx-opacity: 0.9;
@@ -159,7 +164,7 @@
     -fx-background-radius: 0;
     -fx-background-color: #1d1d1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
     -fx-text-fill: #d8d8d8;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
@@ -188,7 +193,7 @@
     -fx-background-radius: 0;
     -fx-background-color: #1d1d1d;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 11pt;
+    -fx-font-size: 10pt;
     -fx-text-fill: #d8d8d8;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
@@ -212,4 +217,10 @@
 
 .btExit:hover{
     -fx-background-color: #FF0011;
+}
+
+/*==============================separators======================================================*/
+
+.separator{
+    -fx-base: #345678;
 }

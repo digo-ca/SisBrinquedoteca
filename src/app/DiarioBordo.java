@@ -98,9 +98,11 @@ public class DiarioBordo extends Application {
 
     Monitor monitor;
     DiarioDeBordo db;
+    int edita = -1;
 
     public void setDiario(DiarioDeBordo diario) {
         db = diario;
+        edita = 1;
     }
 
     public void setMonitor(Monitor m) {
@@ -113,7 +115,7 @@ public class DiarioBordo extends Application {
         initLayout();
         initListeners();
 
-        if(db == null){
+        if (db == null) {
             //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
             if (!Dao.consultarDiarioHoje().isEmpty()) {
                 db = Dao.consultarDiarioHoje().get(0);
@@ -135,7 +137,7 @@ public class DiarioBordo extends Application {
                 });
             }
             //==================================================================================================================
-        }else{
+        } else {
             preencheTela(db);
             dpData.setValue(db.getDia());
             dpData.setDisable(true);
@@ -208,6 +210,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(bAddOcorrencia);
 
         bEditaOcorrencia = new JFXButton("Editar");
+        bEditaOcorrencia.getStyleClass().add("btEditaOcorrencia");
         bEditaOcorrencia.setPrefWidth(150);
         pane.getChildren().add(bEditaOcorrencia);
 
@@ -241,7 +244,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(tabelaBrinquedos);
 
         sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
-        sOcorrenciaCima.setPrefWidth(832);
+        sOcorrenciaCima.setPrefWidth(830);
 
         sOcorrenciaRight = new Separator(Orientation.VERTICAL);
         sOcorrenciaRight.setPrefHeight(200);
@@ -386,6 +389,9 @@ public class DiarioBordo extends Application {
             public void handle(ActionEvent event) {
                 CadastroOcorrencia cadastro = new CadastroOcorrencia();
                 cadastro.setMonitor(monitor);
+                if (edita == 1) {
+                    cadastro.setDiario(db);
+                }
                 try {
                     cadastro.start(DiarioBordo.stage);
                 } catch (Exception ex) {
@@ -402,6 +408,9 @@ public class DiarioBordo extends Application {
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     cad.setMonitor(monitor);
+                    if (edita == 1) {
+                        cad.setDiario(db);
+                    }
                     try {
                         cad.start(DiarioBordo.stage);
                     } catch (Exception ex) {
@@ -418,17 +427,22 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
-                    DiarioDeBordo diario;
-                    diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    Dao.salvar(diario);
-                    try {
-                        Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    } catch (SQLIntegrityConstraintViolationException ex) {
-                        Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
-                        JOptionPane.showMessageDialog(null, ex);
+                    if (edita == -1) {
+                        DiarioDeBordo diario;
+                        diario = Dao.consultarDiarioHoje().get(0);
+                        diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        Dao.salvar(diario);
+                    }else{
+                        db.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        Dao.salvar(db);
                     }
-                    tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
+                        try {
+                            Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        } catch (SQLIntegrityConstraintViolationException ex) {
+                            Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(null, ex);
+                        }
+                        tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
                 } else {
                     //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
@@ -451,6 +465,12 @@ public class DiarioBordo extends Application {
                             }
                         }
                         bFechar.setDisable(true);
+                        cbBrinquedos.setDisable(true);
+                        bAddBrinquedos.setDisable(true);
+                        bRemoveBrinquedos.setDisable(true);
+                        bAddOcorrencia.setDisable(true);
+                        bEditaOcorrencia.setDisable(true);
+                        bRemoveOcorrencia.setDisable(true);
                     }
                 });
             }
@@ -492,6 +512,14 @@ public class DiarioBordo extends Application {
             if (diario.getMonitorFechou() != null) {
                 txMFechou.setText(diario.getMonitorFechou() + "");
                 bFechar.setDisable(true);
+                if (edita == -1) {
+                    cbBrinquedos.setDisable(true);
+                    bAddBrinquedos.setDisable(true);
+                    bRemoveBrinquedos.setDisable(true);
+                    bAddOcorrencia.setDisable(true);
+                    bEditaOcorrencia.setDisable(true);
+                    bRemoveOcorrencia.setDisable(true);
+                }
             } else {
                 txMFechou.setText("");
                 bFechar.setDisable(false);
