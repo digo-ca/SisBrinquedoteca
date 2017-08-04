@@ -194,7 +194,8 @@ public class ListarResponsavel extends Application {
                         try {
                             Dao.remover((Responsavel) tabela.getSelectionModel().getSelectedItem());
                         } catch (RollbackException re) {
-                            JOptionPane.showMessageDialog(null, "Impossível remover item, pois o mesmo está alocado a uma criança");
+                            new Alert(Alert.AlertType.NONE, "Impossível remover item, pois o mesmo está alocado a uma criança", ButtonType.OK).show();
+                            //JOptionPane.showMessageDialog(null, "Impossível remover item, pois o mesmo está alocado a uma criança");
                         } catch (SQLIntegrityConstraintViolationException ex) {
                             Logger.getLogger(ListarResponsavel.class.getName()).log(Level.SEVERE, null, ex);
                         }
