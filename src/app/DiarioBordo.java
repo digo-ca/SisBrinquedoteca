@@ -389,7 +389,7 @@ public class DiarioBordo extends Application {
             public void handle(ActionEvent event) {
                 CadastroOcorrencia cadastro = new CadastroOcorrencia();
                 cadastro.setMonitor(monitor);
-                if(edita == 1){
+                if (edita == 1) {
                     cadastro.setDiario(db);
                 }
                 try {
@@ -408,6 +408,9 @@ public class DiarioBordo extends Application {
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
                     cad.setMonitor(monitor);
+                    if (edita == 1) {
+                        cad.setDiario(db);
+                    }
                     try {
                         cad.start(DiarioBordo.stage);
                     } catch (Exception ex) {
@@ -424,17 +427,22 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
-                    DiarioDeBordo diario;
-                    diario = Dao.consultarDiarioHoje().get(0);
-                    diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    Dao.salvar(diario);
-                    try {
-                        Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    } catch (SQLIntegrityConstraintViolationException ex) {
-                        Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
-                        JOptionPane.showMessageDialog(null, ex);
+                    if (edita == -1) {
+                        DiarioDeBordo diario;
+                        diario = Dao.consultarDiarioHoje().get(0);
+                        diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        Dao.salvar(diario);
+                    }else{
+                        db.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        Dao.salvar(db);
                     }
-                    tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
+                        try {
+                            Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                        } catch (SQLIntegrityConstraintViolationException ex) {
+                            Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(null, ex);
+                        }
+                        tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
                 } else {
                     //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
@@ -504,7 +512,7 @@ public class DiarioBordo extends Application {
             if (diario.getMonitorFechou() != null) {
                 txMFechou.setText(diario.getMonitorFechou() + "");
                 bFechar.setDisable(true);
-                if(edita == -1){
+                if (edita == -1) {
                     cbBrinquedos.setDisable(true);
                     bAddBrinquedos.setDisable(true);
                     bRemoveBrinquedos.setDisable(true);
