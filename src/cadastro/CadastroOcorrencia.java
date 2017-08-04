@@ -177,7 +177,7 @@ public class CadastroOcorrencia extends Application {
     }
 
     public void preencheTela() {
-        cbMonitor.getSelectionModel().select(monitor);
+        cbMonitor.getSelectionModel().select(ocorrencia.getMonitor());
         taDescricao.setText(ocorrencia.getDescricao());
     }
 

@@ -407,7 +407,7 @@ public class DiarioBordo extends Application {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    cad.setMonitor(monitor);
+                    //cad.setMonitor(monitor);
                     if (edita == 1) {
                         cad.setDiario(db);
                     }
