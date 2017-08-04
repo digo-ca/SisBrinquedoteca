@@ -54,8 +54,6 @@ import persistencia.Dao;
  * @author Ivanildo
  */
 public class Principal extends Application {
-    
-    
     private static Stage stage;
     
     private AnchorPane pane;
