@@ -244,7 +244,7 @@ public class DiarioBordo extends Application {
         pane.getChildren().add(tabelaBrinquedos);
 
         sOcorrenciaCima = new Separator(Orientation.HORIZONTAL);
-        sOcorrenciaCima.setPrefWidth(832);
+        sOcorrenciaCima.setPrefWidth(830);
 
         sOcorrenciaRight = new Separator(Orientation.VERTICAL);
         sOcorrenciaRight.setPrefHeight(200);
