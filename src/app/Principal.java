@@ -67,6 +67,9 @@ public class Principal extends Application {
     private Menu mUsuario;
     private Menu mPatrimonio;
     private Menu mVisita;
+    private Menu mListaPatrimonio;
+    private Menu mListaVisita;
+    
     private MenuItem itemBri;
     private MenuItem itemCri;
     private MenuItem itemResp;
@@ -179,6 +182,8 @@ public class Principal extends Application {
         mUsuario = new Menu("Usuário");
         mPatrimonio = new Menu("Patrimônio");
         mVisita = new Menu("Visita");
+        mListaPatrimonio = new Menu("Patrimônio");
+        mListaVisita = new Menu("Visita");
 
         // Create MenuItems
         itemBri = new MenuItem("Brinquedo");
@@ -197,7 +202,7 @@ public class Principal extends Application {
         itemLEscola = new MenuItem("Escola");
         itemLLivro = new MenuItem("Livro");
         itemLMonitor = new MenuItem("Monitor");
-        itemLVisita = new MenuItem("Visita");
+        itemLVisita = new MenuItem("Visita de Criança");
         itemLVisitaEscola = new MenuItem("Visita de Escola");
         itemLClassificacao = new MenuItem("Classificação");
         itemLDiario = new MenuItem("Diário de Bordo");
@@ -220,11 +225,14 @@ public class Principal extends Application {
         if(monitor.getSupervisor()){
             MenuCad.getItems().add(itemMonitor);
             mPatrimonio.getItems().add(itemClassificacao);
+            mListaPatrimonio.getItems().add(itemLClassificacao);
         }
         mVisita.getItems().addAll(itemVisita, itemVisitaEscola);
         mPatrimonio.getItems().addAll(itemBri, itemLivro);
+        mListaVisita.getItems().addAll(itemLVisita, itemLVisitaEscola);
+        mListaPatrimonio.getItems().addAll(itemLBrinquedo, itemLLivro);
         MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, mVisita, mPatrimonio);
-        mListar.getItems().addAll(itemLCrianca,itemLBrinquedo, itemLResp, itemLEscola, itemLLivro, itemLMonitor, itemLVisita, itemLVisitaEscola, itemLDiario, itemLClassificacao);
+        mListar.getItems().addAll(itemLCrianca, itemLResp, itemLEscola, itemLMonitor, itemLDiario, mListaVisita, mListaPatrimonio);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
         // Add Menus to the MenuBar

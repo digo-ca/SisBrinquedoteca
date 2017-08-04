@@ -427,15 +427,15 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
-                    if (edita == -1) {
-                        DiarioDeBordo diario;
+                   // if (edita == -1) {
+                        /*DiarioDeBordo diario;
                         diario = Dao.consultarDiarioHoje().get(0);
                         diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                        Dao.salvar(diario);
-                    }else{
+                        Dao.salvar(diario);*/
+                    //}else{
                         db.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
                         Dao.salvar(db);
-                    }
+                   // }
                         try {
                             Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
                         } catch (SQLIntegrityConstraintViolationException ex) {
