@@ -50,7 +50,6 @@ public class Brinquedo implements Serializable {
     private String faixaEtaria;
     
     @ManyToOne
-    @Basic(fetch = FetchType.LAZY)
     private Classificacao classificacao;
 
     public String getFaixaEtaria() {

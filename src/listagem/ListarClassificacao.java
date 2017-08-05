@@ -1,7 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package listagem;
 
-import cadastro.CadastroMonitor;
+import cadastro.CadastroClassificacao;
 import com.jfoenix.controls.JFXButton;
+import entidade.Classificacao;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -26,9 +32,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.RollbackException;
 import persistencia.Dao;
 
-public class ListarMonitor extends Application {
+/**
+ *
+ * @author Ivanildo
+ */
+public class ListarClassificacao extends Application {
+
     private AnchorPane pane;
     private TextField txPesquisa;
     private TableView tabela;
@@ -41,9 +53,9 @@ public class ListarMonitor extends Application {
 
     TableColumn colunaId;
     TableColumn colunaNome;
+    TableColumn colunaDescricao;
 
-    List<Monitor> monitores = Dao.listar(Monitor.class);
-    ObservableList<Monitor> listItens = FXCollections.observableArrayList(monitores);
+    ObservableList<Classificacao> listItens = FXCollections.observableArrayList(Dao.listar(Classificacao.class));
 
     public void setMonitor(Monitor m) {
         monitor = m;
@@ -57,7 +69,7 @@ public class ListarMonitor extends Application {
         initLayout();
         Scene scene = new Scene(pane);
         stage.setScene(scene);
-        stage.setTitle("Relatório de Monitores");
+        stage.setTitle("Relatório de Classificações");
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(parent);
@@ -81,16 +93,20 @@ public class ListarMonitor extends Application {
         //responsaveis = Dao.listar(Responsavel.class);
         tabela = new TableView<>();
         colunaId = new TableColumn<>("Id");
+        colunaId.setMaxWidth(900);
         colunaNome = new TableColumn<>("Nome");
+        colunaNome.setMaxWidth(3000);
+        colunaDescricao = new TableColumn<>("Descrição");
 
         colunaId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colunaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        colunaDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 
         tabela.setItems(listItens);
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
-        tabela.getColumns().addAll(colunaId, colunaNome);
+        tabela.getColumns().addAll(colunaId, colunaNome, colunaDescricao);
         pane.getChildren().addAll(tabela, txPesquisa, bSair);
         if (monitor.getSupervisor()) {
             pane.getChildren().add(bRemover);
@@ -113,10 +129,10 @@ public class ListarMonitor extends Application {
     }
 
     public void initListeners() {
-        FilteredList<Monitor> filteredData = new FilteredList<>(listItens, (e) -> true);
+        FilteredList<Classificacao> filteredData = new FilteredList<>(listItens, (e) -> true);
         txPesquisa.setOnKeyReleased((e) -> {
             txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                filteredData.setPredicate((Predicate<? super Monitor>) user -> {
+                filteredData.setPredicate((Predicate<? super Classificacao>) user -> {
                     if (newValue == null || newValue.isEmpty()) {
                         return true;
                     }
@@ -125,14 +141,16 @@ public class ListarMonitor extends Application {
                         return true;
                     } else if (user.getNome().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if ((user.getNomeUsuario() + "").toLowerCase().contains(lowerCaseFilter)) {
+                    } else if ((user.getNome() + "").toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if ((user.getDescricao() + "").toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     }
 
                     return false;
                 });
             });
-            SortedList<Monitor> sortedData = new SortedList<>(filteredData);
+            SortedList<Classificacao> sortedData = new SortedList<>(filteredData);
             sortedData.comparatorProperty().bind(tabela.comparatorProperty());
             tabela.setItems(sortedData);
         });
@@ -140,23 +158,23 @@ public class ListarMonitor extends Application {
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                ListarMonitor.stage.hide();
+                ListarClassificacao.stage.hide();
             }
         });
 
         bEditar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CadastroMonitor cm = new CadastroMonitor();
+                CadastroClassificacao cc = new CadastroClassificacao();
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
-                    cm.setMonitor((Monitor) tabela.getSelectionModel().getSelectedItem());
+                    cc.setClassificacao((Classificacao) tabela.getSelectionModel().getSelectedItem());
 
                     try {
-                        cm.start(ListarMonitor.stage);
+                        cc.start(ListarClassificacao.stage);
                     } catch (Exception ex) {
-                        Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ListarClassificacao.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    listItens.setAll(Dao.listar(Monitor.class));
+                    listItens.setAll(Dao.listar(Classificacao.class));
                     tabela.requestFocus();
                 } else {
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
@@ -170,20 +188,17 @@ public class ListarMonitor extends Application {
             public void handle(ActionEvent event) {
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
-                        if (!monitor.equals((Monitor) tabela.getSelectionModel().getSelectedItem())) {
-                            try {
-                                Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
-                            } catch (SQLIntegrityConstraintViolationException ex) {
-                                Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
-                            }
 
-                            listItens.setAll(Dao.listar(Monitor.class));
-                            tabela.requestFocus();
-                        }else{
-                            new Alert(Alert.AlertType.NONE, "Você não pode se auto remover!", ButtonType.OK).showAndWait();
-                            tabela.requestFocus();
-                            
+                        try {
+                            Dao.remover((Classificacao) tabela.getSelectionModel().getSelectedItem());
+                        } catch (SQLIntegrityConstraintViolationException ex) {
+                            Logger.getLogger(ListarClassificacao.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (RollbackException rb){
+                            new Alert(Alert.AlertType.ERROR, "Impossível excluir este item, pois o mesmo está alocado a um item de brinquedo", ButtonType.OK).show();
                         }
+
+                        listItens.setAll(Dao.listar(Classificacao.class));
+                        tabela.requestFocus();
                     }
                 } else {
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();

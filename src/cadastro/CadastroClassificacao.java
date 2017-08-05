@@ -42,11 +42,20 @@ public class CadastroClassificacao extends Application {
     
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
+    
+    private Classificacao classificacao;
+    
+    public void setClassificacao(Classificacao c){
+        classificacao = c;
+    }
 
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
+        if(classificacao != null)
+            preencheTela();
+        
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro Classificação");
@@ -119,15 +128,21 @@ public class CadastroClassificacao extends Application {
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Classificacao c = new Classificacao();
+                if(classificacao == null)
+                    classificacao = new Classificacao();
                 
-                c.setNome(txNome.getText());
-                c.setDescricao(taDescricao.getText());
+                classificacao.setNome(txNome.getText());
+                classificacao.setDescricao(taDescricao.getText());
                 
-                Dao.salvar(c);
+                Dao.salvar(classificacao);
                 CadastroClassificacao.getStage().close();
             }
         });
+    }
+    
+    public void preencheTela(){
+        txNome.setText(classificacao.getNome());
+        taDescricao.setText(classificacao.getDescricao());
     }
 
     public static Stage getStage() {

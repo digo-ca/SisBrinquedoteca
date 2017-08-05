@@ -40,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import listagem.ListarBrinquedo;
+import listagem.ListarClassificacao;
 import listagem.ListarCrianca;
 import listagem.ListarDiarios;
 import listagem.ListarEscola;
@@ -418,6 +419,15 @@ public class Principal extends Application {
                 ListarDiarios ld = new ListarDiarios();
                 ld.setMonitor(monitor);
                 ld.start(Principal.stage);
+            }
+        });
+        
+        itemLClassificacao.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ListarClassificacao lc = new ListarClassificacao();
+                lc.setMonitor(monitor);
+                lc.start(Principal.stage);
             }
         });
         
