@@ -319,8 +319,8 @@ public class CadastroVisitacaoEscola extends Application {
 
                         diario.setDia(LocalDate.now());
                         diario.setMonitorAbriu(monitor);
-
-                        diario.setOcorrencias(list);
+                        Dao.salvar(diario);
+                        diario.getOcorrencias().add(item);
                     } else { //Caso tenha um cadastrado edita
                         diario = Dao.consultarDiarioHoje().get(0);
                         if(!diario.getOcorrencias().contains(item))

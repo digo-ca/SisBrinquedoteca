@@ -39,17 +39,14 @@ public class Brinquedo implements Serializable {
     private String nome;
     
     @Column(length = 50, nullable = false)
-    @Basic(fetch = FetchType.LAZY)
     private String fabricante;
     
-    @Basic(fetch = FetchType.LAZY)
     private Estado estado;
     
     @Basic(fetch = FetchType.LAZY)
     private byte[] foto;
     
     @Column(name = "faixa_etaria")
-    @Basic(fetch = FetchType.LAZY)
     private String faixaEtaria;
     
     @ManyToOne
