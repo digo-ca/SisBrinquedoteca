@@ -183,12 +183,12 @@ public class ListarDiarios extends Application{
                     if (new Alert(Alert.AlertType.NONE, "Tem certeza que deseja remover o item selecionado?", ButtonType.CANCEL, ButtonType.YES).showAndWait().get().equals(ButtonType.YES)) {
                         
                             try {
-                                Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
+                                Dao.remover((DiarioDeBordo) tabela.getSelectionModel().getSelectedItem());
                             } catch (SQLIntegrityConstraintViolationException ex) {
-                                Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                                Logger.getLogger(ListarDiarios.class.getName()).log(Level.SEVERE, null, ex);
                             }
 
-                            listItens.setAll(Dao.listar(Monitor.class));
+                            listItens.setAll(Dao.listar(DiarioDeBordo.class));
                             tabela.requestFocus();
                     }
                 } else {
