@@ -48,7 +48,7 @@ public class DiarioDeBordo implements Serializable {
     private Date dia;
     
       //@Column(name = "brinquedos_mais_usados")
-      @ManyToMany(cascade = CascadeType.ALL)
+      @ManyToMany
       @JoinTable(name = "DiariodeBordo_Brinquedo", joinColumns = @JoinColumn(name = "diario_de_bordo_id"), 
           inverseJoinColumns = @JoinColumn(name = "brinquedo_id"))
       private List<Brinquedo> brinquedosMaisUsados;

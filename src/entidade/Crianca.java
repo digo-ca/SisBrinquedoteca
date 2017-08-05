@@ -35,7 +35,7 @@ public class Crianca implements Serializable{
     @ManyToMany
     @JoinTable(name = "Crianca_Responsavel",joinColumns = @JoinColumn(name = "crianca_id"),
             inverseJoinColumns = @JoinColumn(name = "responsavel_id"))
-    private List<Responsavel> responsaveis;    
+    private List<Responsavel> responsaveis;
 
     //Getters e Setters===============================
     public List<Responsavel> getResponsaveis() {

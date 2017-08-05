@@ -29,7 +29,8 @@ public class Responsavel implements Serializable {
     
     private String vinculo;
 
-    @ManyToMany(mappedBy = "responsaveis", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "responsaveis")
+    @Basic(fetch = FetchType.LAZY)
     private List<Crianca> criancas;
     
     //Getters e Setters==================================
