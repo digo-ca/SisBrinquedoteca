@@ -27,9 +27,11 @@ public class Crianca implements Serializable{
     private LocalDate nascimento;
 
     @Column(length = 100)
+    @Basic(fetch = FetchType.LAZY)
     private String escola;
 
     //@Column(nullable = false)
+    @Basic(fetch = FetchType.LAZY)
     private byte[] foto;
     
     @ManyToMany

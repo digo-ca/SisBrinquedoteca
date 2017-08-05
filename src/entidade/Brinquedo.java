@@ -7,9 +7,11 @@ package entidade;
 
 import java.io.Serializable;
 import javafx.scene.image.Image;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,16 +39,21 @@ public class Brinquedo implements Serializable {
     private String nome;
     
     @Column(length = 50, nullable = false)
+    @Basic(fetch = FetchType.LAZY)
     private String fabricante;
     
+    @Basic(fetch = FetchType.LAZY)
     private Estado estado;
     
+    @Basic(fetch = FetchType.LAZY)
     private byte[] foto;
     
     @Column(name = "faixa_etaria")
+    @Basic(fetch = FetchType.LAZY)
     private String faixaEtaria;
     
     @ManyToOne
+    @Basic(fetch = FetchType.LAZY)
     private Classificacao classificacao;
 
     public String getFaixaEtaria() {
