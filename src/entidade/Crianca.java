@@ -32,7 +32,7 @@ public class Crianca implements Serializable{
     //@Column(nullable = false)
     private byte[] foto;
     
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "Crianca_Responsavel",joinColumns = @JoinColumn(name = "crianca_id"),
             inverseJoinColumns = @JoinColumn(name = "responsavel_id"))
     private List<Responsavel> responsaveis;    
