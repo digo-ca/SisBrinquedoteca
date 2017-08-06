@@ -26,6 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.persistence.RollbackException;
 import persistencia.Dao;
 
 public class ListarMonitor extends Application {
@@ -175,6 +176,8 @@ public class ListarMonitor extends Application {
                                 Dao.remover((Monitor) tabela.getSelectionModel().getSelectedItem());
                             } catch (SQLIntegrityConstraintViolationException ex) {
                                 Logger.getLogger(ListarMonitor.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (RollbackException rb){
+                                new Alert(Alert.AlertType.ERROR, "Impossível remover o item, pois o mesmo está alocado a um outro item", ButtonType.OK).show();
                             }
 
                             listItens.setAll(Dao.listar(Monitor.class));
