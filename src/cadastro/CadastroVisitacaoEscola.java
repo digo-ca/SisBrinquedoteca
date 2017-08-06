@@ -261,6 +261,19 @@ public class CadastroVisitacaoEscola extends Application {
                 }
             }
         });
+        
+        txAluno.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!txAluno.getText().isEmpty()){
+                    alunos.add(txAluno.getText());
+                    listaAlunos.getItems().add(txAluno.getText());
+                    txAluno.setText(null);
+                }else{
+                    new Alert(Alert.AlertType.NONE, "Informe o nome do Aluno", ButtonType.OK).show();
+                }
+            }
+        });
 
         removeAluno.setOnAction(new EventHandler<ActionEvent>() {
             @Override
