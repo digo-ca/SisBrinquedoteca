@@ -51,49 +51,49 @@ import persistencia.Dao;
  *
  * @author Ivanildo
  */
-public class CadastroVisita extends Application{
-     private AnchorPane pane;
+public class CadastroVisita extends Application {
+
+    private AnchorPane pane;
     private static Stage stage;
-    
+
     private Label lData;
     private Label lHoraEntrada;
     private Label lHoraSaida;
     private Label lCrianca;
     private Label lMonitor;
-    
+
     private JFXDatePicker cData;
     private JFXTimePicker tpHoraEntrada;
     private JFXTimePicker tpHoraSaida;
     private JFXComboBox cbCrianca;
     private JFXComboBox cbMonitor;
-    
+
     //private CheckBox chSupervisor;
-    
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
-    
+
     private List<Crianca> criancas = Dao.listar(Crianca.class);
     private List<Monitor> monitores = Dao.listar(Monitor.class);
-    
+
     private Monitor monitor;
     private Visita visita;
-    
-    public void setVisita(Visita v){
+
+    public void setVisita(Visita v) {
         visita = v;
     }
-    
+
     @Override
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
-        
-        if(visita != null){
+
+        if (visita != null) {
             preencheTela();
         }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de Visitas");
-        
+
         stage.setScene(scene);
         stage.initModality(Modality.APPLICATION_MODAL); //Mantém o foco apenas nessa tela enquanto aberta
         stage.setResizable(false);
@@ -102,13 +102,13 @@ public class CadastroVisita extends Application{
         //CadastroVisita.stage = stage;
         stage.showAndWait();
     }
-    
+
     private void initComponents() {
         stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(550, 290); //definindo o tamanho da janela de Login
         pane.getStyleClass().add("pane");
-      
+
         lData = new Label("Data");
         pane.getChildren().add(lData);
         lHoraEntrada = new Label("Hora de Entrada");
@@ -119,14 +119,15 @@ public class CadastroVisita extends Application{
         pane.getChildren().add(lCrianca);
         lMonitor = new Label("Monitor");
         //pane.getChildren().add(lMonitor);
-        
+
         cData = new JFXDatePicker();
         cData.setEditable(false);
         cData.setValue(new Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         pane.getChildren().add(cData);
         tpHoraEntrada = new JFXTimePicker();
-        if(visita == null)
+        if (visita == null) {
             tpHoraEntrada.setValue(LocalTime.now());
+        }
         tpHoraEntrada.setEditable(false);
         //tpHoraEntrada.setPromptText("Hora de Entrada");
         pane.getChildren().add(tpHoraEntrada);
@@ -145,7 +146,7 @@ public class CadastroVisita extends Application{
         cbMonitor.setPromptText("Monitor");
         cbMonitor.setLabelFloat(true);
         pane.getChildren().add(cbMonitor);
-        
+
         btCadastrar = new JFXButton("Cadastrar");
         btCadastrar.getStyleClass().add("btCadastrar");
         pane.getChildren().add(btCadastrar);
@@ -153,7 +154,8 @@ public class CadastroVisita extends Application{
         btCancelar.getStyleClass().add("btCancelar");
         pane.getChildren().add(btCancelar);
     }
-    private void initLayout(){
+
+    private void initLayout() {
         lData.setLayoutX(10);
         lData.setLayoutY(20);
         lHoraEntrada.setLayoutX(10);
@@ -164,7 +166,7 @@ public class CadastroVisita extends Application{
         lCrianca.setLayoutY(160);
         lMonitor.setLayoutX(10);
         lMonitor.setLayoutY(170);
-        
+
         cData.setLayoutX(130);
         cData.setLayoutY(20);
         tpHoraEntrada.setLayoutX(130);
@@ -175,13 +177,13 @@ public class CadastroVisita extends Application{
         cbCrianca.setLayoutY(160);
         cbMonitor.setLayoutX(365);
         cbMonitor.setLayoutY(20);
-        
-        
+
         btCadastrar.setLayoutX(490);
         btCadastrar.setLayoutY(270);
         btCancelar.setLayoutX(420);
         btCancelar.setLayoutY(270);
     }
+
     private void initListeners() {
         btCancelar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -193,43 +195,35 @@ public class CadastroVisita extends Application{
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(visita == null){
+                if (visita == null) {
                     visita = new Visita();
                 }
                 visita.setDia(cData.getValue());
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                
-                    //visita.setHoraEntrada(sdf.parse(tpHoraEntrada.getValue()+""));
-                    visita.setHoraEntrada(tpHoraEntrada.getValue());
-                    //visita.setHoraSaida(sdf.parse(tpHoraSaida.getValue()+""));
-                    visita.setHoraSaida(tpHoraSaida.getValue());
-                    //visita.setHoraEntrada(tpHoraEntrada.getValue()+"");
-                
+                visita.setHoraEntrada(tpHoraEntrada.getValue());
+                visita.setHoraSaida(tpHoraSaida.getValue());
                 visita.setCrianca((Crianca) cbCrianca.getSelectionModel().getSelectedItem());
                 visita.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
-                
-                
+
                 Dao.salvar(visita);
                 CadastroVisita.getStage().close();
-                
+
                 DiarioDeBordo d;
-                if(Dao.consultarDiarioHoje().isEmpty()){
+                if (Dao.consultarDiarioHoje().isEmpty()) {
                     d = new DiarioDeBordo();
                     d.setDia(LocalDate.now());
                     d.setMonitorAbriu(monitor);
                     d.setVisitasNoDia(1);
-                }else{
+                } else {
                     d = Dao.consultarDiarioHoje().get(0);
-                    d.setVisitasNoDia(d.getVisitasNoDia()+1);   
+                    d.setVisitasNoDia(d.getVisitasNoDia() + 1);
                 }
-                
-                
+
                 Dao.salvar(d);
             }
         });
     }
-    
-    public void preencheTela(){
+
+    public void preencheTela() {
         cData.setValue(visita.getDia());
         tpHoraEntrada.setValue(visita.getHoraEntrada());
         //tpHoraSaida.setValue(LocalTime.parse((CharSequence) visita.getHoraSaida()));
@@ -237,18 +231,17 @@ public class CadastroVisita extends Application{
         cbCrianca.getSelectionModel().select(visita.getCrianca());
         cbMonitor.getSelectionModel().select(visita.getMonitor());
     }
-    
-    
-    public void setMonitor(Monitor m){
+
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
-    
-    public static Stage getStage(){
+
+    public static Stage getStage() {
         return stage;
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
-  
+
 }
