@@ -19,6 +19,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDrawer;
 import entidade.DiarioDeBordo;
 import entidade.Monitor;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -29,7 +30,9 @@ import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -55,8 +58,9 @@ import persistencia.Dao;
  * @author Ivanildo
  */
 public class Principal extends Application {
+
     private static Stage stage;
-    
+
     private AnchorPane pane;
     private GridPane grid;
     private JFXDrawer sideBar;
@@ -68,7 +72,7 @@ public class Principal extends Application {
     private Menu mVisita;
     private Menu mListaPatrimonio;
     private Menu mListaVisita;
-    
+
     private MenuItem itemBri;
     private MenuItem itemCri;
     private MenuItem itemResp;
@@ -78,9 +82,7 @@ public class Principal extends Application {
     private MenuItem itemVisita;
     private MenuItem itemVisitaEscola;
     private MenuItem itemClassificacao;
-    
-    
-    
+
     //Menus de listagem
     private MenuItem itemLCrianca;
     private MenuItem itemLBrinquedo;
@@ -94,18 +96,17 @@ public class Principal extends Application {
     private MenuItem itemLVisitaEscola;
     private MenuItem itemLClassificacao;
     private MenuItem itemLDiario;
-    
+
     private JFXButton bDiario;
     private JFXButton sair;
-    
-    
+
     private MenuItem alteraSenha;
-    
+
     private Monitor monitor;
-    
+
     private DiarioDeBordo diario;
 
-    public void setMonitor(Monitor m){
+    public void setMonitor(Monitor m) {
         monitor = m;
     }
 
@@ -116,13 +117,13 @@ public class Principal extends Application {
         BorderPane rootGrid = new BorderPane();
         VBox vboxSuperior = new VBox();
         VBox vboxInferior = new VBox();
-        
+
         root.setTop(menuBar);
         root.getStyleClass().add("raiz");
         Scene scene = new Scene(root, 1500, 697);
         scene.getStylesheets().add("css/style.css");
         //Scene scene = new Scene(root, Screen.getPrimary().getVisualBounds().getWidth(), Screen.getPrimary().getVisualBounds().getHeight());
-        
+
         vboxSuperior.getChildren().addAll(bDiario);
         vboxInferior.getChildren().add(sair);
 
@@ -131,10 +132,9 @@ public class Principal extends Application {
 
         //bDiario.setPrefSize(100, 40);
         //sair.setPrefSize(100, 40);  
-        
         rootGrid.getStyleClass().add("grid");
         root.setLeft(rootGrid);
-        
+
         itemSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -157,8 +157,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
-        
+
         initListeners();
 
         stage.setTitle("SisBrinquedoteca");
@@ -168,7 +167,7 @@ public class Principal extends Application {
         stage.initOwner(parent);
         stage.show();
     }
-    
+
     private void initComponents() {
         stage = new Stage();
         // Create MenuBar
@@ -205,14 +204,13 @@ public class Principal extends Application {
         itemLVisitaEscola = new MenuItem("Visita de Escola");
         itemLClassificacao = new MenuItem("Classificação");
         itemLDiario = new MenuItem("Diário de Bordo");
-        
-        
+
         itemSair = new MenuItem("Sair");
         itemNomeUser = new Menu(monitor.getNomeUsuario());
-        
+
         alteraSenha = new MenuItem("Alterar Senha");
         itemNomeUser.getItems().add(alteraSenha);
-        
+
         grid = new GridPane();
         bDiario = new JFXButton("Exibir Diário");
         //bDiario.setPrefHeight(30);
@@ -221,7 +219,7 @@ public class Principal extends Application {
         sair.getStyleClass().add("buttonPrincipalSair");
 
         // Add menuItems to the Menus
-        if(monitor.getSupervisor()){
+        if (monitor.getSupervisor()) {
             MenuCad.getItems().add(itemMonitor);
             mPatrimonio.getItems().add(itemClassificacao);
             mListaPatrimonio.getItems().add(itemLClassificacao);
@@ -230,7 +228,7 @@ public class Principal extends Application {
         mPatrimonio.getItems().addAll(itemBri, itemLivro);
         mListaVisita.getItems().addAll(itemLVisita, itemLVisitaEscola);
         mListaPatrimonio.getItems().addAll(itemLBrinquedo, itemLLivro);
-        MenuCad.getItems().addAll(itemCri,itemResp,itemEscola, mVisita, mPatrimonio);
+        MenuCad.getItems().addAll(itemCri, itemResp, itemEscola, mVisita, mPatrimonio);
         mListar.getItems().addAll(itemLMonitor, itemLCrianca, itemLResp, itemLEscola, itemLDiario, mListaVisita, mListaPatrimonio);
         mUsuario.getItems().addAll(itemNomeUser, itemSair);
 
@@ -238,8 +236,8 @@ public class Principal extends Application {
         menuBar.getMenus().addAll(MenuCad, mListar, mUsuario);
 
     }
-    
-    public void initListeners(){
+
+    public void initListeners() {
         itemCri.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -260,7 +258,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
+
         itemBri.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -281,7 +279,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
+
         itemLivro.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -326,7 +324,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
+
         itemClassificacao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -337,7 +335,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
+
         itemLCrianca.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -361,7 +359,7 @@ public class Principal extends Application {
                 }
             }
         });
-        
+
         itemLResp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -370,7 +368,7 @@ public class Principal extends Application {
                 lr.start(Principal.stage);
             }
         });
-        
+
         itemLEscola.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -379,7 +377,7 @@ public class Principal extends Application {
                 le.start(Principal.stage);
             }
         });
-        
+
         itemLLivro.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -403,7 +401,7 @@ public class Principal extends Application {
                 lv.start(Principal.stage);
             }
         });
-        
+
         itemLVisitaEscola.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -412,7 +410,7 @@ public class Principal extends Application {
                 lve.start(Principal.stage);
             }
         });
-        
+
         itemLDiario.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -421,7 +419,7 @@ public class Principal extends Application {
                 ld.start(Principal.stage);
             }
         });
-        
+
         itemLClassificacao.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -430,18 +428,34 @@ public class Principal extends Application {
                 lc.start(Principal.stage);
             }
         });
-        
+
         bDiario.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                DiarioBordo db = new DiarioBordo();
-                db.setMonitor(monitor);
-                //db.setDiario(diario);
-                
-                try {
-                    db.start(Principal.stage);
-                } catch (Exception ex) {
-                    Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                List<DiarioDeBordo> diarioList = Dao.consultarDiarioHoje();
+                DiarioBordo db = new DiarioBordo();;
+                if (diarioList.isEmpty()) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText("O diário ainda não foi aberto hoje!");
+                    alert.setContentText("Deseja criar um diario para hoje?");
+                    alert.getButtonTypes().setAll(ButtonType.YES,ButtonType.NO);
+                    alert.showAndWait();
+                    if (alert.getResult().equals(ButtonType.YES)) {
+                        db.setMonitor(monitor);
+                        try {
+                            db.start(Principal.stage);
+                        } catch (Exception ex) {
+                            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }else{
+                    db.setDiario(diarioList.get(0));
+                    db.setMonitor(monitor);
+                    try {
+                        db.start(Principal.stage);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
@@ -458,19 +472,18 @@ public class Principal extends Application {
             }
         });
     }
-    
+
     public static Stage getStage() {
         return stage;
     }
-    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        if(Dao.consultarTodos(Monitor.class).isEmpty()){
+        if (Dao.consultarTodos(Monitor.class).isEmpty()) {
             CadastroMonitor.main(args);
-        }else{
+        } else {
             Login.main(args);
         }
     }

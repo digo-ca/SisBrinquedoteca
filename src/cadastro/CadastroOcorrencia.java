@@ -7,8 +7,6 @@ package cadastro;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextArea;
-import com.jfoenix.skins.JFXTextAreaSkin;
 import entidade.DiarioDeBordo;
 import entidade.ItemDiarioDeBordo;
 import entidade.Monitor;
@@ -20,16 +18,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 import persistencia.Dao;
 
 /**
@@ -52,7 +47,7 @@ public class CadastroOcorrencia extends Application {
 
     private Monitor monitor;
     private ItemDiarioDeBordo ocorrencia;
-    private DiarioDeBordo diarioEdita;
+    private DiarioDeBordo diario;
 
     ObservableList<Monitor> listMonitor = FXCollections.observableArrayList(Dao.consultarTodos(Monitor.class));
 
@@ -65,7 +60,7 @@ public class CadastroOcorrencia extends Application {
     }
 
     public void setDiario(DiarioDeBordo d) {
-        diarioEdita = d;
+        diario = d;
     }
 
     @Override
@@ -143,35 +138,43 @@ public class CadastroOcorrencia extends Application {
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (ocorrencia == null) {
-                    ocorrencia = new ItemDiarioDeBordo();
-                }
-                ocorrencia.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
-                ocorrencia.setDescricao(taDescricao.getText());
+                if (diario != null) {
+                    if (ocorrencia == null) {
+                        ocorrencia = new ItemDiarioDeBordo();
+                    }
+                    ocorrencia.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
+                    ocorrencia.setDescricao(taDescricao.getText());
 
-                if (diarioEdita == null) {
-                    DiarioDeBordo diario;
-                    if (Dao.consultarDiarioHoje().isEmpty()) {
-                        diario = new DiarioDeBordo();
-                        diario.setDia(LocalDate.now());
-                        diario.setMonitorAbriu(monitor);
+                    //                if (diarioEdita == null) {
+                    //                    DiarioDeBordo diario;
+                    //                    if (Dao.consultarDiarioHoje().isEmpty()) {
+                    //                        diario = new DiarioDeBordo();
+                    //                        diario.setDia(LocalDate.now());
+                    //                        diario.setMonitorAbriu(monitor);
+                    //                        diario.getOcorrencias().add(ocorrencia);
+                    //                        Dao.salvar(diario);
+                    //                    } else {
+                    //                        diario = Dao.consultarDiarioHoje().get(0);
+                    //                        if (!diario.getOcorrencias().contains(ocorrencia)) {
+                    //                            diario.getOcorrencias().add(ocorrencia);
+                    //                        }
+                    //
+                    //                        Dao.salvar(diario);
+                    //                    }
+                    //                }else{
+                    //                    if(!diarioEdita.getOcorrencias().contains(ocorrencia)){
+                    //                        diarioEdita.getOcorrencias().add(ocorrencia);
+                    //                    }
+                    //                    Dao.salvar(diarioEdita);
+                    //                }
+                    if (!diario.getOcorrencias().contains(ocorrencia)) {
                         diario.getOcorrencias().add(ocorrencia);
-                        Dao.salvar(diario);
-                    } else {
-                        diario = Dao.consultarDiarioHoje().get(0);
-                        if (!diario.getOcorrencias().contains(ocorrencia)) {
-                            diario.getOcorrencias().add(ocorrencia);
-                        }
-
-                        Dao.salvar(diario);
                     }
-                }else{
-                    if(!diarioEdita.getOcorrencias().contains(ocorrencia)){
-                        diarioEdita.getOcorrencias().add(ocorrencia);
-                    }
-                    Dao.salvar(diarioEdita);
+                    Dao.salvar(diario);
+                    CadastroOcorrencia.getStage().close();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "Diario não existe!", ButtonType.OK);
                 }
-                CadastroOcorrencia.getStage().close();
             }
         });
     }
