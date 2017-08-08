@@ -1,28 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package app;
 
 import cadastro.CadastroOcorrencia;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXTextField;
 import entidade.Brinquedo;
 import entidade.DiarioDeBordo;
 import entidade.ItemDiarioDeBordo;
 import entidade.Monitor;
-import java.awt.Color;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -40,18 +29,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 import persistencia.Dao;
 
-/**
- *
- * @author Ivanildo
- */
+
 public class DiarioBordo extends Application {
 
     private AnchorPane pane;
@@ -116,31 +100,17 @@ public class DiarioBordo extends Application {
         initListeners();
 
         if (db == null) {
-            //Caso não tenha nenhum diário aberto no dia, pergunta se o usuário deseja abrir um novo============================
-            if (!Dao.consultarDiarioHoje().isEmpty()) {
-                db = Dao.consultarDiarioHoje().get(0);
-                preencheTela(db);
-//            dpData.setValue(db.getDia().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                dpData.setValue(db.getDia());
-            } else {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Não há nenhum diario cadastrado para esse dia! Deseja abrir um novo?", ButtonType.YES, ButtonType.NO);
-                alert.showAndWait().ifPresent(b -> {
-                    if (b == ButtonType.YES) {
-                        db = new DiarioDeBordo();
-                        db.setDia(LocalDate.now());
-                        db.setMonitorAbriu(monitor);
+            db = new DiarioDeBordo();
+            db.setDia(LocalDate.now());
+            db.setMonitorAbriu(monitor);
 
-                        Dao.salvar(db);
-                        dpData.setValue(db.getDia());
-                        preencheTela(db);
-                    }
-                });
-            }
+            Dao.salvar(db);
+
+            preencheTela(db);
             //==================================================================================================================
         } else {
             preencheTela(db);
             dpData.setValue(db.getDia());
-            dpData.setDisable(true);
         }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
@@ -338,20 +308,20 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 List<DiarioDeBordo> listaDiario = Dao.listar(DiarioDeBordo.class);
-                int existe = -1;
+                Boolean existe = false;
 //                Date data = new Date();
 //                data = Date.from(dpData.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
                 for (int i = 0; i < listaDiario.size(); i++) {
                     if (listaDiario.get(i).getDia().equals(dpData.getValue())) {
+                        abilitaDesabilitaComponets(false);
                         preencheTela(listaDiario.get(i));
-                        existe = 0;
+                        existe = true;
                     }
                 }
-                if (existe == -1) {
-                    preencheTela(null);
-                    txMAbriu.setText("");
-                    txMFechou.setText("");
-                    txVisitas.setText("");
+                if (!existe) {
+                    zeraTudo();
+                    abilitaDesabilitaComponets(true);
+                    new Alert(Alert.AlertType.INFORMATION, "Não há um diário para este dia!", ButtonType.OK).show();
                 }
             }
         });
@@ -365,7 +335,6 @@ public class DiarioBordo extends Application {
                     Dao.salvar(db);
                     cbBrinquedos.getSelectionModel().select(-1);
                 } else {
-                    //JOptionPane.showMessageDialog(null, "Nenhum brinquedo selecionado");
                     new Alert(Alert.AlertType.NONE, "Selecione um brinquedo acima para adiciona-lo", ButtonType.OK).show();
                 }
             }
@@ -379,7 +348,6 @@ public class DiarioBordo extends Application {
                     tabelaBrinquedos.getItems().remove(tabelaBrinquedos.getSelectionModel().getSelectedItem());
                     Dao.salvar(db);
                 } else {
-                    //JOptionPane.showMessageDialog(null, "Nenhum item selecionado na tabela");
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
                 }
             }
@@ -389,9 +357,7 @@ public class DiarioBordo extends Application {
             public void handle(ActionEvent event) {
                 CadastroOcorrencia cadastro = new CadastroOcorrencia();
                 cadastro.setMonitor(monitor);
-                if (edita == 1) {
-                    cadastro.setDiario(db);
-                }
+                cadastro.setDiario(db);
                 try {
                     cadastro.start(DiarioBordo.stage);
                 } catch (Exception ex) {
@@ -407,10 +373,7 @@ public class DiarioBordo extends Application {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
                     CadastroOcorrencia cad = new CadastroOcorrencia();
                     cad.setOcorrencia((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                    //cad.setMonitor(monitor);
-                    if (edita == 1) {
-                        cad.setDiario(db);
-                    }
+                    cad.setDiario(db);
                     try {
                         cad.start(DiarioBordo.stage);
                     } catch (Exception ex) {
@@ -418,7 +381,6 @@ public class DiarioBordo extends Application {
                     }
                     tabelaOcorrencia.refresh();
                 } else {
-                    //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                     new Alert(Alert.AlertType.NONE, "Selecione um item para ser editado na tabela", ButtonType.OK).show();
                 }
             }
@@ -427,24 +389,17 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 if (tabelaOcorrencia.getSelectionModel().getSelectedIndex() != -1) {
-                   // if (edita == -1) {
-                        /*DiarioDeBordo diario;
-                        diario = Dao.consultarDiarioHoje().get(0);
-                        diario.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                        Dao.salvar(diario);*/
-                    //}else{
-                        db.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                        Dao.salvar(db);
-                   // }
-                        try {
-                            Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
-                        } catch (SQLIntegrityConstraintViolationException ex) {
-                            Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
-                            JOptionPane.showMessageDialog(null, ex);
-                        }
-                        tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
+                    db.getOcorrencias().remove((ItemDiarioDeBordo) tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    Dao.salvar(db);
+                    // }
+                    try {
+                        Dao.remover(tabelaOcorrencia.getSelectionModel().getSelectedItem());
+                    } catch (SQLIntegrityConstraintViolationException ex) {
+                        Logger.getLogger(DiarioBordo.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, ex);
+                    }
+                    tabelaOcorrencia.setItems(FXCollections.observableArrayList(db.getOcorrencias()));
                 } else {
-                    //JOptionPane.showMessageDialog(null, "Nenhum Item Selecionado na Tabela");
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela para ser removido", ButtonType.OK).show();
                 }
             }
@@ -454,7 +409,7 @@ public class DiarioBordo extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Alert alerta = new Alert(Alert.AlertType.CONFIRMATION, "Realmente deseja Fechar o diário de Hoje?", ButtonType.YES, ButtonType.NO);
-                alerta.showAndWait().ifPresent(b -> {
+                alerta.showAndWait().ifPresent((b) -> {
                     if (b == ButtonType.YES) {
                         List<DiarioDeBordo> diarios = Dao.listar(DiarioDeBordo.class);
                         for (int i = 0; i < diarios.size(); i++) {
@@ -478,8 +433,6 @@ public class DiarioBordo extends Application {
     }
 
     public void abilitaDesabilitaComponets(Boolean b) {
-        tabelaOcorrencia.setDisable(b);
-        tabelaBrinquedos.setDisable(b);
         txVisitas.setDisable(b);
         txMAbriu.setDisable(b);
         txMFechou.setDisable(b);
@@ -489,52 +442,38 @@ public class DiarioBordo extends Application {
         bEditaOcorrencia.setDisable(b);
         bRemoveBrinquedos.setDisable(b);
         bRemoveOcorrencia.setDisable(b);
-        if (b) {
-            tabelaOcorrencia.setItems(null);
-            tabelaBrinquedos.setItems(null);
-        }
-        if (b) {
-            dpData.setStyle("-fx-border-color: red;-fx-border-width: 2;");
-        } else {
-            dpData.setStyle("-fx-border-width: 0;");
-        }
+        bFechar.setDisable(b);
+    }
+
+    public void zeraTudo() {
+        txMAbriu.setText("");
+        txMFechou.setText("");
+        txVisitas.setText("");
+        tabelaBrinquedos.setItems(null);
+        tabelaOcorrencia.setItems(null);
+
     }
 
     public void preencheTela(DiarioDeBordo diario) {
-        if (diario == null) {
-            abilitaDesabilitaComponets(true);
-            new Alert(Alert.AlertType.NONE, "Não há um diário cadastrado para esta data", ButtonType.OK).show();
+
+        txMAbriu.setText(diario.getMonitorAbriu().getNome());
+        txVisitas.setText(diario.getVisitasNoDia() + "");
+
+        dpData.setValue(diario.getDia());
+
+        tabelaBrinquedos.setItems(FXCollections.observableArrayList(diario.getBrinquedosMaisUsados()));
+        cbBrinquedos.getItems().removeAll(tabelaBrinquedos.getItems());
+
+        tabelaOcorrencia.setItems(FXCollections.observableArrayList(diario.getOcorrencias()));
+
+        if (diario.getMonitorFechou() == null) {
+            txMFechou.setText("");
+            bFechar.setDisable(false);
         } else {
-            abilitaDesabilitaComponets(false);
-//        if(diario.getMonitorAbriu() != null)
-            txMAbriu.setText(diario.getMonitorAbriu() + "");
-
-            if (diario.getMonitorFechou() != null) {
-                txMFechou.setText(diario.getMonitorFechou() + "");
-                bFechar.setDisable(true);
-                if (edita == -1) {
-                    cbBrinquedos.setDisable(true);
-                    bAddBrinquedos.setDisable(true);
-                    bRemoveBrinquedos.setDisable(true);
-                    bAddOcorrencia.setDisable(true);
-                    bEditaOcorrencia.setDisable(true);
-                    bRemoveOcorrencia.setDisable(true);
-                }
-            } else {
-                txMFechou.setText("");
-                bFechar.setDisable(false);
-            }
-
-            //       if(diario.getVisitasNoDia() >= 0)
-            txVisitas.setText(diario.getVisitasNoDia() + "");
-
-//        if(diario.getBrinquedosMaisUsados() != null){
-            tabelaBrinquedos.setItems(FXCollections.observableArrayList(diario.getBrinquedosMaisUsados()));
-            cbBrinquedos.getItems().removeAll(tabelaBrinquedos.getItems());
-//        }
-
-            //      if(diario.getOcorrencias() != null)
-            tabelaOcorrencia.setItems(FXCollections.observableArrayList(diario.getOcorrencias()));
+            txMFechou.setText(diario.getMonitorFechou().getNome());
+            bFechar.setDisable(true);
+            abilitaDesabilitaComponets(Boolean.TRUE);
+            new Alert(Alert.AlertType.INFORMATION, "Este diário está fechado", ButtonType.OK).showAndWait();
         }
     }
 
