@@ -160,7 +160,7 @@ public class DiarioBordo extends Application {
         txVisitas.setPromptText("Visitas");
         txVisitas.setLabelFloat(true);
         pane.getChildren().add(txVisitas);
-        cbBrinquedos = new JFXComboBox(FXCollections.observableArrayList(Dao.listar(Brinquedo.class)));
+        cbBrinquedos = new JFXComboBox(FXCollections.observableArrayList(Dao.consultarTodos(Brinquedo.class)));
         cbBrinquedos.setPrefWidth(173);
         cbBrinquedos.setPromptText("Selecione o Brinquedo");
         cbBrinquedos.setLabelFloat(true);
