@@ -57,6 +57,10 @@ public class Dao {
         return q.getResultList(); //Retorna uma lista de objetos do banco
     }
     
+     public static Object busca(Integer id, Class c){ //Busca uma tupla do banco
+        return em.find(c, id);
+    }
+    
     public static  List consultarTodos(Class c){
         Query q = em.createNamedQuery(c.getSimpleName()+".consultarTodos");
         
