@@ -35,7 +35,9 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -195,8 +197,10 @@ public class CadastroVisita extends Application {
         btCadastrar.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                int flag = 0;
                 if (visita == null) {
                     visita = new Visita();
+                    flag = 1;
                 }
                 visita.setDia(cData.getValue());
                 visita.setHoraEntrada(tpHoraEntrada.getValue());
@@ -204,21 +208,28 @@ public class CadastroVisita extends Application {
                 visita.setCrianca((Crianca) cbCrianca.getSelectionModel().getSelectedItem());
                 visita.setMonitor((Monitor) cbMonitor.getSelectionModel().getSelectedItem());
 
-                Dao.salvar(visita);
-                CadastroVisita.getStage().close();
+                if (flag == 1) {
+                    DiarioDeBordo diario;
+                    if (Dao.consultarDiarioHoje().isEmpty()) {
+                        diario = new DiarioDeBordo();
+                        diario.setDia(LocalDate.now());
+                        diario.setMonitorAbriu(monitor);
+                        diario.setVisitasNoDia(1);
+                    } else {
+                        diario = Dao.consultarDiarioHoje().get(0);
+                        if (diario.getMonitorFechou() == null) {
+                            diario.setVisitasNoDia(diario.getVisitasNoDia() + 1);
+                            Dao.salvar(visita);
+                        }else{
+                            new Alert(Alert.AlertType.ERROR, "O diário de hoje está fechado, Impossível adicionar uma nova visita", ButtonType.OK).showAndWait();
+                        }
+                    }
 
-                DiarioDeBordo d;
-                if (Dao.consultarDiarioHoje().isEmpty()) {
-                    d = new DiarioDeBordo();
-                    d.setDia(LocalDate.now());
-                    d.setMonitorAbriu(monitor);
-                    d.setVisitasNoDia(1);
-                } else {
-                    d = Dao.consultarDiarioHoje().get(0);
-                    d.setVisitasNoDia(d.getVisitasNoDia() + 1);
+                    Dao.salvar(diario);
+                }else{
+                    Dao.salvar(visita);
                 }
-
-                Dao.salvar(d);
+                CadastroVisita.getStage().close();
             }
         });
     }
