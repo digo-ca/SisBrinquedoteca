@@ -72,7 +72,7 @@ public class ListarDiarios extends Application{
         stage.showAndWait();
     }
 
-    public void initComponents() {
+    public void initComponents(){
         stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(795, 445);

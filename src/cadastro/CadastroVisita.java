@@ -8,6 +8,7 @@ package cadastro;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
+import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXTimePicker;
 import com.jfoenix.skins.JFXTimePickerContent;
 import entidade.Crianca;
@@ -144,7 +145,7 @@ public class CadastroVisita extends Application {
         cbMonitor = new JFXComboBox(FXCollections.observableArrayList(monitores));
         cbMonitor.getSelectionModel().select(monitor);
         cbMonitor.setDisable(true);
-        cbMonitor.setPrefWidth(190);
+        cbMonitor.setPrefWidth(220);
         cbMonitor.setPromptText("Monitor");
         cbMonitor.setLabelFloat(true);
         pane.getChildren().add(cbMonitor);
@@ -177,7 +178,7 @@ public class CadastroVisita extends Application {
         tpHoraSaida.setLayoutY(110);
         cbCrianca.setLayoutX(130);
         cbCrianca.setLayoutY(160);
-        cbMonitor.setLayoutX(365);
+        cbMonitor.setLayoutX(335);
         cbMonitor.setLayoutY(20);
 
         btCadastrar.setLayoutX(490);
