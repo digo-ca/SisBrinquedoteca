@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
@@ -81,6 +82,7 @@ public class CadastroClassificacao extends Application {
         pane.getChildren().add(lDescricao);
 
         txNome = new JFXTextField();
+        txNome.setFocusColor(Paint.valueOf("#009999"));
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
         pane.getChildren().add(txNome);

@@ -38,6 +38,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -118,6 +119,7 @@ public class CadastroBrinquedo extends Application {
         img = new ImageView();
 
         txNome = new JFXTextField();
+        txNome.setFocusColor(Paint.valueOf("#009999"));
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
         txNome.setPrefWidth(250);
@@ -129,22 +131,26 @@ public class CadastroBrinquedo extends Application {
         pane.getChildren().add(sQuantidade);
 
         txFabricante = new JFXTextField();
+        txFabricante.setFocusColor(Paint.valueOf("#009999"));
         txFabricante.setPromptText("Fabricante");
         txFabricante.setLabelFloat(true);
         txFabricante.setPrefWidth(250);
         pane.getChildren().add(txFabricante);
 
         txFaixaEtaria = new JFXTextField();
+        txFaixaEtaria.setFocusColor(Paint.valueOf("#009999"));
         txFaixaEtaria.setPromptText("Faixa Etária: ex 5-10");
         txFaixaEtaria.setLabelFloat(true);
         pane.getChildren().add(txFaixaEtaria);
 
         cbEstado = new JFXComboBox(FXCollections.observableArrayList(Estado.values()));
+        cbEstado.setFocusColor(Paint.valueOf("#009999"));
         cbEstado.setPromptText("Estado");
         cbEstado.setLabelFloat(true);
         pane.getChildren().add(cbEstado);
 
         cbClassificacao = new JFXComboBox(FXCollections.observableArrayList(classificacoes));
+        cbClassificacao.setFocusColor(Paint.valueOf("#009999"));
         cbClassificacao.setPromptText("Classificação");
         cbClassificacao.setLabelFloat(true);
         //cbClassificacao.setItems(FXCollections.observableArrayList(classificacoes));

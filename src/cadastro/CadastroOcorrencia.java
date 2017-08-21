@@ -23,6 +23,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import persistencia.Dao;
@@ -98,6 +99,7 @@ public class CadastroOcorrencia extends Application {
         taDescricao.setPrefSize(220, 100);
         pane.getChildren().add(taDescricao);
         cbMonitor = new JFXComboBox(listMonitor);
+        cbMonitor.setFocusColor(Paint.valueOf("#009999"));
         cbMonitor.getSelectionModel().select(monitor);
         cbMonitor.setDisable(true);
         pane.getChildren().add(cbMonitor);

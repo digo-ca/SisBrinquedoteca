@@ -40,6 +40,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -129,6 +130,7 @@ public class CadastroCrianca extends Application {
         pane.getChildren().add(lFoto);
 
         txNome = new JFXTextField();
+        txNome.setFocusColor(Paint.valueOf("#009999"));
         txNome.setPrefWidth(220);
         txNome.setPromptText("Nome");
         txNome.setLabelFloat(true);
@@ -139,6 +141,7 @@ public class CadastroCrianca extends Application {
         //txIdade.setLabelFloat(true);
         pane.getChildren().add(dpNascimento);
         txEscola = new JFXTextField();
+        txEscola.setFocusColor(Paint.valueOf("#009999"));
         txEscola.setPrefWidth(220);
         txEscola.setPromptText("Escola");
         txEscola.setLabelFloat(true);
@@ -149,6 +152,7 @@ public class CadastroCrianca extends Application {
         cbResponsavel.setPrefWidth(190);
         cbResponsavel.setPromptText("Responsável");
         cbResponsavel.setLabelFloat(true);
+        cbResponsavel.setFocusColor(Paint.valueOf("#009999"));
         pane.getChildren().add(cbResponsavel);
 
         cadResp = new JFXButton("+");

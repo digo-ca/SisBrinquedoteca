@@ -53,7 +53,7 @@
 }
 
 .btCancelar{
-    -fx-background-color: red;
+    -fx-background-color: #FF0033;
     -fx-text-fill: white;
 }
 /*==================================================Tela Cadastro de Criancas=====================================================*/
@@ -102,25 +102,28 @@
 /*==================================================Tela Cadastro de Visitação Escola==============================================*/
 
 .btAddBrinquedo{
-    -fx-background-color: #32CD32;
+    -fx-background-color: #009999;
     -fx-text-fill: white;
 }
 
 .btRemoveBrinquedo{
-    -fx-background-color: red;
+    -fx-background-color: #FF0033;
     -fx-text-fill: white;
 }
 .btAddOcorrencia{
-    -fx-background-color: #32CD32;
+    -fx-background-color: #009999;
     -fx-text-fill: white;
 }
 
 .btEditaOcorrencia{
-    -fx-background-color: #00FF7F;
+    
+    -fx-background-color: #339966;
+    -fx-text-fill: white;
+    /*-fx-background-color: #00FF7F;*/
 }
 
 .btRemoveOcorrencia{
-    -fx-background-color: red;
+    -fx-background-color: #FF0033;
     -fx-text-fill: white;
 }
 
@@ -131,7 +134,7 @@
 
 .btFechaDiario{
     /*-fx-background-color: blueviolet;*/
-    -fx-background-color: blueviolet;
+    -fx-background-color: #3399CC;
     -fx-text-fill: white;
 }
 
@@ -139,7 +142,8 @@
 /*=================================Menu Principal========================================*/
 
 .menu-bar {
-    -fx-background-color: derive(#1d1d1d,20%);
+    -fx-base: #666666;
+    /*-fx-background-color: derive(#1d1d1d,20%);*/
 }
 
 .context-menu {
@@ -164,6 +168,7 @@
     -fx-border-width: 2;
     -fx-background-radius: 0;
     -fx-background-color: #1d1d1d;
+    /*-fx-background-color: #1d1d1d;*/
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 10pt;
     -fx-text-fill: #d8d8d8;
