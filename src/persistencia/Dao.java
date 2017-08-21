@@ -10,6 +10,8 @@ import entidade.Monitor;
 import entidade.Responsavel;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javax.persistence.*;
 import javax.persistence.spi.PersistenceProvider;
 //import javax.persistence.Query;
@@ -42,7 +44,7 @@ public class Dao {
             trx.commit();
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao salvar no Banco");
+            new Alert(Alert.AlertType.ERROR, "Erro ao salvar no Banco", ButtonType.OK).showAndWait();
         }
     }
 

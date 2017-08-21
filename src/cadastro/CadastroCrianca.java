@@ -27,6 +27,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -237,6 +238,7 @@ public class CadastroCrianca extends Application {
                 }
             }
         });
+        
 
         removeResp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -268,7 +270,11 @@ public class CadastroCrianca extends Application {
                 crianca.setEscola(txEscola.getText());
                 crianca.setResponsaveis(tabela.getItems());
                 crianca.setFoto(bImagem);
-                Dao.salvar(crianca);
+                try {
+                    Dao.salvar(crianca);
+                } catch (NullPointerException ne) {
+                    new Alert(Alert.AlertType.ERROR, "Certifique-se de que todos os campos estão preenchidos", ButtonType.OK).show();
+                }
                 CadastroCrianca.getStage().hide();
             }
         });

@@ -19,14 +19,14 @@ public class Crianca implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(length = 50)
+    @Column(nullable = false)
     private String nome;
 
 //    @Temporal(TemporalType.DATE)
-    @Column(nullable = false/*, columnDefinition = "DATE"*/)
+    @Column(nullable = false)
     private LocalDate nascimento;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     @Basic(fetch = FetchType.LAZY)
     private String escola;
 

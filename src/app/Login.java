@@ -19,7 +19,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -177,7 +179,7 @@ public class Login extends Application {
         Principal p = new Principal();
         Monitor m = autenticacao();
         if (m == null) {
-            JOptionPane.showMessageDialog(null, "Login e/ou Senha inválidos", "Erro", JOptionPane.ERROR_MESSAGE);
+            new Alert(Alert.AlertType.ERROR, "Login e/ou Senha inválidos", ButtonType.OK).showAndWait();
         } else {
             Login.getStage().close();
             p.setMonitor(m);
