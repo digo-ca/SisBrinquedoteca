@@ -33,6 +33,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.persistence.RollbackException;
 import persistencia.Dao;
@@ -68,6 +69,7 @@ public class ListarCrianca extends Application {
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.initOwner(parent);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.setTitle("Tabela de Crianças");
         stage.setResizable(false);
