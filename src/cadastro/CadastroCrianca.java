@@ -238,7 +238,6 @@ public class CadastroCrianca extends Application {
                 }
             }
         });
-        
 
         removeResp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -265,17 +264,23 @@ public class CadastroCrianca extends Application {
                 if (crianca == null) {
                     crianca = new Crianca();
                 }
-                crianca.setNome(txNome.getText());
-                crianca.setNascimento(dpNascimento.getValue());
-                crianca.setEscola(txEscola.getText());
-                crianca.setResponsaveis(tabela.getItems());
-                crianca.setFoto(bImagem);
-                try {
-                    Dao.salvar(crianca);
-                } catch (NullPointerException ne) {
-                    new Alert(Alert.AlertType.ERROR, "Certifique-se de que todos os campos estão preenchidos", ButtonType.OK).show();
+
+                if ((txNome.getText().trim().isEmpty()) || dpNascimento.getValue().equals(null) || txEscola.getText().trim().isEmpty()
+                        || tabela.getItems().isEmpty()) {
+                    new Alert(Alert.AlertType.ERROR, "Preencha todos os campos", ButtonType.OK).showAndWait();
+                } else {
+                    crianca.setNome(txNome.getText());
+                    crianca.setNascimento(dpNascimento.getValue());
+                    crianca.setEscola(txEscola.getText());
+                    crianca.setResponsaveis(tabela.getItems());
+                    crianca.setFoto(bImagem);
+                    try {
+                        Dao.salvar(crianca);
+                    } catch (NullPointerException ne) {
+                        new Alert(Alert.AlertType.ERROR, "Certifique-se de que todos os campos estão preenchidos", ButtonType.OK).show();
+                    }
+                    CadastroCrianca.getStage().hide();
                 }
-                CadastroCrianca.getStage().hide();
             }
         });
 
@@ -341,7 +346,6 @@ public class CadastroCrianca extends Application {
         });
     }
 
-
     private ObservableList<Responsavel> findItens() {
         ObservableList<Responsavel> itensEncontrados = FXCollections.observableArrayList();
 
@@ -361,19 +365,20 @@ public class CadastroCrianca extends Application {
         txEscola.setText(crianca.getEscola());
         tabela.setItems(FXCollections.observableArrayList(crianca.getResponsaveis()));
         cbResponsavel.getItems().removeAll(crianca.getResponsaveis());
-        if(crianca.getFoto() != null)
+        if (crianca.getFoto() != null) {
             exibeFoto();
+        }
     }
-    
-    public void exibeFoto() throws IOException{
+
+    public void exibeFoto() throws IOException {
         byte[] foto = null;
         BufferedImage buffer = null;
         buffer = ImageIO.read(new ByteArrayInputStream(crianca.getFoto()));
-        Image imagem = SwingFXUtils.toFXImage(buffer, null);                
+        Image imagem = SwingFXUtils.toFXImage(buffer, null);
         img.setImage(imagem);
         img.setFitWidth(lFoto.getMaxWidth());
         img.setFitHeight(lFoto.getMaxHeight());
-        
+
         lFoto.setText("");
         lFoto.setGraphic(img);
     }
@@ -392,9 +397,8 @@ public class CadastroCrianca extends Application {
         is.close();
         return buffer;
     }
-    
-    //Byte para imagem, conversão.
 
+    //Byte para imagem, conversão.
     public static void main(String[] args) {
         launch(args);
     }
