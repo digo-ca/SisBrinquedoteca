@@ -85,11 +85,13 @@ public class CadastroEscola  extends Application{
         pane.getChildren().add(txResponsavel);
         txCgResponsavel = new JFXTextField();
         txCgResponsavel.setFocusColor(Paint.valueOf("#009999"));
+        txCgResponsavel.setPrefWidth(220);
         txCgResponsavel.setPromptText("Cargo do Responável");
         txCgResponsavel.setLabelFloat(true);
         pane.getChildren().add(txCgResponsavel);
         txTelefone = new JFXTextField();
         txTelefone.setFocusColor(Paint.valueOf("#009999"));
+        txTelefone.setPrefWidth(220);
         txTelefone.setPromptText("Telefone");
         txTelefone.setLabelFloat(true);
         pane.getChildren().add(txTelefone);
@@ -115,9 +117,9 @@ public class CadastroEscola  extends Application{
         txResponsavel.setLayoutY(70);
         txCgResponsavel.setLayoutX(10);
         txCgResponsavel.setLayoutY(120);
-        txTelefone.setLayoutX(290);
+        txTelefone.setLayoutX(330);
         txTelefone.setLayoutY(20);
-        txEndereco.setLayoutX(290);
+        txEndereco.setLayoutX(330);
         txEndereco.setLayoutY(70);
         
         

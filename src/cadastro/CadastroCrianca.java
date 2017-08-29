@@ -274,11 +274,9 @@ public class CadastroCrianca extends Application {
                     crianca.setEscola(txEscola.getText());
                     crianca.setResponsaveis(tabela.getItems());
                     crianca.setFoto(bImagem);
-                    try {
-                        Dao.salvar(crianca);
-                    } catch (NullPointerException ne) {
-                        new Alert(Alert.AlertType.ERROR, "Certifique-se de que todos os campos estão preenchidos", ButtonType.OK).show();
-                    }
+                    
+                    Dao.salvar(crianca);
+                        
                     CadastroCrianca.getStage().hide();
                 }
             }
