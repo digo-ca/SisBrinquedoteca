@@ -6,6 +6,7 @@
 package app;
 
 import cadastro.CadastroCrianca;
+import com.jfoenix.controls.JFXButton;
 import entidade.Crianca;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -52,8 +53,7 @@ public class ItemCrianca extends Application {
     private TableView tabelaResponsaveis;
     private TableColumn colunaId;
     private TableColumn colunaNome;
-    private Button bEditar;
-    private Button bSair;
+    private JFXButton bSair;
     private static Stage stage;
     private static Crianca crianca;
     private static int index;
@@ -64,6 +64,7 @@ public class ItemCrianca extends Application {
         initValues();
         initListeners();
         Scene scene = new Scene(pane);
+        scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
         stage.setTitle("Criança");
         stage.setResizable(false);
@@ -76,6 +77,7 @@ public class ItemCrianca extends Application {
         stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(600, 270);
+        pane.getStyleClass().add("pane");
         img = new ImageView();
         lFoto = new Label("Não possui foto");
         lFoto.setStyle("-fx-border-color: black");
@@ -97,9 +99,9 @@ public class ItemCrianca extends Application {
         tabelaResponsaveis.setPrefSize(400, 150);
         tabelaResponsaveis.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        bEditar = new Button("Editar");
-        bSair = new Button("Sair");
-        pane.getChildren().addAll(lNome, lFoto, lNascimento, bEditar, bSair, tabelaResponsaveis);
+        bSair = new JFXButton("Fechar");
+        bSair.getStyleClass().add("btCancelar");
+        pane.getChildren().addAll(lNome, lFoto, lNascimento, bSair, tabelaResponsaveis);
 
         initLayout();
 
@@ -128,28 +130,6 @@ public class ItemCrianca extends Application {
     }
 
     public void initListeners() {
-        bEditar.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CadastroCrianca cadastro = new CadastroCrianca();
-                cadastro.setCrianca(crianca);
-                try {
-                    cadastro.start(ItemCrianca.getStage());
-                } catch (Exception ex) {
-                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                crianca = (Crianca) Dao.busca(crianca.getId(), Crianca.class);;
-                try {
-                    initValues();
-                } catch (ParseException ex) {
-                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(ItemCrianca.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
         bSair.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -166,9 +146,7 @@ public class ItemCrianca extends Application {
         lNome.setLayoutY(10);
         lNascimento.setLayoutX(250);
         lNascimento.setLayoutY(50);
-        bEditar.setLayoutX(602);
-        bEditar.setLayoutY(255);
-        bSair.setLayoutX(560);
+        bSair.setLayoutX(598);
         bSair.setLayoutY(255);
 
         tabelaResponsaveis.setLayoutX(250);
