@@ -1,9 +1,12 @@
 package listagem;
 
+import app.ItemBrinquedo;
+import app.ItemCrianca;
 import cadastro.CadastroBrinquedo;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import entidade.Brinquedo;
+import entidade.Crianca;
 import entidade.Monitor;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
@@ -22,6 +25,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -51,13 +55,13 @@ public class ListarBrinquedo extends Application {
     TableColumn colunaFaixaEtaria;
     TableColumn colunaClassificacao;
 
-    List<Brinquedo> brinquedos = Dao.listar(Brinquedo.class);
-    ObservableList<Brinquedo> listItens = FXCollections.observableArrayList(brinquedos);
+    ObservableList<Brinquedo> brinquedos;
+    //ObservableList<Brinquedo> listItens = FXCollections.observableArrayList(brinquedos);
     
     @Override
     public void start(Stage parent) {
         initComponents();
-
+        initValues();
         initListeners();
         initLayout();
         Scene scene = new Scene(pane);
@@ -98,12 +102,17 @@ public class ListarBrinquedo extends Application {
         colunaFaixaEtaria.setCellValueFactory(new PropertyValueFactory<>("faixaEtaria"));
         colunaClassificacao.setCellValueFactory(new PropertyValueFactory<>("classificacao"));
 
-        tabela.setItems(listItens);
         tabela.setPrefSize(785, 400);
         tabela.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); //Colunas se posicionam comforme o tamanho da tabela
 
         tabela.getColumns().addAll(colunaId, colunaNome, colunaFabricante, colunaEstado, colunaClassificacao, colunaFaixaEtaria);
         pane.getChildren().addAll(tabela, txPesquisa, bSair, bEditar, bRemover);
+    }
+    
+    private void initValues() {
+        brinquedos = FXCollections.observableArrayList(Dao.listar(Brinquedo.class));
+        tabela.setItems(brinquedos);
+        tabela.refresh();
     }
 
     public void initLayout() {
@@ -119,10 +128,14 @@ public class ListarBrinquedo extends Application {
         txPesquisa.setLayoutX(645);
         txPesquisa.setLayoutY(10);
     }
+    
+    public static Stage getStage() {
+        return stage;
+    }
 
     public void initListeners() {
 
-        FilteredList<Brinquedo> filteredData = new FilteredList<>(listItens, (e) -> true);
+        FilteredList<Brinquedo> filteredData = new FilteredList<>(brinquedos, (e) -> true);
         txPesquisa.setOnKeyReleased((e) -> {
             txPesquisa.textProperty().addListener((observableValue, oldValue, newValue) -> {
                 filteredData.setPredicate((Predicate<? super Brinquedo>) user -> {
@@ -167,7 +180,7 @@ public class ListarBrinquedo extends Application {
                     } catch (Exception ex) {
                         Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    listItens.setAll(Dao.listar(Brinquedo.class));
+                    brinquedos.setAll(Dao.listar(Brinquedo.class));
                     tabela.requestFocus();
                 } else {
                     new Alert(Alert.AlertType.NONE, "Selecione um item na tabela!", ButtonType.OK).showAndWait();
@@ -189,7 +202,7 @@ public class ListarBrinquedo extends Application {
                         } catch(RollbackException rb){
                             new Alert(Alert.AlertType.ERROR, "Impossível remover o item selecionado, pois o mesmo está inserindo em um diário de bordo", ButtonType.OK).show();
                         }
-                        listItens.setAll(Dao.listar(Brinquedo.class));
+                        brinquedos.setAll(Dao.listar(Brinquedo.class));
                         tabela.requestFocus();
                     }
                 } else {
@@ -197,6 +210,23 @@ public class ListarBrinquedo extends Application {
                     tabela.requestFocus();
                 }
             }
+        });
+        
+        tabela.setRowFactory(tv -> {
+            TableRow<Brinquedo> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    ItemBrinquedo.setBrinquedo(row.getItem());
+                    try {
+                        new ItemBrinquedo().start(ListarBrinquedo.getStage());
+                    } catch (Exception ex) {
+                        Logger.getLogger(ListarBrinquedo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    initValues();
+                }
+
+            });
+            return row;
         });
     }
     public static void main(String[] args) {
