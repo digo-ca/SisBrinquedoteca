@@ -42,7 +42,7 @@ public class ItemVisitaEscola extends Application{
         initLayout();
         preencheTela();
         Scene scene = new Scene(pane);
-        
+        scene.getStylesheets().add("css/style.css");
         stage.setScene(scene);
         stage.setTitle("Visita de Escola");
         stage.setResizable(false);
@@ -55,7 +55,7 @@ public class ItemVisitaEscola extends Application{
         stage = new Stage();
         pane = new AnchorPane();
         pane.setPrefSize(500, 370);
-        
+        pane.getStyleClass().add("pane");
         data = new JFXDatePicker();
         data.setDisable(true);
         pane.getChildren().add(data);
@@ -108,6 +108,7 @@ public class ItemVisitaEscola extends Application{
         pane.getChildren().add(listAlunos);
         
         bFechar = new JFXButton("Fechar");
+        bFechar.getStyleClass().add("btCancelar");
         pane.getChildren().add(bFechar);
         
     }
