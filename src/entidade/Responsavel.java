@@ -29,19 +29,11 @@ public class Responsavel implements Serializable {
     
     private String vinculo;
 
-    @ManyToMany(mappedBy = "responsaveis")
-    @Basic(fetch = FetchType.LAZY)
-    private List<Crianca> criancas;
+    //@ManyToMany(mappedBy = "responsaveis")
+    //@Basic(fetch = FetchType.LAZY)
+    //private List<Crianca> criancas;
     
-    //Getters e Setters==================================
-    public List<Crianca> getCriancas() {
-        return criancas;
-    }
-
-    public void setCriancas(List<Crianca> criancas) {
-        this.criancas = criancas;
-    }
-    
+    //Getters e Setters==================================    
     public Integer getId() {
         return id;
     }

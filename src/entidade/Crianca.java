@@ -34,7 +34,7 @@ public class Crianca implements Serializable{
     @Basic(fetch = FetchType.LAZY)
     private byte[] foto;
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "Crianca_Responsavel",joinColumns = @JoinColumn(name = "crianca_id"),
             inverseJoinColumns = @JoinColumn(name = "responsavel_id"))
     private List<Responsavel> responsaveis;
