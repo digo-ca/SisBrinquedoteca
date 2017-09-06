@@ -34,6 +34,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
+import listagem.ListarDiarios;
 import persistencia.Dao;
 
 
@@ -110,6 +111,9 @@ public class DiarioBordo extends Application {
         } else {
             preencheTela(db);
             dpData.setValue(db.getDia());
+            if(parent.equals(ListarDiarios.getStage())){
+                abilitaOcorrencias(Boolean.FALSE);
+            }
         }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
@@ -447,6 +451,12 @@ public class DiarioBordo extends Application {
         bRemoveBrinquedos.setDisable(b);
         bRemoveOcorrencia.setDisable(b);
         bFechar.setDisable(b);
+    }
+    
+    public void abilitaOcorrencias(Boolean b){
+        bAddOcorrencia.setDisable(b);
+        bEditaOcorrencia.setDisable(b);
+        bRemoveOcorrencia.setDisable(b);
     }
 
     public void zeraTudo() {

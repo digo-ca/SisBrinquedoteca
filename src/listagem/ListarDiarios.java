@@ -161,6 +161,7 @@ public class ListarDiarios extends Application{
                 if (tabela.getSelectionModel().getSelectedIndex() != -1) {
                     db.setDiario((DiarioDeBordo) tabela.getSelectionModel().getSelectedItem());
                     db.setMonitor(monitor);
+                    //db.abilitaOcorrencias(false);
 
                     try {
                         db.start(ListarDiarios.stage);
@@ -197,6 +198,10 @@ public class ListarDiarios extends Application{
                 }
             }
         });
+    }
+    
+    public static Stage getStage(){
+        return stage;
     }
 
     public static void main(String[] args) {
