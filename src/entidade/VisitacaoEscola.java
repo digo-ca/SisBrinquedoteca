@@ -54,7 +54,7 @@ public class VisitacaoEscola implements Serializable{
     private List<String> alunos;
     
     //relação///////////////////////////
-    @ManyToOne(cascade = CascadeType.ALL)
+    //@ManyToOne(cascade = CascadeType.ALL)
     private Monitor monitor;
 
     public Integer getId() {

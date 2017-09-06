@@ -61,7 +61,7 @@ public class DiarioDeBordo implements Serializable {
     //@Column(name = "monitor_fechou")
     private Monitor monitorFechou;
     
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     private List <ItemDiarioDeBordo> ocorrencias;
     
     @Column(name = "visitas_no_dia")

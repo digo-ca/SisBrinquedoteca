@@ -94,13 +94,13 @@ public class CadastroVisitacaoEscola extends Application {
 
     private JFXButton btCadastrar;
     private JFXButton btCancelar;
-    
+
     private JFXListView<String> listaAlunos;
 
     private Monitor monitor;
 
     private VisitacaoEscola visitaEscola = null;
-    
+
     private DiarioDeBordo diario;
 
     public void setMonitor(Monitor m) {
@@ -115,8 +115,9 @@ public class CadastroVisitacaoEscola extends Application {
     public void start(Stage parent) throws Exception {
         initComponents();
         initListeners();
-        if(visitaEscola != null)
+        if (visitaEscola != null) {
             preencheTela();
+        }
         Scene scene = new Scene(pane);
         scene.getStylesheets().add("css/style.css");
         stage.setTitle("Cadastro de visita de escola");
@@ -138,8 +139,7 @@ public class CadastroVisitacaoEscola extends Application {
 
         lData = new Label("Data");
         pane.getChildren().add(lData);
-       
-        
+
         cData = new JFXDatePicker();
         cData.setEditable(false);
         cData.setValue(new Date(System.currentTimeMillis()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
@@ -201,7 +201,7 @@ public class CadastroVisitacaoEscola extends Application {
         cadEscola = new JFXButton("+");
         cadEscola.getStyleClass().add("btAddEscola");
         pane.getChildren().add(cadEscola);
-        
+
         listaAlunos = new JFXListView();
         listaAlunos.setPrefSize(605, 170);
         pane.getChildren().add(listaAlunos);
@@ -264,20 +264,20 @@ public class CadastroVisitacaoEscola extends Application {
                     listaAlunos.getItems().add(txAluno.getText());
                     txAluno.setText("");
                 } else {
-                   //JOptionPane.showMessageDialog(null, "Informe o nome do Aluno");
-                   new Alert(Alert.AlertType.NONE, "Informe o nome do Aluno", ButtonType.OK).show();
+                    //JOptionPane.showMessageDialog(null, "Informe o nome do Aluno");
+                    new Alert(Alert.AlertType.NONE, "Informe o nome do Aluno", ButtonType.OK).show();
                 }
             }
         });
-        
+
         txAluno.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!txAluno.getText().isEmpty()){
+                if (!txAluno.getText().isEmpty()) {
                     alunos.add(txAluno.getText());
                     listaAlunos.getItems().add(txAluno.getText());
                     txAluno.setText(null);
-                }else{
+                } else {
                     new Alert(Alert.AlertType.NONE, "Informe o nome do Aluno", ButtonType.OK).show();
                 }
             }
@@ -323,29 +323,32 @@ public class CadastroVisitacaoEscola extends Application {
                 visitaEscola.setFaixaEtariaCriancas(txFaixaEtaria.getText());
                 visitaEscola.setAlunos(alunos);
 
-                Dao.salvar(visitaEscola);
-                
-                if(flag == 1){
+                if (flag == 1) {
                     //Salvando uma ocorrencia ao diario de bordo===================================
                     ItemDiarioDeBordo item = new ItemDiarioDeBordo();
                     item.setDescricao("Visita de Escola");
                     item.setMonitor(monitor);
 
-
-                    if (Dao.consultarDiarioHoje().isEmpty()){ //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
+                    if (Dao.consultarDiarioHoje().isEmpty()) { //Caso não tenha um diario de bordo ja cadastrado no dia, cadastra um novo
                         diario = new DiarioDeBordo();
-
-                        List<ItemDiarioDeBordo>  list = new LinkedList<>();
-                        list.add(item);
 
                         diario.setDia(LocalDate.now());
                         diario.setMonitorAbriu(monitor);
                         Dao.salvar(diario);
                         diario.getOcorrencias().add(item);
+                        
+                        Dao.salvar(visitaEscola);
                     } else { //Caso tenha um cadastrado edita
                         diario = Dao.consultarDiarioHoje().get(0);
-                        if(!diario.getOcorrencias().contains(item))
-                            diario.getOcorrencias().add(item);
+                        if (diario.getMonitorFechou() == null) {
+                            if (!diario.getOcorrencias().contains(item)) {
+                                diario.getOcorrencias().add(item);
+                            }
+                            Dao.salvar(visitaEscola);
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "O diário de hoje está fechado, Impossível adicionar uma nova visita de escola", ButtonType.OK).showAndWait();
+
+                        }
                     }
                     Dao.salvar(diario);
                 }
@@ -367,8 +370,8 @@ public class CadastroVisitacaoEscola extends Application {
             }
         });
     }
-    
-    public void preencheTela(){
+
+    public void preencheTela() {
         cData.setValue(visitaEscola.getData());
         cbPeriodo.getSelectionModel().select(visitaEscola.getPeriodo());
         cbMonitor.getSelectionModel().select(visitaEscola.getMonitor());

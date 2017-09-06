@@ -14,6 +14,7 @@ import com.jfoenix.skins.JFXTimePickerContent;
 import entidade.Crianca;
 import entidade.DiarioDeBordo;
 import entidade.Estado;
+import entidade.ItemDiarioDeBordo;
 import entidade.Livro;
 import entidade.Monitor;
 import entidade.Visita;
@@ -26,6 +27,7 @@ import java.time.ZoneId;
 import static java.time.temporal.TemporalQueries.zone;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -214,21 +216,38 @@ public class CadastroVisita extends Application {
 
                 if (flag == 1) {
                     DiarioDeBordo diario;
+                    
+                    ItemDiarioDeBordo item = new ItemDiarioDeBordo();
+                    item.setDescricao("Visita de Criança");
+                    item.setMonitor(monitor);
+                    
+                    
                     if (Dao.consultarDiarioHoje().isEmpty()) {
                         diario = new DiarioDeBordo();
+                        //List<ItemDiarioDeBordo>  list = new LinkedList<>();
+                        //list.add(item);
+                        
                         diario.setDia(LocalDate.now());
                         diario.setMonitorAbriu(monitor);
                         diario.setVisitasNoDia(1);
+                        
+                        Dao.salvar(diario);
+                        diario.getOcorrencias().add(item);
+                        
+                        
+                        Dao.salvar(visita);
+                        
                     } else {
                         diario = Dao.consultarDiarioHoje().get(0);
                         if (diario.getMonitorFechou() == null) {
                             diario.setVisitasNoDia(diario.getVisitasNoDia() + 1);
+                            if(!diario.getOcorrencias().contains(item))
+                                diario.getOcorrencias().add(item);
                             Dao.salvar(visita);
                         }else{
                             new Alert(Alert.AlertType.ERROR, "O diário de hoje está fechado, Impossível adicionar uma nova visita", ButtonType.OK).showAndWait();
                         }
                     }
-
                     Dao.salvar(diario);
                 }else{
                     Dao.salvar(visita);

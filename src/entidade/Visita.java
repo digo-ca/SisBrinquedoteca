@@ -45,7 +45,7 @@ public class Visita implements Serializable {
     @ManyToOne
     private Crianca crianca;
     
-    @ManyToOne
+    //@ManyToOne
     private Monitor monitor;
 
     public Integer getId() {
