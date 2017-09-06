@@ -433,7 +433,7 @@ public class Principal extends Application {
             @Override
             public void handle(ActionEvent event) {
                 List<DiarioDeBordo> diarioList = Dao.consultarDiarioHoje();
-                DiarioBordo db = new DiarioBordo();;
+                DiarioBordo db = new DiarioBordo();
                 if (diarioList.isEmpty()) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setHeaderText("O diário ainda não foi aberto hoje!");

@@ -83,11 +83,9 @@ public class DiarioBordo extends Application {
 
     Monitor monitor;
     DiarioDeBordo db;
-    int edita = -1;
 
     public void setDiario(DiarioDeBordo diario) {
         db = diario;
-        edita = 1;
     }
 
     public void setMonitor(Monitor m) {
