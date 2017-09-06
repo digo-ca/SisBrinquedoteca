@@ -289,6 +289,7 @@ public class CadastroBrinquedo extends Application {
         cbEstado.getSelectionModel().select(brinquedo.getEstado());
         if (brinquedo.getFoto() != null) {
             exibeFoto();
+            bImagem = brinquedo.getFoto();
         }
     }
 

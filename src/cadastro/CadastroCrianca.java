@@ -365,6 +365,7 @@ public class CadastroCrianca extends Application {
         cbResponsavel.getItems().removeAll(crianca.getResponsaveis());
         if (crianca.getFoto() != null) {
             exibeFoto();
+            bImagem = crianca.getFoto();
         }
     }
 
