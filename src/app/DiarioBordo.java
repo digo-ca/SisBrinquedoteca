@@ -111,6 +111,8 @@ public class DiarioBordo extends Application {
         } else {
             preencheTela(db);
             dpData.setValue(db.getDia());
+            
+            //Caso o chamador for a tela de listagem, abilita operações na ocorrência
             if(parent.equals(ListarDiarios.getStage())){
                 abilitaOcorrencias(Boolean.FALSE);
             }
